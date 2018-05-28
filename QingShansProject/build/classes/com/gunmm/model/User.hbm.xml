@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-5-14 16:56:33 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.model.User" table="USER">
+        <id name="userId" type="java.lang.String">
+            <column name="USERID" />
+            <generator class="assigned" />
+        </id>
+        <property name="phoneNumber" type="java.lang.String">
+            <column name="PHONENUMBER" />
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="PASSWORD" />
+        </property>
+        <property name="nickname" type="java.lang.String">
+            <column name="NICKNAME" />
+        </property>
+        <property name="imageUrl" type="java.lang.String">
+            <column name="IMAGEURL" />
+        </property>
+        <property name="type" type="java.lang.String">
+            <column name="TYPE" />
+        </property>
+        <property name="personImage" type="java.lang.String">
+            <column name="PERSONIMAGE" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
+        <property name="address" type="java.lang.String">
+            <column name="ADDRESS" />
+        </property>
+        <property name="addressLatitude" type="double">
+            <column name="ADDRESSLATITUDE" />
+        </property>
+        <property name="addressLongitude" type="double">
+            <column name="ADDRESSLONGITUDE" />
+        </property>
+        <property name="nowLatitude" type="double">
+            <column name="NOWLATITUDE" />
+        </property>
+        <property name="nowLongitude" type="double">
+            <column name="NOWLONGITUDE" />
+        </property>
+        <property name="score" type="float">
+            <column name="SCORE" />
+        </property>
+        <property name="createTime" type="java.util.Date">
+            <column name="CREATETIME" />
+        </property>
+        <property name="lastLoginTime" type="java.util.Date">
+            <column name="LASTLOGINTIME" />
+        </property>
+    </class>
+</hibernate-mapping>

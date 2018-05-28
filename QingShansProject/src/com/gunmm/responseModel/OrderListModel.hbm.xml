@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-5-27 22:32:06 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.responseModel.OrderListModel" table="ORDERLISTMODEL">
+        <id name="orderId" type="java.lang.String">
+            <column name="ORDERID" />
+            <generator class="assigned" />
+        </id>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
+        <property name="type" type="java.lang.String">
+            <column name="TYPE" />
+        </property>
+        <property name="createManId" type="java.lang.String">
+            <column name="CREATEMANID" />
+        </property>
+        <property name="driverId" type="java.lang.String">
+            <column name="DRIVERID" />
+        </property>
+        <property name="linkMan" type="java.lang.String">
+            <column name="LINKMAN" />
+        </property>
+        <property name="linkPhone" type="java.lang.String">
+            <column name="LINKPHONE" />
+        </property>
+        <property name="carType" type="java.lang.String">
+            <column name="CARTYPE" />
+        </property>
+        <property name="carTypeName" type="java.lang.String">
+            <column name="CARTYPENAME" />
+        </property>
+        <property name="note" type="java.lang.String">
+            <column name="NOTE" />
+        </property>
+        <property name="sendAddress" type="java.lang.String">
+            <column name="SENDADDRESS" />
+        </property>
+        <property name="sendLatitude" type="java.lang.Double">
+            <column name="SENDLATITUDE" />
+        </property>
+        <property name="sendLongitude" type="java.lang.Double">
+            <column name="SENDLONGITUDE" />
+        </property>
+        <property name="receiveAddress" type="java.lang.String">
+            <column name="RECEIVEADDRESS" />
+        </property>
+        <property name="receiveLatitude" type="java.lang.Double">
+            <column name="RECEIVELATITUDE" />
+        </property>
+        <property name="receiveLongitude" type="java.lang.Double">
+            <column name="RECEIVELONGITUDE" />
+        </property>
+        <property name="siteComplaint" type="java.lang.String">
+            <column name="SITECOMPLAINT" />
+        </property>
+        <property name="driverComplaint" type="java.lang.String">
+            <column name="DRIVERCOMPLAINT" />
+        </property>
+        <property name="createTime" type="java.util.Date">
+            <column name="CREATETIME" />
+        </property>
+        <property name="appointTime" type="java.util.Date">
+            <column name="APPOINTTIME" />
+        </property>
+        <property name="phoneNumber" type="java.lang.String">
+            <column name="PHONENUMBER" />
+        </property>
+        <property name="nickname" type="java.lang.String">
+            <column name="NICKNAME" />
+        </property>
+        <property name="personImageUrl" type="java.lang.String">
+            <column name="PERSONIMAGEURL" />
+        </property>
+        <property name="nowLatitude" type="java.lang.Double">
+            <column name="NOWLATITUDE" />
+        </property>
+        <property name="nowLongitude" type="java.lang.Double">
+            <column name="NOWLONGITUDE" />
+        </property>
+        <property name="plateNumber" type="java.lang.String">
+            <column name="PLATENUMBER" />
+        </property>
+        <property name="score" type="java.lang.Float">
+            <column name="SCORE" />
+        </property>
+    </class>
+</hibernate-mapping>

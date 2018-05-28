@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-5-14 16:56:33 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.model.Order" table="`ORDER`">
+        <id name="orderId" type="java.lang.String">
+            <column name="ORDERID" />
+            <generator class="assigned" />
+        </id>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
+        <property name="type" type="java.lang.String">
+            <column name="TYPE" />
+        </property>
+        <property name="createManId" type="java.lang.String">
+            <column name="CREATEMANID" />
+        </property>
+        <property name="linkMan" type="java.lang.String">
+            <column name="LINKMAN" />
+        </property>
+        <property name="linkPhone" type="java.lang.String">
+            <column name="LINKPHONE" />
+        </property>
+        <property name="carType" type="java.lang.String">
+            <column name="CARTYPE" />
+        </property>
+        <property name="note" type="java.lang.String">
+            <column name="NOTE" />
+        </property>
+        <property name="sendAddress" type="java.lang.String">
+            <column name="SENDADDRESS" />
+        </property>
+        <property name="sendLatitude" type="double">
+            <column name="SENDLATITUDE" />
+        </property>
+        <property name="sendLongitude" type="double">
+            <column name="SENDLONGITUDE" />
+        </property>
+        <property name="receiveAddress" type="java.lang.String">
+            <column name="RECEIVEADDRESS" />
+        </property>
+        <property name="receiveLatitude" type="double">
+            <column name="RECEIVELATITUDE" />
+        </property>
+        <property name="receiveLongitude" type="double">
+            <column name="RECEIVELONGITUDE" />
+        </property>
+        <property name="siteComplaint" type="java.lang.String">
+            <column name="SITECOMPLAINT" />
+        </property>
+        <property name="driverComplaint" type="java.lang.String">
+            <column name="DRIVERCOMPLAINT" />
+        </property>
+        <property name="createTime" type="java.util.Date">
+            <column name="CREATETIME" />
+        </property>
+        <property name="appointTime" type="java.util.Date">
+            <column name="APPOINTTIME" />
+        </property>
+    </class>
+</hibernate-mapping>

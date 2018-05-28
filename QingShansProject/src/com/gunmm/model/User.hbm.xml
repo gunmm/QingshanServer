@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-5-27 16:03:02 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.model.User" table="USER">
+        <id name="userId" type="java.lang.String">
+            <column name="USERID" />
+            <generator class="assigned" />
+        </id>
+        <property name="phoneNumber" type="java.lang.String">
+            <column name="PHONENUMBER" />
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="PASSWORD" />
+        </property>
+        <property name="nickname" type="java.lang.String">
+            <column name="NICKNAME" />
+        </property>
+        <property name="personImageUrl" type="java.lang.String">
+            <column name="PERSONIMAGEURL" />
+        </property>
+        <property name="type" type="java.lang.String">
+            <column name="TYPE" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
+        <property name="plateNumber" type="java.lang.String">
+            <column name="PLATENUMBER" />
+        </property>
+        <property name="vehicleType" type="java.lang.String">
+            <column name="VEHICLETYPE" />
+        </property>
+        <property name="driverCertificationStatus" type="java.lang.String">
+            <column name="DRIVERCERTIFICATIONSTATUS" />
+        </property>
+        <property name="driverLicenseImageUrl" type="java.lang.String">
+            <column name="DRIVERLICENSEIMAGEURL" />
+        </property>
+        <property name="driverVehicleImageUrl" type="java.lang.String">
+            <column name="DRIVERVEHICLEIMAGEURL" />
+        </property>
+        <property name="driverThirdImageUrl" type="java.lang.String">
+            <column name="DRIVERTHIRDIMAGEURL" />
+        </property>
+        <property name="loginPlate" type="java.lang.String">
+            <column name="LOGINPLATE" />
+        </property>
+        <property name="address" type="java.lang.String">
+            <column name="ADDRESS" />
+        </property>
+        <property name="addressLatitude" type="java.lang.Double">
+            <column name="ADDRESSLATITUDE" />
+        </property>
+        <property name="addressLongitude" type="java.lang.Double">
+            <column name="ADDRESSLONGITUDE" />
+        </property>
+        <property name="nowLatitude" type="java.lang.Double">
+            <column name="NOWLATITUDE" />
+        </property>
+        <property name="nowLongitude" type="java.lang.Double">
+            <column name="NOWLONGITUDE" />
+        </property>
+        <property name="distance" type="java.lang.Double">
+            <column name="DISTANCE" />
+        </property>
+        <property name="score" type="java.lang.Double">
+            <column name="SCORE" />
+        </property>
+        <property name="createTime" type="java.util.Date">
+            <column name="CREATETIME" />
+        </property>
+        <property name="lastLoginTime" type="java.util.Date">
+            <column name="LASTLOGINTIME" />
+        </property>
+    </class>
+</hibernate-mapping>
