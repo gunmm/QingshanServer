@@ -43,4 +43,32 @@ public class DictionaryImpl implements DictionaryDao {
 		}
 	}
 
+	@Override
+	public String getValueTextByNameAndkey(String name, String keyText) {
+		// TODO Auto-generated method stub
+		Transaction tx = null;
+		String valueText = null;
+		String hql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory()
+					.getCurrentSession();
+			tx = session.beginTransaction();
+			hql = "select valueText from DictionaryModel where name = '"+name+"' and keyText = '"+keyText+"'";
+			Query query = session.createQuery(hql);
+			valueText = (String) query.uniqueResult();
+			
+			tx.commit();
+			return valueText;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return valueText;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
 }

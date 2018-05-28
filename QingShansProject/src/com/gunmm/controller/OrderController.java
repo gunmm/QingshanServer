@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.gunmm.dao.DictionaryDao;
 import com.gunmm.dao.OrderDao;
 import com.gunmm.dao.PushDao;
 import com.gunmm.dao.UserDao;
+import com.gunmm.impl.DictionaryImpl;
 import com.gunmm.impl.OrderDaoImpl;
 import com.gunmm.impl.PushDaoImpl;
 import com.gunmm.impl.UserDaoImpl;
@@ -46,6 +48,8 @@ public class OrderController {
 		if ("1".equals(result_code)) {
 			Thread t = new Thread(new Runnable() {
 				public void run() {
+					DictionaryDao dictionaryDao = new DictionaryImpl();
+					addOrder.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", addOrder.getCarType()));
 					PushDao pushDao = new PushDaoImpl();
 					pushDao.pushForOrder(addOrder);
 				}
@@ -140,9 +144,13 @@ public class OrderController {
 		
 		OrderDao orderDao = new OrderDaoImpl();
 		Order wayOrder = orderDao.getOrderById(orderId);
+		DictionaryDao dictionaryDao = new DictionaryImpl();
+
+		
 
 		UserDao userDao = new UserDaoImpl();
 		User wayDriver = userDao.getUserById(wayOrder.getDriverId());
+		wayOrder.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", wayOrder.getCarType()));
 
 		if (wayOrder != null && wayDriver != null) {
 			JSONObject jsonObject = new JSONObject();
@@ -160,13 +168,16 @@ public class OrderController {
 	private JSONObject getOrderList(HttpServletRequest request) {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 		String userId = object.getString("userId");
-		
+		String rows = object.getString("rows");
+
+		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+
 		if(userId == null) {
 			return JSONUtils.responseToJsonString("0", "参数错误！", "查询失败！", "");
 		}
 
 		OrderDao orderDao = new OrderDaoImpl();
-		List<OrderListModel> orderList = orderDao.getOrderListByUserId(userId);
+		List<OrderListModel> orderList = orderDao.getOrderListByUserId(userId, page, rows);
 		
 		
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);

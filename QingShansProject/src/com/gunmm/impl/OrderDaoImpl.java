@@ -185,48 +185,52 @@ public class OrderDaoImpl implements OrderDao {
 		}
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<OrderListModel> getOrderListByUserId(String userId) {
+	public List<OrderListModel> getOrderListByUserId(String userId, String page, String rows) {
 		// TODO Auto-generated method stub
-				List<OrderListModel> orderList = null;
-				Transaction tx = null;
-				String sql = "";
-				try {
-					Session session = MyHibernateSessionFactory.getSessionFactory()
-							.getCurrentSession();
-					tx = session.beginTransaction();
-					sql = "SELECT "+
-							"`order`.*,"+
-							"user.nickname,"+
-							"user.phoneNumber,"+
-							"user.personImageUrl,"+
-							"user.nowLatitude,"+
-							"user.nowLongitude,"+
-							"user.plateNumber,"+
-							"user.score "+
-						"FROM "+
-						"`order` LEFT JOIN user ON `order`.driverId = user.userId "+
-						"where `order`.createManId = '"+userId+"'";
-							
-					SQLQuery query = session.createSQLQuery(sql);
-					query.addEntity(OrderListModel.class);
-
-					orderList = query.list();
-
-					tx.commit();
-					return orderList;
+		List<OrderListModel> orderList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory()
+					.getCurrentSession();
+			tx = session.beginTransaction();
+			sql = "SELECT "+
+					"`order`.*,"+
+					"user.nickname,"+
+					"user.phoneNumber,"+
+					"user.personImageUrl,"+
+					"user.nowLatitude,"+
+					"user.nowLongitude,"+
+					"user.plateNumber,"+
+					"user.score,"+
+					"(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "+
+				"FROM "+
+				"`order` LEFT JOIN user ON `order`.driverId = user.userId "+
+				"where `order`.createManId = '"+userId+"' "+
+				"ORDER BY CREATETIME desc " + 
+				"LIMIT "+page+","+rows;
 					
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					return orderList;
-				} finally {
-					if (tx != null) {
-						tx = null;
-					}
-					
-				}
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(OrderListModel.class);
+
+			orderList = query.list();
+
+			tx.commit();
+			return orderList;
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return orderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+			
+		}
 	}
 	
 	

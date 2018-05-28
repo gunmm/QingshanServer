@@ -27,6 +27,7 @@ public class PushDaoImpl implements PushDao {
 		hashmap.put("type", order.getType());
 		hashmap.put("linkMan", order.getLinkMan());
 		hashmap.put("carType", order.getCarType());
+		hashmap.put("carTypeName", order.getCarTypeName());
 		hashmap.put("note", order.getNote());
 		hashmap.put("sendAddress", order.getSendAddress());
 		hashmap.put("receiveAddress", order.getReceiveAddress());

@@ -18,6 +18,8 @@ public class Order {
 	private String linkPhone; //联系电话
 	
 	private String carType; //车辆类型
+	private String carTypeName; //车辆类型
+
 	private String note; //备注
 
 
@@ -54,6 +56,18 @@ public class Order {
 				+ receiveLatitude + ", receiveLongitude=" + receiveLongitude + ", siteComplaint=" + siteComplaint
 				+ ", driverComplaint=" + driverComplaint + ", createTime=" + createTime + ", appointTime=" + appointTime
 				+ "]";
+	}
+
+
+	
+	
+	public String getCarTypeName() {
+		return carTypeName;
+	}
+
+
+	public void setCarTypeName(String carTypeName) {
+		this.carTypeName = carTypeName;
 	}
 
 

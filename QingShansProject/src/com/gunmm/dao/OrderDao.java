@@ -25,7 +25,8 @@ public interface OrderDao {
 	public List<User> queryDriverForOrder(Order order);
 	
 	//根据userid查询订单列表
-	public List<OrderListModel> getOrderListByUserId(String userId);
+	public List<OrderListModel> getOrderListByUserId(String userId, String page, String rows);
+
 
 
 }
