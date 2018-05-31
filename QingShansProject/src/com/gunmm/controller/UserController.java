@@ -45,8 +45,10 @@ public class UserController {
 			byte[] data =JSONUtils.readInputStream(httpServletRequest);
 			JSONObject body = JSONUtils.getBody(data);
 			String phoneNumber = body.getString("phoneNumber");
+			String type = body.getString("type");
+
 			UserDao userDao = new UserDaoImpl();
-			return userDao.getVerificationCode(phoneNumber);
+			return userDao.getVerificationCode(phoneNumber, type);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -65,8 +67,31 @@ public class UserController {
 			JSONObject body = JSONUtils.getBody(data);
 			String phoneNumber = body.getString("phoneNumber");
 			String password = body.getString("password");
+			String plateform = body.getString("plateform");
+
 			UserDao userDao = new UserDaoImpl();
-			return userDao.login(phoneNumber, password);
+			return userDao.login(phoneNumber, password, plateform);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "登陆失败！", "");
+		}
+		
+	}
+	
+	@RequestMapping("/resetPassword")
+	@ResponseBody
+	private JSONObject resetPassword(HttpServletRequest request) {
+		try {
+			HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+			httpServletRequest.setCharacterEncoding("utf-8");
+			byte[] data =JSONUtils.readInputStream(httpServletRequest);
+			JSONObject body = JSONUtils.getBody(data);
+			String phoneNumber = body.getString("phoneNumber");
+			String password = body.getString("password");
+			UserDao userDao = new UserDaoImpl();
+			return userDao.resetPassword(phoneNumber, password);
 			
 		} catch (Exception e) {
 			// TODO: handle exception

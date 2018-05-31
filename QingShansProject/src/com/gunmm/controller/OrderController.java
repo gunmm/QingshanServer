@@ -181,7 +181,27 @@ public class OrderController {
 		
 		
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);
+	}
+	
+	//司机订单列表
+	@RequestMapping("/getDriverOrderList")
+	@ResponseBody
+	private JSONObject getDriverOrderList(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String userId = object.getString("userId");
+		String rows = object.getString("rows");
 
+		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+
+		if(userId == null) {
+			return JSONUtils.responseToJsonString("0", "参数错误！", "查询失败！", "");
+		}
+
+		OrderDao orderDao = new OrderDaoImpl();
+		List<OrderListModel> orderList = orderDao.getOrderListByUserId(userId, page, rows);
+		
+		
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);
 	}
 		
 		

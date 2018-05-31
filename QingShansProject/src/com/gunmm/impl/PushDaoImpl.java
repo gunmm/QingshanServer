@@ -44,17 +44,27 @@ public class PushDaoImpl implements PushDao {
 
 
 		//司机列表
-		List<String> person = new ArrayList<>();
+		List<String> personIOS = new ArrayList<>();
+		List<String> personAndroid = new ArrayList<>();
+
 		OrderDao orderDao = new OrderDaoImpl();
 		List<User> userList = orderDao.queryDriverForOrder(order);
 		for (User user : userList) {
-			person.add(user.getPhoneNumber());
+			if ("iOS".equals(user.getLoginPlate())) {
+				personIOS.add(user.getPhoneNumber());
+			}else {
+				personAndroid.add(user.getPhoneNumber());
+			}
 		}
 	
 		try {
-	        PushResult result = JPushUtils.getJPushClient().sendPush(
-					JPushUtils.buildPushPayLoad(person, "newOrderNotify", "有新的订单", "iOS", hashmap));
-	        System.out.println("Got result - " + result);
+	        PushResult resultIOS = JPushUtils.getJPushClient().sendPush(
+					JPushUtils.buildPushPayLoad(personIOS, "newOrderNotify", "有新的订单", "iOS", hashmap));
+	        System.out.println("Got result iOS- " + resultIOS);
+	        
+	        PushResult resultAndroid = JPushUtils.getJPushClient().sendPush(
+					JPushUtils.buildPushPayLoad(personAndroid, "newOrderNotify", "有新的订单", "android", hashmap));
+	        System.out.println("Got result android- " + resultAndroid);
 
 	    } catch (APIConnectionException e) {
 	        // Connection error, should retry later
@@ -77,6 +87,13 @@ public class PushDaoImpl implements PushDao {
 			
 			UserDao userDao = new UserDaoImpl();
 			User user = userDao.getUserById(order.getDriverId());
+			String plateStr = "";
+			if ("iOS".equals(user.getLoginPlate())) {
+				plateStr = "iOS";
+			}else {
+				plateStr = "android";
+
+			}
 			
 			Map<String, String> hashmap = new HashMap<String, String>();
 			hashmap.put("status", order.getStatus());
@@ -98,7 +115,7 @@ public class PushDaoImpl implements PushDao {
 
 			try {
 		        PushResult result = JPushUtils.getJPushClient().sendPush(
-						JPushUtils.buildPushPayLoad(person, "OrderBeReceivedNotify", "订单状态更新", "iOS", hashmap));
+						JPushUtils.buildPushPayLoad(person, "OrderBeReceivedNotify", "订单状态更新", plateStr, hashmap));
 		        System.out.println("Got result - " + result);
 
 		    } catch (APIConnectionException e) {
@@ -122,6 +139,14 @@ public class PushDaoImpl implements PushDao {
 			UserDao userDao = new UserDaoImpl();
 			User user = userDao.getUserById(order.getDriverId());
 			person.add(user.getPhoneNumber());
+			
+			String plateStr = "";
+			if ("iOS".equals(user.getLoginPlate())) {
+				plateStr = "iOS";
+			}else {
+				plateStr = "android";
+
+			}
 
 			Map<String, String> hashmap = new HashMap<String, String>();
 			hashmap.put("status", order.getStatus());
@@ -140,7 +165,7 @@ public class PushDaoImpl implements PushDao {
 			
 			try {
 		        PushResult result = JPushUtils.getJPushClient().sendPush(
-						JPushUtils.buildPushPayLoad(person, "OrderBeCanceledNotify", "订单被取消", "iOS", hashmap));
+						JPushUtils.buildPushPayLoad(person, "OrderBeCanceledNotify", "订单被取消", plateStr, hashmap));
 		        System.out.println("Got result - " + result);
 
 		    } catch (APIConnectionException e) {

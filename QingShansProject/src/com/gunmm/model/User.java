@@ -12,7 +12,7 @@ public class User {
 	private String personImageUrl;   //用户图像
 
 	private String type;   //用户类型0.总管理员   1.站点   2.司机
-	private String status; //状态       司机是否在拉货  1：在拉货 0：未拉货
+	private String status; //状态       司机是否在拉货  1：在拉货 0：未拉货  2：下班
 	private String plateNumber; //车牌号
 	private String vehicleType; //车辆类型
 	

@@ -107,7 +107,8 @@ public class OrderDaoImpl implements OrderDao {
 				UserDao userDao = new UserDaoImpl();
 				User user = userDao.getUserById(driverId);
 				if(user != null) {
-					userDao.setUserStatus("1", user);
+					user.setStatus("1");
+					userDao.updateUserInfo(user);
 				}
 				return "success";
 			} catch (Exception e) {
@@ -169,7 +170,9 @@ public class OrderDaoImpl implements OrderDao {
 				
 				if(order.getDriverId()!=null) {
 					UserDao userDao = new UserDaoImpl();
-					userDao.setUserStatus("0", userDao.getUserById(order.getDriverId()));
+					User user = userDao.getUserById(order.getDriverId());
+					user.setStatus("0");
+					userDao.updateUserInfo(user);
 				}
 				
 				return "success";
@@ -210,6 +213,49 @@ public class OrderDaoImpl implements OrderDao {
 				"FROM "+
 				"`order` LEFT JOIN user ON `order`.driverId = user.userId "+
 				"where `order`.createManId = '"+userId+"' "+
+				"ORDER BY CREATETIME desc " + 
+				"LIMIT "+page+","+rows;
+					
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(OrderListModel.class);
+
+			orderList = query.list();
+
+			tx.commit();
+			return orderList;
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return orderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+			
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<OrderListModel> getDriverOrderListByDriverId(String driverId, String page, String rows) {
+		// TODO Auto-generated method stub
+		List<OrderListModel> orderList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory()
+					.getCurrentSession();
+			tx = session.beginTransaction();
+			sql = "SELECT "+
+					"`order`.*,"+
+					"user.nickname,"+
+					"user.phoneNumber,"+
+					"user.personImageUrl,"+
+					"user.score "+
+				"FROM "+
+				"`order` LEFT JOIN user ON `order`.createManId = user.userId "+
+				"where `order`.driverId = '"+driverId+"' "+
 				"ORDER BY CREATETIME desc " + 
 				"LIMIT "+page+","+rows;
 					

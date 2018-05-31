@@ -79,15 +79,25 @@ public class UserDaoImpl implements UserDao {
 
 	//发送验证码
 	@Override
-	public JSONObject getVerificationCode(String phoneNumber) {
+	public JSONObject getVerificationCode(String phoneNumber, String type) {
 		// TODO Auto-generated method stub
+		if ("0".equals(type)) {
+			if(judgeUserByPhone(phoneNumber)) {
+				return JSONUtils.responseToJsonString("0", "", "电话号码已存在！", "");
+			}
+		}else if ("1".equals(type)) {
+			if(!judgeUserByPhone(phoneNumber)) {
+				return JSONUtils.responseToJsonString("0", "", "电话号码未注册！", "");
+			}
+		}
+		
 		return JSONUtils.responseToJsonString("1", "", "验证码发送成功！", "123456");
 	}
 
 	
 	//登陆
 	@Override
-	public JSONObject login(String phoneNumber, String password) {
+	public JSONObject login(String phoneNumber, String password, String plateform) {
 		
 		if(!judgeUserByPhone(phoneNumber)) {
 			return JSONUtils.responseToJsonString("0", "电话号码未注册！", "电话号码未注册！", "");
@@ -109,7 +119,10 @@ public class UserDaoImpl implements UserDao {
 			if (user == null) {
 				return JSONUtils.responseToJsonString("0", "密码错误！", "密码错误！", "");
 			}else {
-				setUserLoginTime(user);
+				//设置
+				user.setLoginPlate(plateform);
+				user.setLastLoginTime(new Date());
+				updateUserInfo(user);
 				return JSONUtils.responseToJsonString("1", "", "登陆成功！", user);
 			}
 
@@ -124,23 +137,35 @@ public class UserDaoImpl implements UserDao {
 		}		
 	}
 	
-	private void setUserLoginTime(User user) {
+	@Override
+	public JSONObject resetPassword(String phoneNumber, String password) {
 		// TODO Auto-generated method stub
-		user.setLastLoginTime(new Date());
+		if(!judgeUserByPhone(phoneNumber)) {
+			return JSONUtils.responseToJsonString("0", "电话号码未注册！", "电话号码未注册！", "");
+		}
 		Transaction tx = null;
+		User user = getUserByPhone(phoneNumber);
+		if (user == null) {
+			return JSONUtils.responseToJsonString("0", "系统异常！", "根据已存在电话号码查询异常！", "");
+		}
+		user.setPassword(password);
 		try {
-			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			Session session = MyHibernateSessionFactory.getSessionFactory()
+					.getCurrentSession();
 			tx = session.beginTransaction();
 			session.update(user);
 			tx.commit();
+			return JSONUtils.responseToJsonString("1", "", "修改密码成功！", "");
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "登陆失败！", "");
 		} finally {
 			if (tx != null) {
 				tx = null;
 			}
-		}
+		}		
 	}
 
 	@Override
@@ -171,26 +196,56 @@ public class UserDaoImpl implements UserDao {
 			}
 		}
 	}
+	
+	@Override
+	public User getUserByPhone(String phoneNumber) {
+		// TODO Auto-generated method stub
+		Transaction tx = null;
+		User user = null;
+		String hql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory()
+					.getCurrentSession();
+			tx = session.beginTransaction();
+			hql = "from User where phoneNumber = ?";
+			Query query = session.createQuery(hql);
+			query.setParameter(0, phoneNumber);
+			user = (User) query.uniqueResult();
+			
+			tx.commit();
+			return user;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}	
+	}
 
 	@Override
-	public void setUserStatus(String status, User user) {
+	public JSONObject updateUserInfo(User user) {
 		// TODO Auto-generated method stub
-		user.setStatus(status);
 		Transaction tx = null;
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.update(user);
 			tx.commit();
+			
+			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", user);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", user);
 		} finally {
 			if (tx != null) {
 				tx = null;
 			}
 		}
 	}
-	
 
 }

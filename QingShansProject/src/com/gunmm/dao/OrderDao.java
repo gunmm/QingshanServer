@@ -26,6 +26,10 @@ public interface OrderDao {
 	
 	//根据userid查询订单列表
 	public List<OrderListModel> getOrderListByUserId(String userId, String page, String rows);
+	
+	//车讯司机订单列表
+	public List<OrderListModel> getDriverOrderListByDriverId(String driverId, String page, String rows);
+
 
 
 
