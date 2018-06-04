@@ -15,8 +15,10 @@ public class User {
 	private String status; //状态       司机是否在拉货  1：在拉货 0：未拉货  2：下班
 	private String plateNumber; //车牌号
 	private String vehicleType; //车辆类型
+	private String carTypeName; //车辆类型
+
 	
-	private String driverCertificationStatus;   //司机认证0.未通过认证   1.认证中  2.认证通过
+	private String driverCertificationStatus;   //司机认证0.未认证   1.认证中  2.认证通过 9.认证未通过
 	private String driverLicenseImageUrl;   //驾驶证照片
 	private String driverVehicleImageUrl;   //行驶证照片
 	private String driverThirdImageUrl;   //备用照片
@@ -87,6 +89,14 @@ public class User {
 	}
 
 
+
+	public String getCarTypeName() {
+		return carTypeName;
+	}
+
+	public void setCarTypeName(String carTypeName) {
+		this.carTypeName = carTypeName;
+	}
 
 	public String getUserId() {
 		return userId;

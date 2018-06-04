@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.gunmm.utils.Constant;
 import com.gunmm.utils.FileUtil;
 import com.gunmm.utils.JSONUtils;
 
@@ -33,7 +32,7 @@ public class FileController {
 		String fileName = FileUtil.uploadBase64Img(imgStr, str+"/static/image"+
 		File.separator+formatStr+File.separator);
 		
-		String urlStr = Constant.SERVER_URL + "/static/image/" + formatStr +"/"+ fileName;
+		String urlStr = "static/image/" + formatStr +"/"+ fileName;
 		if (fileName == null) {
 			return JSONUtils.responseToJsonString("0", "", "上传失败！", "");
 		}else {

@@ -27,6 +27,8 @@ public class UserDaoImpl implements UserDao {
 
 		user.setCreateTime(new Date());
 		user.setScore(5.0);
+		user.setStatus("2");
+		user.setDriverCertificationStatus("0");
 		Transaction tx = null;
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();

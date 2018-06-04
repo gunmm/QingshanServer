@@ -29,6 +29,10 @@ public class OrderController {
 	static Order addOrder = null;
 	static String robOrderId = null;
 	static String cancelOrderId = null;
+	static String beginAppointOrderId = null;
+	static String updateStatusOrderId = null;
+
+
 
 
 	//添加订单
@@ -60,31 +64,29 @@ public class OrderController {
 	}
 	
 	//取消订单
-		@RequestMapping("/cancelOrder")
-		@ResponseBody
-		private JSONObject cancelOrder(HttpServletRequest request) {
-			JSONObject object = (JSONObject) request.getAttribute("body");
-			cancelOrderId = object.getString("orderId");
+	@RequestMapping("/cancelOrder")
+	@ResponseBody
+	private JSONObject cancelOrder(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		cancelOrderId = object.getString("orderId");
 
-			if(cancelOrderId == null) {
-				return JSONUtils.responseToJsonString("0", "参数错误，订单取消失败！", "取消订单失败！", "");
-			}
-			OrderDao orderDao = new OrderDaoImpl();
-			String result = orderDao.cancelOrderById(cancelOrderId);
-			if (result.equals("success")) {
-				Thread t = new Thread(new Runnable() {
-					public void run() {
-						PushDao pushDao = new PushDaoImpl();
-						pushDao.cancelSuccessPushForUser(cancelOrderId);
-					}
-				});
-				t.start();
-				return JSONUtils.responseToJsonString("1", "", "订单取消成功！", "");
-			} else {
-				return JSONUtils.responseToJsonString("0", result, "订单取消失败！", "");
-			}
-
+		if (cancelOrderId == null) {
+			return JSONUtils.responseToJsonString("0", "参数错误，取消订单失败！", "取消订单失败！", "");
 		}
+		OrderDao orderDao = new OrderDaoImpl();
+		JSONObject jsonObj = orderDao.cancelOrderById(cancelOrderId);
+		String result_code = jsonObj.getString("result_code");
+		if ("1".equals(result_code)) {
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					PushDao pushDao = new PushDaoImpl();
+					pushDao.cancelSuccessPushForUser(cancelOrderId);
+				}
+			});
+			t.start();
+		} 
+		return jsonObj;
+	}
 	
 	//抢单
 	@RequestMapping("/robOrder")
@@ -98,19 +100,18 @@ public class OrderController {
 			return JSONUtils.responseToJsonString("0", "未接收到数据，抢单失败！", "抢单失败！", "");
 		}
 		OrderDao orderDao = new OrderDaoImpl();
-		String result = orderDao.robOrder(driverId, robOrderId);
-		if (result.equals("success")) {
+		JSONObject jsonObj = orderDao.robOrder(driverId, robOrderId);
+		String result_code = jsonObj.getString("result_code");
+		if ("1".equals(result_code)) {
 			Thread t = new Thread(new Runnable() {
 				public void run() {
 					PushDao pushDao = new PushDaoImpl();
-					pushDao.RobSuccessPushForUser(robOrderId);
+					pushDao.updateOrderSuccessPushForUser(robOrderId);
 				}
 			});
 			t.start();
-			return JSONUtils.responseToJsonString("1", "", "抢单成功！", "");
-		} else {
-			return JSONUtils.responseToJsonString("0", result, "抢单失败！", "");
 		}
+		return jsonObj;
 
 	}
 	
@@ -162,6 +163,22 @@ public class OrderController {
 		}
 	}
 	
+	// 根据订单ID查寻包含部分司机信息的大订单信息
+		@RequestMapping("/getBigOrderInfo")
+		@ResponseBody
+		private JSONObject getBigOrderInfo(HttpServletRequest request) {
+			JSONObject object = (JSONObject) request.getAttribute("body");
+			String orderId = object.getString("orderId");
+
+			if(orderId == null) {
+				return JSONUtils.responseToJsonString("0", "参数错误！", "查询失败！", "");
+			}
+			
+			OrderDao orderDao = new OrderDaoImpl();
+			OrderListModel orderListModel = orderDao.getBigOrderInfo(orderId);
+			return JSONUtils.responseToJsonString("1", "", "查询成功！", orderListModel);
+		}
+	
 	// 订单列表
 	@RequestMapping("/getOrderList")
 	@ResponseBody
@@ -198,10 +215,86 @@ public class OrderController {
 		}
 
 		OrderDao orderDao = new OrderDaoImpl();
-		List<OrderListModel> orderList = orderDao.getOrderListByUserId(userId, page, rows);
+		List<OrderListModel> orderList = orderDao.getDriverOrderListByDriverId(userId, page, rows);
 		
 		
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);
+	}
+	
+	
+	//司机设置预约订单开始执行
+	@RequestMapping("/setAppointOrderBegin")
+	@ResponseBody
+	private JSONObject setAppointOrderBegin(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String driverId = object.getString("userId");
+		String orderId = object.getString("orderId");
+
+		if(driverId == null || orderId == null) {
+			return JSONUtils.responseToJsonString("0", "参数错误！", "执行失败！", "");
+		}
+		
+		OrderDao orderDao = new OrderDaoImpl();
+		beginAppointOrderId = orderId;
+		JSONObject jsonObj = orderDao.setAppointOrderBegin(driverId, orderId);
+		String result_code = jsonObj.getString("result_code");
+		if ("1".equals(result_code)) {
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					PushDao pushDao = new PushDaoImpl();
+					pushDao.beginAppointOrderPushForUser(beginAppointOrderId);
+				}
+			});
+			t.start();
+		} 
+		return jsonObj;
+	}
+	
+	
+	//司机更新订单完成状态
+	@RequestMapping("/updateOrderStatus")
+	@ResponseBody
+	private JSONObject updateOrderStatus(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String orderId = object.getString("orderId");
+		String status = object.getString("status");
+
+
+		if(orderId == null) {
+			return JSONUtils.responseToJsonString("0", "参数错误！", "操作失败！", "");
+		}
+		
+		OrderDao orderDao = new OrderDaoImpl();
+		
+		Order order = orderDao.getOrderById(orderId);
+		if(order == null) {
+			return JSONUtils.responseToJsonString("0", "未找到对应订单！", "操作失败！", "");
+		}
+		order.setStatus(status);
+		if ("3".equals(status)) {
+			UserDao userDao = new UserDaoImpl();
+			User driver = userDao.getUserById(order.getDriverId());
+			driver.setStatus("0");
+			userDao.updateUserInfo(driver);
+		}
+		
+		updateStatusOrderId = orderId;
+		JSONObject jsonObj = orderDao.updateOrderInfo(order);
+		String result_code = jsonObj.getString("result_code");
+		String reason = jsonObj.getString("reason");
+
+		if ("1".equals(result_code)) {
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					PushDao pushDao = new PushDaoImpl();
+					pushDao.updateOrderSuccessPushForUser(updateStatusOrderId);
+				}
+			});
+			t.start();
+			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
+		}else {
+			return JSONUtils.responseToJsonString("0", reason, "操作失败！", "");
+		}
 	}
 		
 		

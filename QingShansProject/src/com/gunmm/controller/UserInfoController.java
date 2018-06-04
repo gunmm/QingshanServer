@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.gunmm.dao.DictionaryDao;
 import com.gunmm.dao.UserDao;
+import com.gunmm.impl.DictionaryImpl;
 import com.gunmm.impl.UserDaoImpl;
 import com.gunmm.model.User;
 import com.gunmm.utils.JSONUtils;
@@ -27,8 +29,10 @@ public class UserInfoController {
 			return JSONUtils.responseToJsonString("0", "", "未接收到用户ID！", "");
 		}
 
+		DictionaryDao dictionaryDao = new DictionaryImpl();
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.getUserById(userId);
+		user.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", user.getVehicleType()));
 		return JSONUtils.responseToJsonString("1", "", "请求成功！", user);
 	}
 	
@@ -55,6 +59,12 @@ public class UserInfoController {
 		user.setDriverLicenseImageUrl(driverLicenseImageUrl);
 		user.setDriverVehicleImageUrl(driverVehicleImageUrl);
 		user.setDriverThirdImageUrl(driverThirdImageUrl);
+		if ("2".equals(user.getDriverCertificationStatus())) {
+			user.setDriverCertificationStatus("2");
+		}else {
+			user.setDriverCertificationStatus("1");
+		}
+
 		return userDao.updateUserInfo(user);
 	}
 	

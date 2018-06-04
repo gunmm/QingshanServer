@@ -9,6 +9,8 @@ public class OrderListModel {
 	private String orderId;
 	private String status; //订单状态 0：刚新建未被接单  1：已被接单  2：已发货  3：发货完成  9：订单取消
 	private String type; //订单类型   0：全部   1：实时  2：预约
+	private String appointStatus; //预约订单司机方的执行状态   0：未开始   1：已开始
+
 	private String createManId; //发布人id
 	private String driverId; //接单司机id
 
@@ -53,6 +55,19 @@ public class OrderListModel {
 	}
 
 	
+	
+	public String getAppointStatus() {
+		return appointStatus;
+	}
+
+
+
+	public void setAppointStatus(String appointStatus) {
+		this.appointStatus = appointStatus;
+	}
+
+
+
 	public String getCarTypeName() {
 		return carTypeName;
 	}

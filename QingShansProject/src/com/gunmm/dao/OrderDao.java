@@ -12,10 +12,10 @@ public interface OrderDao {
 	public JSONObject addOrder(Order order);
 	
 	//取消订单
-    public String cancelOrderById(String orderId);
+    public JSONObject cancelOrderById(String orderId);
 	
 	// 抢单
-	public String robOrder(String driverId, String orderId);
+	public JSONObject robOrder(String driverId, String orderId);
 	
 	//根据订单ID拿订单
 	public Order getOrderById(String orderId);
@@ -27,8 +27,18 @@ public interface OrderDao {
 	//根据userid查询订单列表
 	public List<OrderListModel> getOrderListByUserId(String userId, String page, String rows);
 	
-	//车讯司机订单列表
+	//查询司机订单列表
 	public List<OrderListModel> getDriverOrderListByDriverId(String driverId, String page, String rows);
+
+	
+	//司机设置预约订单开始执行
+	public JSONObject setAppointOrderBegin(String driverId, String orderId);
+	
+	//更新订单信息
+	public JSONObject updateOrderInfo(Order order);
+	
+	//查询带部分司机信息的订单信息
+	public OrderListModel getBigOrderInfo(String orderId);
 
 
 

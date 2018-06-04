@@ -76,7 +76,7 @@ public class PushDaoImpl implements PushDao {
 	}
 
 	@Override
-	public void RobSuccessPushForUser(String orderId) {
+	public void updateOrderSuccessPushForUser(String orderId) {
 		// TODO Auto-generated method stub
 		OrderDao orderDao = new OrderDaoImpl();
 		Order order = orderDao.getOrderById(orderId);
@@ -97,6 +97,7 @@ public class PushDaoImpl implements PushDao {
 			
 			Map<String, String> hashmap = new HashMap<String, String>();
 			hashmap.put("status", order.getStatus());
+			hashmap.put("appointStatus", order.getAppointStatus());
 			hashmap.put("type", order.getType());
 			hashmap.put("orderId", order.getOrderId());
 			hashmap.put("sendAddress", order.getSendAddress());
@@ -166,6 +167,58 @@ public class PushDaoImpl implements PushDao {
 			try {
 		        PushResult result = JPushUtils.getJPushClient().sendPush(
 						JPushUtils.buildPushPayLoad(person, "OrderBeCanceledNotify", "订单被取消", plateStr, hashmap));
+		        System.out.println("Got result - " + result);
+
+		    } catch (APIConnectionException e) {
+		        // Connection error, should retry later
+		        System.out.println("错误:"+e);
+		    } catch (APIRequestException e) {
+		        // Should review the error, and fix the request
+		        System.out.println("错误  状态："+e.getStatus()+ "    错误码："+e.getErrorCode()+"   错误信息："+e.getErrorMessage());
+		    }
+		}
+	}
+
+	//司机开始执行预约订单时推给下单人
+	@Override
+	public void beginAppointOrderPushForUser(String orderId) {
+		// TODO Auto-generated method stub
+		OrderDao orderDao = new OrderDaoImpl();
+		Order order = orderDao.getOrderById(orderId);
+		
+		if(order != null && order.getLinkPhone() != null) {
+			List<String> person = new ArrayList<>();
+			person.add(order.getLinkPhone());
+			
+			UserDao userDao = new UserDaoImpl();
+			User user = userDao.getUserById(order.getDriverId());
+			String plateStr = "";
+			if ("iOS".equals(user.getLoginPlate())) {
+				plateStr = "iOS";
+			}else {
+				plateStr = "android";
+			}
+			
+			Map<String, String> hashmap = new HashMap<String, String>();
+			hashmap.put("type", order.getType());
+			hashmap.put("orderId", order.getOrderId());
+			hashmap.put("sendAddress", order.getSendAddress());
+			hashmap.put("receiveAddress", order.getReceiveAddress());
+			hashmap.put("driverName", user.getNickname());
+			hashmap.put("driverPhone", user.getPhoneNumber());
+			hashmap.put("plateNumber", user.getPlateNumber());
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String createTime = formatter.format(order.getCreateTime());
+			hashmap.put("createTime", createTime);
+			
+			if (order.getAppointTime() != null) {
+				String appointTime = formatter.format(order.getAppointTime());
+				hashmap.put("appointTime", appointTime);
+			}
+
+			try {
+		        PushResult result = JPushUtils.getJPushClient().sendPush(
+						JPushUtils.buildPushPayLoad(person, "AppointOrderBeginNotify", "预约订单开始执行", plateStr, hashmap));
 		        System.out.println("Got result - " + result);
 
 		    } catch (APIConnectionException e) {
