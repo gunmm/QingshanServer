@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-6-7 10:37:45 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-6-12 0:03:52 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.OrderListModel" table="ORDERLISTMODEL">
         <id name="orderId" type="java.lang.String">
@@ -67,6 +67,12 @@
         </property>
         <property name="payStatus" type="java.lang.String">
             <column name="PAYSTATUS" />
+        </property>
+        <property name="commentContent" type="java.lang.String">
+            <column name="COMMENTCONTENT" />
+        </property>
+        <property name="commentStar" type="java.lang.Double">
+            <column name="COMMENTSTAR" />
         </property>
         <property name="siteComplaint" type="java.lang.String">
             <column name="SITECOMPLAINT" />

@@ -298,6 +298,43 @@ public class OrderController {
 			return JSONUtils.responseToJsonString("0", reason, "操作失败！", "");
 		}
 	}
+	
+	
+	//货主评价订单
+	@RequestMapping("/commentOrder")
+	@ResponseBody
+	private JSONObject commentOrder(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String orderId = object.getString("orderId");
+		String commentContent = object.getString("commentContent");
+		Double commentStar = object.getDouble("commentStar");
+
+
+
+		if(orderId == null) {
+			return JSONUtils.responseToJsonString("0", "参数错误！", "评价失败！", "");
+		}
 		
+		OrderDao orderDao = new OrderDaoImpl();
+		
+		Order order = orderDao.getOrderById(orderId);
+		if(order == null) {
+			return JSONUtils.responseToJsonString("0", "未找到对应订单！", "评价失败！", "");
+		}
+		order.setCommentContent(commentContent);
+		order.setCommentStar(commentStar);
+		JSONObject jsonObj = orderDao.updateOrderInfo(order);
+		
+		String result_code = jsonObj.getString("result_code");
+		String reason = jsonObj.getString("reason");
+
+		if ("1".equals(result_code)) {
+			return JSONUtils.responseToJsonString("1", "", "评价成功！", "");
+		}else {
+			return JSONUtils.responseToJsonString("0", reason, "评价失败！", "");
+		}
+		
+		
+	}	
 		
 }

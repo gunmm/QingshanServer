@@ -39,6 +39,8 @@ public class OrderListModel {
 	private String payStatus; //支付状态   0:未支付   1:已支付
 	
 
+	private String commentContent;  //评价内容
+	private Double commentStar;  //评价星级
 	
 
 	
@@ -235,6 +237,24 @@ public class OrderListModel {
 
 	public void setPayStatus(String payStatus) {
 		this.payStatus = payStatus;
+	}
+	
+	
+
+	public String getCommentContent() {
+		return commentContent;
+	}
+
+	public void setCommentContent(String commentContent) {
+		this.commentContent = commentContent;
+	}
+
+	public Double getCommentStar() {
+		return commentStar;
+	}
+
+	public void setCommentStar(Double commentStar) {
+		this.commentStar = commentStar;
 	}
 
 	public String getSiteComplaint() {

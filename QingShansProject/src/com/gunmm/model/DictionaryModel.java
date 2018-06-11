@@ -7,6 +7,14 @@ public class DictionaryModel {
 	private String keyText;
 	private String valueText;
 	private String description;
+	
+	private Double startPrice; //起步价
+	private Double unitPrice;  //单价
+	private Double startDistance;  //起步距离
+
+
+
+	
 
 	public DictionaryModel() {
 
@@ -57,6 +65,32 @@ public class DictionaryModel {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public Double getStartPrice() {
+		return startPrice;
+	}
+
+	public void setStartPrice(Double startPrice) {
+		this.startPrice = startPrice;
+	}
+
+	public Double getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(Double unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public Double getStartDistance() {
+		return startDistance;
+	}
+
+	public void setStartDistance(Double startDistance) {
+		this.startDistance = startDistance;
+	}
+	
+	
 
 	
 
