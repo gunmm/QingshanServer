@@ -19,6 +19,7 @@ public class OrderListModel {
 	
 	private String carType; //车辆类型
 	private String carTypeName; //车辆类型
+
 	private String note; //备注
 
 
@@ -31,14 +32,28 @@ public class OrderListModel {
 	private Double receiveLatitude = 0.0; 
 	private Double receiveLongitude = 0.0; 
 	
+	private Double price = 0.0; //费用
+	private Double distance = 0.0; //距离
+
+	private String payType; //支付方式   1:支付宝支付    2:微信支付   3:现金支付
+	private String payStatus; //支付状态   0:未支付   1:已支付
+	
+
+	
+
+	
 	private String siteComplaint;  //站点投诉
 	private String driverComplaint; //司机投诉
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime; // 创建时间
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date updateTime; //更新时间  
 
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date appointTime; //预约时间  
+	
 	
 	
 	private String phoneNumber; //联系电话   注册电话
@@ -53,30 +68,6 @@ public class OrderListModel {
 	public OrderListModel() {
 
 	}
-
-	
-	
-	public String getAppointStatus() {
-		return appointStatus;
-	}
-
-
-
-	public void setAppointStatus(String appointStatus) {
-		this.appointStatus = appointStatus;
-	}
-
-
-
-	public String getCarTypeName() {
-		return carTypeName;
-	}
-
-
-	public void setCarTypeName(String carTypeName) {
-		this.carTypeName = carTypeName;
-	}
-
 
 	public String getOrderId() {
 		return orderId;
@@ -100,6 +91,14 @@ public class OrderListModel {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getAppointStatus() {
+		return appointStatus;
+	}
+
+	public void setAppointStatus(String appointStatus) {
+		this.appointStatus = appointStatus;
 	}
 
 	public String getCreateManId() {
@@ -140,6 +139,14 @@ public class OrderListModel {
 
 	public void setCarType(String carType) {
 		this.carType = carType;
+	}
+
+	public String getCarTypeName() {
+		return carTypeName;
+	}
+
+	public void setCarTypeName(String carTypeName) {
+		this.carTypeName = carTypeName;
 	}
 
 	public String getNote() {
@@ -198,6 +205,38 @@ public class OrderListModel {
 		this.receiveLongitude = receiveLongitude;
 	}
 
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public Double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(Double distance) {
+		this.distance = distance;
+	}
+
+	public String getPayType() {
+		return payType;
+	}
+
+	public void setPayType(String payType) {
+		this.payType = payType;
+	}
+
+	public String getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(String payStatus) {
+		this.payStatus = payStatus;
+	}
+
 	public String getSiteComplaint() {
 		return siteComplaint;
 	}
@@ -220,6 +259,14 @@ public class OrderListModel {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	public Date getAppointTime() {

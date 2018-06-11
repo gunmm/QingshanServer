@@ -28,7 +28,7 @@ public interface OrderDao {
 	public List<OrderListModel> getOrderListByUserId(String userId, String page, String rows);
 	
 	//查询司机订单列表
-	public List<OrderListModel> getDriverOrderListByDriverId(String driverId, String page, String rows);
+	public List<OrderListModel> getDriverOrderListByDriverId(String driverId, String page, String rows, String condition);
 
 	
 	//司机设置预约订单开始执行

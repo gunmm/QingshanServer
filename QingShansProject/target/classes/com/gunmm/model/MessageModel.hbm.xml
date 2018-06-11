@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-6-9 21:45:41 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.model.MessageModel" table="MESSAGEMODEL">
+        <id name="messageId" type="java.lang.String">
+            <column name="MESSAGEID" />
+            <generator class="assigned" />
+        </id>
+        <property name="orderId" type="java.lang.String">
+            <column name="ORDERID" />
+        </property>
+        <property name="messageType" type="java.lang.String">
+            <column name="MESSAGETYPE" />
+        </property>
+        <property name="receiveUserId" type="java.lang.String">
+            <column name="RECEIVEUSERID" />
+        </property>
+        <property name="alias" type="java.lang.String">
+            <column name="ALIAS" />
+        </property>
+        <property name="orderStatus" type="java.lang.String">
+            <column name="ORDERSTATUS" />
+        </property>
+        <property name="orderType" type="java.lang.String">
+            <column name="ORDERTYPE" />
+        </property>
+        <property name="orderAppointStatus" type="java.lang.String">
+            <column name="ORDERAPPOINTSTATUS" />
+        </property>
+        <property name="secondTitle" type="java.lang.String">
+            <column name="SECONDTITLE" />
+        </property>
+        <property name="isRead" type="java.lang.String">
+            <column name="ISREAD" />
+        </property>
+        <property name="createTime" type="java.util.Date">
+            <column name="CREATETIME" />
+        </property>
+    </class>
+</hibernate-mapping>

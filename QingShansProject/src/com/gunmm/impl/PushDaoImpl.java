@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import com.gunmm.dao.MessageDao;
 import com.gunmm.dao.OrderDao;
 import com.gunmm.dao.PushDao;
 import com.gunmm.dao.UserDao;
+import com.gunmm.model.MessageModel;
 import com.gunmm.model.Order;
 import com.gunmm.model.User;
 import com.gunmm.utils.JPushUtils;
@@ -32,6 +35,10 @@ public class PushDaoImpl implements PushDao {
 		hashmap.put("sendAddress", order.getSendAddress());
 		hashmap.put("receiveAddress", order.getReceiveAddress());
 		hashmap.put("orderId", order.getOrderId());
+		hashmap.put("price", order.getPrice().toString());
+		hashmap.put("distance", order.getDistance().toString());
+
+
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateString = formatter.format(order.getCreateTime());
 		hashmap.put("createTime", dateString);
@@ -41,38 +48,58 @@ public class PushDaoImpl implements PushDao {
 		}
 		
 
-
-
-		//司机列表
-		List<String> personIOS = new ArrayList<>();
-		List<String> personAndroid = new ArrayList<>();
-
 		OrderDao orderDao = new OrderDaoImpl();
 		List<User> userList = orderDao.queryDriverForOrder(order);
 		for (User user : userList) {
+			MessageModel messageModel = new MessageModel();
+			messageModel.setMessageId(UUID.randomUUID().toString());
+			messageModel.setMessageType("newOrderNotify");
+			messageModel.setReceiveUserId(user.getUserId());
+			messageModel.setAlias(user.getPhoneNumber());
+			messageModel.setOrderId(order.getOrderId());
+			messageModel.setOrderStatus(order.getStatus());
+			messageModel.setOrderType(order.getType());
+			messageModel.setOrderAppointStatus(order.getAppointStatus());
+			
+			MessageDao messageDao = new MessageImpl();
+			messageDao.addMessage(messageModel);
+			
+			hashmap.put("messageId", messageModel.getMessageId());
+
 			if ("iOS".equals(user.getLoginPlate())) {
-				personIOS.add(user.getPhoneNumber());
+				List<String> person = new ArrayList<>();
+				person.add(user.getPhoneNumber());
+				try {
+					PushResult resultIOS = JPushUtils.getJPushClient()
+							.sendPush(JPushUtils.buildPushPayLoad(person, "newOrderNotify", "有新的订单", "iOS", hashmap));
+					System.out.println("Got result iOS- " + resultIOS);
+
+			    } catch (APIConnectionException e) {
+			        // Connection error, should retry later
+			        System.out.println("错误:"+e);
+			    } catch (APIRequestException e) {
+			        // Should review the error, and fix the request
+			        System.out.println("错误  状态："+e.getStatus()+ "    错误码："+e.getErrorCode()+"   错误信息："+e.getErrorMessage());
+			    }
 			}else {
-				personAndroid.add(user.getPhoneNumber());
+				List<String> person = new ArrayList<>();
+				person.add(user.getPhoneNumber());
+				try {
+					PushResult resultAndroid = JPushUtils.getJPushClient().sendPush(
+							JPushUtils.buildPushPayLoad(person, "newOrderNotify", "有新的订单", "android", hashmap));
+			        System.out.println("Got result android- " + resultAndroid);
+
+			    } catch (APIConnectionException e) {
+			        // Connection error, should retry later
+			        System.out.println("错误:"+e);
+			    } catch (APIRequestException e) {
+			        // Should review the error, and fix the request
+			        System.out.println("错误  状态："+e.getStatus()+ "    错误码："+e.getErrorCode()+"   错误信息："+e.getErrorMessage());
+			    }
 			}
 		}
+		
 	
-		try {
-	        PushResult resultIOS = JPushUtils.getJPushClient().sendPush(
-					JPushUtils.buildPushPayLoad(personIOS, "newOrderNotify", "有新的订单", "iOS", hashmap));
-	        System.out.println("Got result iOS- " + resultIOS);
-	        
-	        PushResult resultAndroid = JPushUtils.getJPushClient().sendPush(
-					JPushUtils.buildPushPayLoad(personAndroid, "newOrderNotify", "有新的订单", "android", hashmap));
-	        System.out.println("Got result android- " + resultAndroid);
-
-	    } catch (APIConnectionException e) {
-	        // Connection error, should retry later
-	        System.out.println("错误:"+e);
-	    } catch (APIRequestException e) {
-	        // Should review the error, and fix the request
-	        System.out.println("错误  状态："+e.getStatus()+ "    错误码："+e.getErrorCode()+"   错误信息："+e.getErrorMessage());
-	    }
 	}
 
 	@Override
@@ -95,6 +122,18 @@ public class PushDaoImpl implements PushDao {
 
 			}
 			
+			MessageModel messageModel = new MessageModel();
+			messageModel.setMessageId(UUID.randomUUID().toString());
+			messageModel.setMessageType("OrderBeReceivedNotify");
+			messageModel.setReceiveUserId(order.getCreateManId());
+			messageModel.setAlias(order.getLinkPhone());
+			messageModel.setOrderId(order.getOrderId());
+			messageModel.setOrderStatus(order.getStatus());
+			messageModel.setOrderType(order.getType());
+			messageModel.setOrderAppointStatus(order.getAppointStatus());
+			MessageDao messageDao = new MessageImpl();
+			messageDao.addMessage(messageModel);
+			
 			Map<String, String> hashmap = new HashMap<String, String>();
 			hashmap.put("status", order.getStatus());
 			hashmap.put("appointStatus", order.getAppointStatus());
@@ -113,6 +152,8 @@ public class PushDaoImpl implements PushDao {
 				String appointTime = formatter.format(order.getAppointTime());
 				hashmap.put("appointTime", appointTime);
 			}
+			hashmap.put("messageId", messageModel.getMessageId());
+
 
 			try {
 		        PushResult result = JPushUtils.getJPushClient().sendPush(
@@ -149,13 +190,26 @@ public class PushDaoImpl implements PushDao {
 
 			}
 
+			MessageModel messageModel = new MessageModel();
+			messageModel.setMessageId(UUID.randomUUID().toString());
+			messageModel.setMessageType("OrderBeCanceledNotify");
+			messageModel.setReceiveUserId(order.getDriverId());
+			messageModel.setAlias(user.getPhoneNumber());
+			messageModel.setOrderId(order.getOrderId());
+			messageModel.setOrderStatus(order.getStatus());
+			messageModel.setOrderType(order.getType());
+			messageModel.setOrderAppointStatus(order.getAppointStatus());
+			
+			MessageDao messageDao = new MessageImpl();
+			messageDao.addMessage(messageModel);
+			
 			Map<String, String> hashmap = new HashMap<String, String>();
 			hashmap.put("status", order.getStatus());
 			hashmap.put("orderId", order.getOrderId());
 			hashmap.put("type", order.getType());
 			hashmap.put("sendAddress", order.getSendAddress());
 			hashmap.put("receiveAddress", order.getReceiveAddress());
-			hashmap.put("linkMan", order.getLinkPhone());
+			hashmap.put("linkMan", order.getLinkMan());
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String dateString = formatter.format(order.getCreateTime());
 			hashmap.put("createTime", dateString);
@@ -163,6 +217,7 @@ public class PushDaoImpl implements PushDao {
 				String appointTime = formatter.format(order.getAppointTime());
 				hashmap.put("appointTime", appointTime);
 			}
+			hashmap.put("messageId", messageModel.getMessageId());
 			
 			try {
 		        PushResult result = JPushUtils.getJPushClient().sendPush(
@@ -199,6 +254,19 @@ public class PushDaoImpl implements PushDao {
 				plateStr = "android";
 			}
 			
+			MessageModel messageModel = new MessageModel();
+			messageModel.setMessageId(UUID.randomUUID().toString());
+			messageModel.setMessageType("AppointOrderBeginNotify");
+			messageModel.setReceiveUserId(order.getCreateManId());
+			messageModel.setAlias(order.getLinkPhone());
+			messageModel.setOrderId(order.getOrderId());
+			messageModel.setOrderStatus(order.getStatus());
+			messageModel.setOrderType(order.getType());
+			messageModel.setOrderAppointStatus(order.getAppointStatus());
+			
+			MessageDao messageDao = new MessageImpl();
+			messageDao.addMessage(messageModel);
+			
 			Map<String, String> hashmap = new HashMap<String, String>();
 			hashmap.put("type", order.getType());
 			hashmap.put("orderId", order.getOrderId());
@@ -215,6 +283,8 @@ public class PushDaoImpl implements PushDao {
 				String appointTime = formatter.format(order.getAppointTime());
 				hashmap.put("appointTime", appointTime);
 			}
+			hashmap.put("messageId", messageModel.getMessageId());
+
 
 			try {
 		        PushResult result = JPushUtils.getJPushClient().sendPush(

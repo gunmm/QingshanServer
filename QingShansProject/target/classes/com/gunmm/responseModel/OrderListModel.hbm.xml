@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-6-3 14:23:25 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-6-7 10:37:45 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.OrderListModel" table="ORDERLISTMODEL">
         <id name="orderId" type="java.lang.String">
@@ -56,6 +56,18 @@
         <property name="receiveLongitude" type="java.lang.Double">
             <column name="RECEIVELONGITUDE" />
         </property>
+        <property name="price" type="java.lang.Double">
+            <column name="PRICE" />
+        </property>
+        <property name="distance" type="java.lang.Double">
+            <column name="DISTANCE" />
+        </property>
+        <property name="payType" type="java.lang.String">
+            <column name="PAYTYPE" />
+        </property>
+        <property name="payStatus" type="java.lang.String">
+            <column name="PAYSTATUS" />
+        </property>
         <property name="siteComplaint" type="java.lang.String">
             <column name="SITECOMPLAINT" />
         </property>
@@ -64,6 +76,9 @@
         </property>
         <property name="createTime" type="java.util.Date">
             <column name="CREATETIME" />
+        </property>
+        <property name="updateTime" type="java.util.Date">
+            <column name="UPDATETIME" />
         </property>
         <property name="appointTime" type="java.util.Date">
             <column name="APPOINTTIME" />

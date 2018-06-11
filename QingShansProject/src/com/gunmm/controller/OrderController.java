@@ -206,6 +206,8 @@ public class OrderController {
 	private JSONObject getDriverOrderList(HttpServletRequest request) {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 		String userId = object.getString("userId");
+		String condition = object.getString("condition");
+
 		String rows = object.getString("rows");
 
 		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
@@ -215,7 +217,7 @@ public class OrderController {
 		}
 
 		OrderDao orderDao = new OrderDaoImpl();
-		List<OrderListModel> orderList = orderDao.getDriverOrderListByDriverId(userId, page, rows);
+		List<OrderListModel> orderList = orderDao.getDriverOrderListByDriverId(userId, page, rows, condition);
 		
 		
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);

@@ -23,7 +23,8 @@
 		<mapping resource="com/gunmm/model/User.hbm.xml" />
 		<mapping resource="com/gunmm/model/Order.hbm.xml" />
 		<mapping resource="com/gunmm/model/DictionaryModel.hbm.xml" />
-		
+	    <mapping resource="com/gunmm/model/MessageModel.hbm.xml" />
+				
 		<mapping resource="com/gunmm/responseModel/OrderListModel.hbm.xml" />
 		
 		

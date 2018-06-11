@@ -25,6 +25,7 @@ public class OrderDaoImpl implements OrderDao {
 		// TODO Auto-generated method stub
 		order.setOrderId(UUID.randomUUID().toString());
 		order.setCreateTime(new Date());
+		order.setUpdateTime(new Date());
 		order.setStatus("0");
 		Transaction tx = null;
 		try {
@@ -91,7 +92,7 @@ public class OrderDaoImpl implements OrderDao {
 			return JSONUtils.responseToJsonString("0", "", "对应订单不存在！", "");
 		} else if (!order.getStatus().equals("0")) {
 			if (order.getStatus().equals("9")) {
-				return JSONUtils.responseToJsonString("0", "订单已被取消！", "订单已被取消！", "");
+				return JSONUtils.responseToJsonString("0", "", "订单已被取消！", "");
 			}
 			return JSONUtils.responseToJsonString("0", "", "订单已被抢走！", "");
 		} else {
@@ -102,6 +103,7 @@ public class OrderDaoImpl implements OrderDao {
 			}
 			order.setStatus("1");
 			order.setDriverId(driverId);
+			order.setUpdateTime(new Date());
 			if ("2".equals(order.getType())) {
 				order.setAppointStatus("0");
 			}
@@ -161,6 +163,7 @@ public class OrderDaoImpl implements OrderDao {
 			return JSONUtils.responseToJsonString("0", "对应订单不存在！", "取消订单失败！", "");
 		}  else {
 			order.setStatus("9");
+			order.setUpdateTime(new Date());
 			JSONObject jsonObj = updateOrderInfo(order);
 			String result_code = jsonObj.getString("result_code");
 			String reason = jsonObj.getString("reason");
@@ -204,7 +207,7 @@ public class OrderDaoImpl implements OrderDao {
 				"FROM "+
 				"`order` LEFT JOIN user ON `order`.driverId = user.userId "+
 				"where `order`.createManId = '"+userId+"' "+
-				"ORDER BY CREATETIME desc " + 
+				"ORDER BY updateTime desc " + 
 				"LIMIT "+page+","+rows;
 					
 			SQLQuery query = session.createSQLQuery(sql);
@@ -229,7 +232,7 @@ public class OrderDaoImpl implements OrderDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<OrderListModel> getDriverOrderListByDriverId(String driverId, String page, String rows) {
+	public List<OrderListModel> getDriverOrderListByDriverId(String driverId, String page, String rows, String condition) {
 		// TODO Auto-generated method stub
 		List<OrderListModel> orderList = null;
 		Transaction tx = null;
@@ -250,8 +253,8 @@ public class OrderDaoImpl implements OrderDao {
 					"(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "+
 				"FROM "+
 				"`order` LEFT JOIN user ON `order`.driverId = user.userId "+
-				"where `order`.driverId = '"+driverId+"' "+
-				"ORDER BY CREATETIME desc " + 
+				"where `order`.driverId = '"+driverId+"'"+condition+
+				"ORDER BY updateTime desc " + 
 				"LIMIT "+page+","+rows;
 					
 			SQLQuery query = session.createSQLQuery(sql);
@@ -269,8 +272,7 @@ public class OrderDaoImpl implements OrderDao {
 		} finally {
 			if (tx != null) {
 				tx = null;
-			}
-			
+			}		
 		}
 	}
 
@@ -285,6 +287,7 @@ public class OrderDaoImpl implements OrderDao {
 			return JSONUtils.responseToJsonString("0", "对应订单或司机不存在！", "执行失败！", "");
 		} else {
 			order.setAppointStatus("1");
+			order.setUpdateTime(new Date());
 			JSONObject jsonObj = updateOrderInfo(order);
 			String result_code = jsonObj.getString("result_code");
 			String reason = jsonObj.getString("reason");
@@ -301,6 +304,7 @@ public class OrderDaoImpl implements OrderDao {
 	@Override
 	public JSONObject updateOrderInfo(Order order) {
 		// TODO Auto-generated method stub
+		order.setUpdateTime(new Date());
 		Transaction tx = null;
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();

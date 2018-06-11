@@ -25,9 +25,6 @@ public class User {
 	
 	private String loginPlate; //登陆平台
 
-
-
-
 	
 	private String address; //站点地址
 	private Double addressLatitude = 0.0; //纬度   39.12
