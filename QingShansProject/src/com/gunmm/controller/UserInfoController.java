@@ -32,7 +32,7 @@ public class UserInfoController {
 		DictionaryDao dictionaryDao = new DictionaryImpl();
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.getUserById(userId);
-		user.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", user.getVehicleType()));
+//		user.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", user.getVehicleType()));
 		return JSONUtils.responseToJsonString("1", "", "请求成功！", user);
 	}
 	
@@ -54,16 +54,16 @@ public class UserInfoController {
 		User user = userDao.getUserById(userId);
 		user.setPersonImageUrl(personImageUrl);
 		user.setNickname(nickname);
-		user.setPlateNumber(plateNumber);
-		user.setVehicleType(vehicleType);
-		user.setDriverLicenseImageUrl(driverLicenseImageUrl);
-		user.setDriverVehicleImageUrl(driverVehicleImageUrl);
-		user.setDriverThirdImageUrl(driverThirdImageUrl);
-		if ("2".equals(user.getDriverCertificationStatus())) {
-			user.setDriverCertificationStatus("2");
-		}else {
-			user.setDriverCertificationStatus("1");
-		}
+//		user.setPlateNumber(plateNumber);
+//		user.setVehicleType(vehicleType);
+//		user.setDriverLicenseImageUrl(driverLicenseImageUrl);
+//		user.setDriverVehicleImageUrl(driverVehicleImageUrl);
+//		user.setDriverThirdImageUrl(driverThirdImageUrl);
+//		if ("2".equals(user.getDriverCertificationStatus())) {
+//			user.setDriverCertificationStatus("2");
+//		}else {
+//			user.setDriverCertificationStatus("1");
+//		}
 
 		return userDao.updateUserInfo(user);
 	}

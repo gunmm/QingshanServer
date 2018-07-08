@@ -26,9 +26,10 @@ public class UserDaoImpl implements UserDao {
 		user.setUserId(UUID.randomUUID().toString()); 
 
 		user.setCreateTime(new Date());
+		user.setUpdateTime(new Date());
 		user.setScore(5.0);
 		user.setStatus("2");
-		user.setDriverCertificationStatus("0");
+//		user.setDriverCertificationStatus("0");
 		Transaction tx = null;
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
@@ -124,7 +125,9 @@ public class UserDaoImpl implements UserDao {
 				//设置
 				user.setLoginPlate(plateform);
 				user.setLastLoginTime(new Date());
+				user.setAccessToken(UUID.randomUUID().toString());
 				updateUserInfo(user);
+				user.setPassword(null);
 				return JSONUtils.responseToJsonString("1", "", "登陆成功！", user);
 			}
 
@@ -151,6 +154,7 @@ public class UserDaoImpl implements UserDao {
 			return JSONUtils.responseToJsonString("0", "系统异常！", "根据已存在电话号码查询异常！", "");
 		}
 		user.setPassword(password);
+		user.setUpdateTime(new Date());
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory()
 					.getCurrentSession();
@@ -231,6 +235,7 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public JSONObject updateUserInfo(User user) {
 		// TODO Auto-generated method stub
+		user.setUpdateTime(new Date());
 		Transaction tx = null;
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();

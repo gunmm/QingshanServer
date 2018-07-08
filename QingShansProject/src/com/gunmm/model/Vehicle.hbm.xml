@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-7-8 9:18:08 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.model.Vehicle" table="VEHICLE">
+        <id name="vehicleId" type="java.lang.String">
+            <column name="VEHICLEID" />
+            <generator class="assigned" />
+        </id>
+        <property name="plateNumber" type="java.lang.String">
+            <column name="PLATENUMBER" />
+        </property>
+        <property name="vehicleType" type="java.lang.String">
+            <column name="VEHICLETYPE" />
+        </property>
+        <property name="drivingCardNumber" type="java.lang.String">
+            <column name="DRIVINGCARDNUMBER" />
+        </property>
+        <property name="vehicleRegistrationNumber" type="java.lang.String">
+            <column name="VEHICLEREGISTRATIONNUMBER" />
+        </property>
+        <property name="operationCertificateNumber" type="java.lang.String">
+            <column name="OPERATIONCERTIFICATENUMBER" />
+        </property>
+        <property name="insuranceNumber" type="java.lang.String">
+            <column name="INSURANCENUMBER" />
+        </property>
+        <property name="vehicleIdCardNumber" type="java.lang.String">
+            <column name="VEHICLEIDCARDNUMBER" />
+        </property>
+        <property name="businessLicenseNumber" type="java.lang.String">
+            <column name="BUSINESSLICENSENUMBER" />
+        </property>
+        <property name="vehicleBrand" type="java.lang.String">
+            <column name="VEHICLEBRAND" />
+        </property>
+        <property name="vehicleModel" type="java.lang.String">
+            <column name="VEHICLEMODEL" />
+        </property>
+        <property name="vehiclePhoto" type="java.lang.String">
+            <column name="VEHICLEPHOTO" />
+        </property>
+        <property name="loadWeight" type="java.lang.String">
+            <column name="LOADWEIGHT" />
+        </property>
+        <property name="vehicleMakeDate" type="java.lang.String">
+            <column name="VEHICLEMAKEDATE" />
+        </property>
+        <property name="createTime" type="java.util.Date">
+            <column name="CREATETIME" />
+        </property>
+        <property name="updateTime" type="java.util.Date">
+            <column name="UPDATETIME" />
+        </property>
+    </class>
+</hibernate-mapping>

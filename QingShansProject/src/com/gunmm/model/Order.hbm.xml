@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-6-11 23:36:36 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-7-8 9:18:08 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.model.Order" table="`ORDER`">
         <id name="orderId" type="java.lang.String">
@@ -32,7 +32,9 @@
         <property name="carType" type="java.lang.String">
             <column name="CARTYPE" />
         </property>
-       
+        <property name="carTypeName" type="java.lang.String">
+            <column name="CARTYPENAME" />
+        </property>
         <property name="note" type="java.lang.String">
             <column name="NOTE" />
         </property>

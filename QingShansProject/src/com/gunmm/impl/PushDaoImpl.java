@@ -143,7 +143,7 @@ public class PushDaoImpl implements PushDao {
 			hashmap.put("receiveAddress", order.getReceiveAddress());
 			hashmap.put("driverName", user.getNickname());
 			hashmap.put("driverPhone", user.getPhoneNumber());
-			hashmap.put("plateNumber", user.getPlateNumber());
+//			hashmap.put("plateNumber", user.getPlateNumber());
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String createTime = formatter.format(order.getCreateTime());
 			hashmap.put("createTime", createTime);
@@ -274,7 +274,7 @@ public class PushDaoImpl implements PushDao {
 			hashmap.put("receiveAddress", order.getReceiveAddress());
 			hashmap.put("driverName", user.getNickname());
 			hashmap.put("driverPhone", user.getPhoneNumber());
-			hashmap.put("plateNumber", user.getPlateNumber());
+//			hashmap.put("plateNumber", user.getPlateNumber());
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String createTime = formatter.format(order.getCreateTime());
 			hashmap.put("createTime", createTime);
