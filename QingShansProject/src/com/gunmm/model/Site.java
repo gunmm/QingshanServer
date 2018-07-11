@@ -16,6 +16,7 @@ public class Site {
 	private String businessLicensePhoto;    // 营业执照照片
 	private String lawsManName;        // 法人姓名
 	private String lawsManIdCardNumber;   // 法人身份证号
+	private String lawsManPhone;   // 法人电话
 	private String lawsManIdCardFront;     // 法人身份证正面照片 
 	private String lawsManIdCardBehind;   // 法人身份证反面照片 
 	private String leaseContractPhoto;   // 场地租赁合同或土地证照片
@@ -136,6 +137,16 @@ public class Site {
 	}
 
 
+	public String getLawsManPhone() {
+		return lawsManPhone;
+	}
+
+
+	public void setLawsManPhone(String lawsManPhone) {
+		this.lawsManPhone = lawsManPhone;
+	}
+
+
 	public String getLawsManIdCardFront() {
 		return lawsManIdCardFront;
 	}
@@ -224,7 +235,8 @@ public class Site {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-	
+
+
 	
 
 }

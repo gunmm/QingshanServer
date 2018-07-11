@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -35,7 +36,7 @@ public class FileUtil {
 				String dirPath = savePath;
 				SimpleDateFormat formatter = new SimpleDateFormat("HH-mm-ss");
 				String formatStr = formatter.format(new Date());
-				String fileName = formatStr+".jpg";
+				String fileName = formatStr+UUID.randomUUID().toString()+".jpg";
 				File dir = new File(dirPath);
 				if (!dir.exists() && !dir.isDirectory()) {
 					dir.mkdirs();

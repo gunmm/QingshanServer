@@ -37,7 +37,6 @@ public class FileController {
 			return JSONUtils.responseToJsonString("0", "", "上传失败！", "");
 		}else {
 			return JSONUtils.responseToJsonString("1", "", "上传成功！", urlStr);
-
 		}
 		
 	}
