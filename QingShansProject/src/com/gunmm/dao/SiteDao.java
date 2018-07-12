@@ -8,7 +8,7 @@ import com.gunmm.model.Site;
 public interface SiteDao {
 
 	// 新建站点
-	public JSONObject addOrder(Site site);
+	public JSONObject addSite(Site site);
 	
 	//删除站点
 	public JSONObject deleteSiteById(String siteId);

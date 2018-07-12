@@ -19,8 +19,14 @@ public class SiteImpl implements SiteDao {
 
 	// 新建站点
 	@Override
-	public JSONObject addOrder(Site site) {
+	public JSONObject addSite(Site site) {
 		// TODO Auto-generated method stub
+		if(judgeZhizhaoByNumber(site.getBusinessLicenseNumber())) {
+			return JSONUtils.responseToJsonString("0", "营业执照已被注册！", "营业执照已被注册！添加失败！", "");
+		}
+		if(judgeIdCardByNumber(site.getLawsManIdCardNumber())) {
+			return JSONUtils.responseToJsonString("0", "身份证已被注册！", "身份证已被注册！添加失败！", "");
+		}
 		site.setSiteId(UUID.randomUUID().toString());
 		site.setCreateTime(new Date());
 		site.setUpdateTime(new Date());
@@ -46,6 +52,72 @@ public class SiteImpl implements SiteDao {
 			}
 		}
 	}
+	
+	
+	//查重营业执照
+	private boolean judgeZhizhaoByNumber(String zhiZhaoNumber) {
+		Transaction tx = null;
+		String backZhiZhaoNumber = null;
+		String hql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory()
+					.getCurrentSession();
+			tx = session.beginTransaction();
+			hql = "select businessLicenseNumber from Site where businessLicenseNumber = ?";
+			Query query = session.createQuery(hql);
+			query.setParameter(0, zhiZhaoNumber);
+			backZhiZhaoNumber = (String) query.uniqueResult();
+			
+			tx.commit();
+			if (backZhiZhaoNumber == null || "".equals(backZhiZhaoNumber)) {
+				return false;
+			}else {
+				return true;
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return true;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+	
+	//查重法人身份证号
+	private boolean judgeIdCardByNumber(String idCardNumber) {
+		Transaction tx = null;
+		String backIdCardNumber = null;
+		String hql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory()
+					.getCurrentSession();
+			tx = session.beginTransaction();
+			hql = "select lawsManIdCardNumber from Site where lawsManIdCardNumber = ?";
+			Query query = session.createQuery(hql);
+			query.setParameter(0, idCardNumber);
+			backIdCardNumber = (String) query.uniqueResult();
+			
+			tx.commit();
+			if (backIdCardNumber == null || "".equals(backIdCardNumber)) {
+				return false;
+			}else {
+				return true;
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return true;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+	
 
 	// 删除站点
 	@Override
@@ -86,7 +158,12 @@ public class SiteImpl implements SiteDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "SELECT * " + "FROM site " + "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
+			sql = "SELECT site.*," 
+				 +"(select name from City where id = site.siteProvince and deep = 1),"
+				 +"(select name from City where id = site.siteCity and parent_id = site.siteProvince and deep = 2) "
+			     + "FROM site " 
+			     + "ORDER BY updateTime desc "
+			     + "LIMIT " + page + "," + rows;
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(Site.class);
 

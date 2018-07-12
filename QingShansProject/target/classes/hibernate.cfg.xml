@@ -27,6 +27,8 @@
 	    <mapping resource="com/gunmm/model/Site.hbm.xml" />
 	    <mapping resource="com/gunmm/model/Complain.hbm.xml" />
 	    <mapping resource="com/gunmm/model/Vehicle.hbm.xml" />
+	    <mapping resource="com/gunmm/model/City.hbm.xml" />
+	    
 				
 		<mapping resource="com/gunmm/responseModel/OrderListModel.hbm.xml" />
 		

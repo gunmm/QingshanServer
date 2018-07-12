@@ -21,7 +21,9 @@ public class Site {
 	private String lawsManIdCardBehind;   // 法人身份证反面照片 
 	private String leaseContractPhoto;   // 场地租赁合同或土地证照片
 	private String siteProvince;              // 省 
+	private String siteProvinceName;              // 省名字   表里没有的字段  需删除hbm文件中的他
 	private String siteCity;              // 市 
+	private String siteCityName;              // 市名字  表里没有的字段  需删除hbm文件中的他
 	private String siteArea;              // 区
 	private String address;              //  详细地址
 	
@@ -235,6 +237,28 @@ public class Site {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+
+
+	public String getSiteProvinceName() {
+		return siteProvinceName;
+	}
+
+
+	public void setSiteProvinceName(String siteProvinceName) {
+		this.siteProvinceName = siteProvinceName;
+	}
+
+
+	public String getSiteCityName() {
+		return siteCityName;
+	}
+
+
+	public void setSiteCityName(String siteCityName) {
+		this.siteCityName = siteCityName;
+	}
+	
+	
 
 
 	

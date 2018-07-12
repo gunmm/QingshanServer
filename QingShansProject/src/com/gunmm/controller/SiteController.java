@@ -31,7 +31,7 @@ public class SiteController {
 		}
 
 		SiteDao siteDao = new SiteImpl();
-		return siteDao.addOrder(site);
+		return siteDao.addSite(site);
 	}
 	
 	// 查询站点列表
