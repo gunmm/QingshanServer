@@ -1,5 +1,7 @@
 package com.gunmm.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -9,9 +11,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.DictionaryDao;
 import com.gunmm.dao.UserDao;
+import com.gunmm.dao.VehicleDao;
 import com.gunmm.impl.DictionaryImpl;
 import com.gunmm.impl.UserDaoImpl;
+import com.gunmm.impl.VehicleImpl;
 import com.gunmm.model.User;
+import com.gunmm.model.Vehicle;
+import com.gunmm.responseModel.DriverListModel;
 import com.gunmm.utils.JSONUtils;
 
 @Controller
@@ -32,11 +38,12 @@ public class UserInfoController {
 		DictionaryDao dictionaryDao = new DictionaryImpl();
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.getUserById(userId);
-//		user.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", user.getVehicleType()));
+		// user.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型",
+		// user.getVehicleType()));
 		return JSONUtils.responseToJsonString("1", "", "请求成功！", user);
 	}
-	
-	//根据userId更新user信息
+
+	// 根据userId更新user信息
 	@RequestMapping("/updateUserInfo")
 	@ResponseBody
 	private JSONObject updateUserInfo(HttpServletRequest request) {
@@ -49,26 +56,26 @@ public class UserInfoController {
 		String driverLicenseImageUrl = object.getString("driverLicenseImageUrl");
 		String driverVehicleImageUrl = object.getString("driverVehicleImageUrl");
 		String driverThirdImageUrl = object.getString("driverThirdImageUrl");
-		
+
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.getUserById(userId);
 		user.setPersonImageUrl(personImageUrl);
 		user.setNickname(nickname);
-//		user.setPlateNumber(plateNumber);
-//		user.setVehicleType(vehicleType);
-//		user.setDriverLicenseImageUrl(driverLicenseImageUrl);
-//		user.setDriverVehicleImageUrl(driverVehicleImageUrl);
-//		user.setDriverThirdImageUrl(driverThirdImageUrl);
-//		if ("2".equals(user.getDriverCertificationStatus())) {
-//			user.setDriverCertificationStatus("2");
-//		}else {
-//			user.setDriverCertificationStatus("1");
-//		}
+		// user.setPlateNumber(plateNumber);
+		// user.setVehicleType(vehicleType);
+		// user.setDriverLicenseImageUrl(driverLicenseImageUrl);
+		// user.setDriverVehicleImageUrl(driverVehicleImageUrl);
+		// user.setDriverThirdImageUrl(driverThirdImageUrl);
+		// if ("2".equals(user.getDriverCertificationStatus())) {
+		// user.setDriverCertificationStatus("2");
+		// }else {
+		// user.setDriverCertificationStatus("1");
+		// }
 
 		return userDao.updateUserInfo(user);
 	}
-	
-	//司机上下班
+
+	// 司机上下班
 	@RequestMapping("/operateWork")
 	@ResponseBody
 	private JSONObject goToWork(HttpServletRequest request) {
@@ -81,20 +88,74 @@ public class UserInfoController {
 		user.setStatus(status);
 		return userDao.updateUserInfo(user);
 	}
-	
-	//司机更新位置
+
+	// 司机更新位置
 	@RequestMapping("/updateLocation")
 	@ResponseBody
 	private JSONObject updateLocation(HttpServletRequest request) {
-			JSONObject object = (JSONObject) request.getAttribute("body");
-			String userId = object.getString("userId");
-			Double nowLatitude = object.getDouble("nowLatitude");
-			Double nowLongitude = object.getDouble("nowLongitude");
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String userId = object.getString("userId");
+		Double nowLatitude = object.getDouble("nowLatitude");
+		Double nowLongitude = object.getDouble("nowLongitude");
 
-			UserDao userDao = new UserDaoImpl();
-			User user = userDao.getUserById(userId);
-			user.setNowLatitude(nowLatitude);
-			user.setNowLongitude(nowLongitude);
-			return userDao.updateUserInfo(user);
+		UserDao userDao = new UserDaoImpl();
+		User user = userDao.getUserById(userId);
+		user.setNowLatitude(nowLatitude);
+		user.setNowLongitude(nowLongitude);
+		return userDao.updateUserInfo(user);
+	}
+	
+	
+
+	// 查询司机列表
+	@RequestMapping("/getDriverList")
+	@ResponseBody
+	private JSONObject getDriverList(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String rows = object.getString("rows");
+		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+
+		String siteId = object.getString("siteId");
+		
+		UserDao userDao = new UserDaoImpl();
+		List<DriverListModel> driverList = userDao.getDriverListBySiteId(page, rows, siteId);
+
+		Long driverCount = userDao.getDriverCount(siteId);
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("driverCount", driverCount);
+		jsonObject.put("driverList", driverList);
+
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
+	}
+	
+	//添加司机
+	@RequestMapping("/addDriver")
+	@ResponseBody
+	private JSONObject addDriver(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		
+		JSONObject userObject = object.getJSONObject("user");
+		JSONObject vehicleObject = object.getJSONObject("vehicle");
+		Vehicle vehicle = new Vehicle();
+		vehicle = JSONObject.parseObject(vehicleObject.toJSONString(), Vehicle.class);
+		
+		User user = new User();
+		user = JSONObject.parseObject(userObject.toJSONString(), User.class);
+		
+		VehicleDao vehicleDao = new VehicleImpl();
+		
+		JSONObject jsonObj = vehicleDao.addVehicle(vehicle);
+		String result_code = jsonObj.getString("result_code");
+		
+		if (!"1".equals(result_code)) {
+			return jsonObj;
 		}
+		
+		user.setVehicleId(jsonObj.getString("object"));
+		
+		UserDao userDao = new UserDaoImpl();
+		return userDao.addDriver(user);
+	}
+	
 }

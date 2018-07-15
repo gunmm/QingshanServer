@@ -16,7 +16,6 @@ public class MyHibernateSessionFactory {
 		if (sessionFactory == null) {
 			//创建配置对象
 			Configuration config = new Configuration().configure();
-			
 			//创建服务注册对象
 			ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(config.getProperties())
 					.build();

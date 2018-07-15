@@ -164,20 +164,20 @@ public class OrderController {
 	}
 	
 	// 根据订单ID查寻包含部分司机信息的大订单信息
-		@RequestMapping("/getBigOrderInfo")
-		@ResponseBody
-		private JSONObject getBigOrderInfo(HttpServletRequest request) {
-			JSONObject object = (JSONObject) request.getAttribute("body");
-			String orderId = object.getString("orderId");
+	@RequestMapping("/getBigOrderInfo")
+	@ResponseBody
+	private JSONObject getBigOrderInfo(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String orderId = object.getString("orderId");
 
-			if(orderId == null) {
-				return JSONUtils.responseToJsonString("0", "参数错误！", "查询失败！", "");
-			}
-			
-			OrderDao orderDao = new OrderDaoImpl();
-			OrderListModel orderListModel = orderDao.getBigOrderInfo(orderId);
-			return JSONUtils.responseToJsonString("1", "", "查询成功！", orderListModel);
+		if (orderId == null) {
+			return JSONUtils.responseToJsonString("0", "参数错误！", "查询失败！", "");
 		}
+
+		OrderDao orderDao = new OrderDaoImpl();
+		OrderListModel orderListModel = orderDao.getBigOrderInfo(orderId);
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderListModel);
+	}
 	
 	// 订单列表
 	@RequestMapping("/getOrderList")

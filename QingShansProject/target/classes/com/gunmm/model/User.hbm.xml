@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-7-8 9:18:08 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-7-15 13:45:47 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.model.User" table="USER">
         <id name="userId" type="java.lang.String">
@@ -22,6 +22,9 @@
         </property>
         <property name="personImageUrl" type="java.lang.String">
             <column name="PERSONIMAGEURL" />
+        </property>
+        <property name="belongSiteId" type="java.lang.String">
+            <column name="BELONGSITEID" />
         </property>
         <property name="loginPlate" type="java.lang.String">
             <column name="LOGINPLATE" />

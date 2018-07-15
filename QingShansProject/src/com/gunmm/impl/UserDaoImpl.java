@@ -1,9 +1,12 @@
 package com.gunmm.impl;
 
+import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -11,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.UserDao;
 import com.gunmm.db.MyHibernateSessionFactory;
 import com.gunmm.model.User;
+import com.gunmm.responseModel.DriverListModel;
 import com.gunmm.utils.JSONUtils;
 
 public class UserDaoImpl implements UserDao {
@@ -79,6 +83,39 @@ public class UserDaoImpl implements UserDao {
 			}
 		}
 	}
+	
+	//判断身份证号是否已经注册
+		@SuppressWarnings("unused")
+		private boolean judgeUserIdCardNumber(String userIdCardNumber) {
+			Transaction tx = null;
+			String backIdCardNumber = null;
+			String hql = "";
+			try {
+				Session session = MyHibernateSessionFactory.getSessionFactory()
+						.getCurrentSession();
+				tx = session.beginTransaction();
+				hql = "select userIdCardNumber from User where userIdCardNumber = ?";
+				Query query = session.createQuery(hql);
+				query.setParameter(0, userIdCardNumber);
+				backIdCardNumber = (String) query.uniqueResult();
+				
+				tx.commit();
+				if (backIdCardNumber == null || "".equals(backIdCardNumber)) {
+					return false;
+				}else {
+					return true;
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				return true;
+			} finally {
+				if (tx != null) {
+					tx = null;
+				}
+			}
+		}
 
 	//发送验证码
 	@Override
@@ -248,6 +285,127 @@ public class UserDaoImpl implements UserDao {
 			// TODO: handle exception
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", user);
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	//查询的司机列表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DriverListModel> getDriverListBySiteId(String page, String rows,String siteId) {
+		// TODO Auto-generated method stub
+		List<DriverListModel> driverList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			String sql1 = "SELECT user.*," 
+					 + "(select description from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType) as vehicleTypeName,"
+					 + "(select siteName from site where user.belongSiteId = siteId) as belongSiteName,"
+					 + "(select plateNumber from vehicle where vehicleId = user.vehicleId) as plateNumber "
+				     + "FROM user "
+			         + "where user.type = '6' ";
+			String sql2 = "";
+			if (siteId != null) {
+				sql2 = "and user.belongSiteId = '"+siteId+"' ";
+			}
+
+			String sql3 = "ORDER BY updateTime desc "
+				     + "LIMIT " + page + "," + rows;
+			sql = sql1 + sql2 +sql3;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(DriverListModel.class);
+
+			driverList = query.list();
+
+			tx.commit();
+			return driverList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return driverList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	//查询司机条数
+	@Override
+	public Long getDriverCount(String siteId) {
+		// TODO Auto-generated method stub
+		Transaction tx = null;
+		Long driverCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			String sql1 = "select count(*) from user where user.type = '6' ";
+			String sql2 = "";
+			if (siteId != null) {
+				sql2 = "and user.belongSiteId = '"+siteId+"' ";
+			}
+			sql = sql1 + sql2;
+			
+			SQLQuery query = session.createSQLQuery(sql);
+			driverCount = ((BigInteger)query.uniqueResult()).longValue();
+
+
+			tx.commit();
+			return driverCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return driverCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	//添加司机
+	@Override
+	public JSONObject addDriver(User user) {
+		// TODO Auto-generated method stub
+		if(judgeUserByPhone(user.getPhoneNumber())) {
+			return JSONUtils.responseToJsonString("0", "", "电话号码已存在！", "");
+		}
+		
+		if(judgeUserIdCardNumber(user.getUserIdCardNumber())) {
+			return JSONUtils.responseToJsonString("0", "", "身份证号已被注册！", "");
+		}
+		
+		user.setUserId(UUID.randomUUID().toString()); 
+
+		user.setCreateTime(new Date());
+		user.setUpdateTime(new Date());
+		user.setPassword("e10adc3949ba59abbe56e057f20f883e");
+		user.setScore(5.0);
+		user.setStatus("2");
+		user.setType("6");
+		
+		
+		Transaction tx = null;
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			session.save(user);
+			tx.commit();
+			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
 			if (tx != null) {
 				tx = null;

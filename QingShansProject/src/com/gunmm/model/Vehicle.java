@@ -9,6 +9,10 @@ public class Vehicle {
 	private String vehicleId;              // 车辆id
 	private String plateNumber;              // 车牌号
 	private String vehicleType;              // 车辆类型
+	
+	private String gpsType;              // gps类型
+	private String gpsSerialNumber;              // gps序列号
+	
 	private String drivingCardNumber;              // 行驶证号
 	private String vehicleRegistrationNumber;              // 车辆登记证号
 	private String operationCertificateNumber;              // 营运证号
@@ -191,6 +195,28 @@ public class Vehicle {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+
+
+	public String getGpsType() {
+		return gpsType;
+	}
+
+
+	public void setGpsType(String gpsType) {
+		this.gpsType = gpsType;
+	}
+
+
+	public String getGpsSerialNumber() {
+		return gpsSerialNumber;
+	}
+
+
+	public void setGpsSerialNumber(String gpsSerialNumber) {
+		this.gpsSerialNumber = gpsSerialNumber;
+	}
+	
+	
 	
 	
 	

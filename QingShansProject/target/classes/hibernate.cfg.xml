@@ -31,6 +31,8 @@
 	    
 				
 		<mapping resource="com/gunmm/responseModel/OrderListModel.hbm.xml" />
+		<mapping resource="com/gunmm/responseModel/SiteListModel.hbm.xml" />
+		<mapping resource="com/gunmm/responseModel/DriverListModel.hbm.xml" />
 		
 		
     </session-factory>

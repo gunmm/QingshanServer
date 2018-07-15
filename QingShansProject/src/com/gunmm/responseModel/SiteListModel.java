@@ -1,10 +1,10 @@
-package com.gunmm.model;
+package com.gunmm.responseModel;
 
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class Site {
+public class SiteListModel {
 
 	private String siteId;              // 站点id 
 	private String superSiteId;        // 父站点id 
@@ -34,243 +34,194 @@ public class Site {
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;              // 更新时间
 	
-	
-	public Site() {
+	public SiteListModel() {
 
 	}
-
 
 	public String getSiteId() {
 		return siteId;
 	}
 
-
 	public void setSiteId(String siteId) {
 		this.siteId = siteId;
 	}
-
 
 	public String getSuperSiteId() {
 		return superSiteId;
 	}
 
-
 	public void setSuperSiteId(String superSiteId) {
 		this.superSiteId = superSiteId;
 	}
-
-
-	public Double getChildToSuperRate() {
-		return childToSuperRate;
-	}
-
-
-	public void setChildToSuperRate(Double childToSuperRate) {
-		this.childToSuperRate = childToSuperRate;
-	}
-
-
-	public String getSiteType() {
-		return siteType;
-	}
-
-
-	public void setSiteType(String siteType) {
-		this.siteType = siteType;
-	}
-
-
-	public String getSiteCheckStatus() {
-		return siteCheckStatus;
-	}
-
-
-	public void setSiteCheckStatus(String siteCheckStatus) {
-		this.siteCheckStatus = siteCheckStatus;
-	}
-
-
-	public String getSiteName() {
-		return siteName;
-	}
-
-
-	public void setSiteName(String siteName) {
-		this.siteName = siteName;
-	}
-
-
-	public String getBusinessLicenseNumber() {
-		return businessLicenseNumber;
-	}
-
-
-	public void setBusinessLicenseNumber(String businessLicenseNumber) {
-		this.businessLicenseNumber = businessLicenseNumber;
-	}
-
-
-	public String getBusinessLicensePhoto() {
-		return businessLicensePhoto;
-	}
-
-
-	public void setBusinessLicensePhoto(String businessLicensePhoto) {
-		this.businessLicensePhoto = businessLicensePhoto;
-	}
-
-
-	public String getLawsManName() {
-		return lawsManName;
-	}
-
-
-	public void setLawsManName(String lawsManName) {
-		this.lawsManName = lawsManName;
-	}
-
-
-	public String getLawsManIdCardNumber() {
-		return lawsManIdCardNumber;
-	}
-
-
-	public void setLawsManIdCardNumber(String lawsManIdCardNumber) {
-		this.lawsManIdCardNumber = lawsManIdCardNumber;
-	}
-
-
-	public String getLawsManPhone() {
-		return lawsManPhone;
-	}
-
-
-	public void setLawsManPhone(String lawsManPhone) {
-		this.lawsManPhone = lawsManPhone;
-	}
-
-
-	public String getLawsManIdCardFront() {
-		return lawsManIdCardFront;
-	}
-
-
-	public void setLawsManIdCardFront(String lawsManIdCardFront) {
-		this.lawsManIdCardFront = lawsManIdCardFront;
-	}
-
-
-	public String getLawsManIdCardBehind() {
-		return lawsManIdCardBehind;
-	}
-
-
-	public void setLawsManIdCardBehind(String lawsManIdCardBehind) {
-		this.lawsManIdCardBehind = lawsManIdCardBehind;
-	}
-
-
-	public String getLeaseContractPhoto() {
-		return leaseContractPhoto;
-	}
-
-
-	public void setLeaseContractPhoto(String leaseContractPhoto) {
-		this.leaseContractPhoto = leaseContractPhoto;
-	}
-
-
-	public String getSiteProvince() {
-		return siteProvince;
-	}
-
-
-	public void setSiteProvince(String siteProvince) {
-		this.siteProvince = siteProvince;
-	}
-
-
-	public String getSiteCity() {
-		return siteCity;
-	}
-
-
-	public void setSiteCity(String siteCity) {
-		this.siteCity = siteCity;
-	}
-
-
-	public String getSiteArea() {
-		return siteArea;
-	}
-
-
-	public void setSiteArea(String siteArea) {
-		this.siteArea = siteArea;
-	}
-
-
-	public String getAddress() {
-		return address;
-	}
-
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
 
 	public String getSuperSiteName() {
 		return superSiteName;
 	}
 
-
 	public void setSuperSiteName(String superSiteName) {
 		this.superSiteName = superSiteName;
 	}
 
+	public Double getChildToSuperRate() {
+		return childToSuperRate;
+	}
+
+	public void setChildToSuperRate(Double childToSuperRate) {
+		this.childToSuperRate = childToSuperRate;
+	}
+
+	public String getSiteType() {
+		return siteType;
+	}
+
+	public void setSiteType(String siteType) {
+		this.siteType = siteType;
+	}
+
+	public String getSiteCheckStatus() {
+		return siteCheckStatus;
+	}
+
+	public void setSiteCheckStatus(String siteCheckStatus) {
+		this.siteCheckStatus = siteCheckStatus;
+	}
+
+	public String getSiteName() {
+		return siteName;
+	}
+
+	public void setSiteName(String siteName) {
+		this.siteName = siteName;
+	}
+
+	public String getBusinessLicenseNumber() {
+		return businessLicenseNumber;
+	}
+
+	public void setBusinessLicenseNumber(String businessLicenseNumber) {
+		this.businessLicenseNumber = businessLicenseNumber;
+	}
+
+	public String getBusinessLicensePhoto() {
+		return businessLicensePhoto;
+	}
+
+	public void setBusinessLicensePhoto(String businessLicensePhoto) {
+		this.businessLicensePhoto = businessLicensePhoto;
+	}
+
+	public String getLawsManName() {
+		return lawsManName;
+	}
+
+	public void setLawsManName(String lawsManName) {
+		this.lawsManName = lawsManName;
+	}
+
+	public String getLawsManIdCardNumber() {
+		return lawsManIdCardNumber;
+	}
+
+	public void setLawsManIdCardNumber(String lawsManIdCardNumber) {
+		this.lawsManIdCardNumber = lawsManIdCardNumber;
+	}
+
+	public String getLawsManPhone() {
+		return lawsManPhone;
+	}
+
+	public void setLawsManPhone(String lawsManPhone) {
+		this.lawsManPhone = lawsManPhone;
+	}
+
+	public String getLawsManIdCardFront() {
+		return lawsManIdCardFront;
+	}
+
+	public void setLawsManIdCardFront(String lawsManIdCardFront) {
+		this.lawsManIdCardFront = lawsManIdCardFront;
+	}
+
+	public String getLawsManIdCardBehind() {
+		return lawsManIdCardBehind;
+	}
+
+	public void setLawsManIdCardBehind(String lawsManIdCardBehind) {
+		this.lawsManIdCardBehind = lawsManIdCardBehind;
+	}
+
+	public String getLeaseContractPhoto() {
+		return leaseContractPhoto;
+	}
+
+	public void setLeaseContractPhoto(String leaseContractPhoto) {
+		this.leaseContractPhoto = leaseContractPhoto;
+	}
+
+	public String getSiteProvince() {
+		return siteProvince;
+	}
+
+	public void setSiteProvince(String siteProvince) {
+		this.siteProvince = siteProvince;
+	}
+
+	public String getSiteCity() {
+		return siteCity;
+	}
+
+	public void setSiteCity(String siteCity) {
+		this.siteCity = siteCity;
+	}
 
 	public String getSiteProvinceName() {
 		return siteProvinceName;
 	}
 
-
 	public void setSiteProvinceName(String siteProvinceName) {
 		this.siteProvinceName = siteProvinceName;
 	}
-
 
 	public String getSiteCityName() {
 		return siteCityName;
 	}
 
-
 	public void setSiteCityName(String siteCityName) {
 		this.siteCityName = siteCityName;
 	}
-	
-	
 
-	
+	public String getSiteArea() {
+		return siteArea;
+	}
 
+	public void setSiteArea(String siteArea) {
+		this.siteArea = siteArea;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+	
+	
+	
 }

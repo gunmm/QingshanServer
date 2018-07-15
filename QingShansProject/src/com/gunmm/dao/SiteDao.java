@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gunmm.model.Site;
+import com.gunmm.responseModel.SiteListModel;
 
 public interface SiteDao {
 
@@ -14,10 +15,10 @@ public interface SiteDao {
 	public JSONObject deleteSiteById(String siteId);
 	
 	//查询站点列表
-	public List<Site> getSiteList(String page, String rows);
+	public List<SiteListModel> getSiteList(String page, String rows, String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime);
 	
 	//查询站点条数
-	public Long getSiteCount();
+	public Long getSiteCount(String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime);
 	
 	//根据站点id拿站点信息
 	public Site getSiteById(String siteId);

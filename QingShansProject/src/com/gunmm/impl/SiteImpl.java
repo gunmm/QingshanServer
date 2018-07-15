@@ -1,5 +1,6 @@
 package com.gunmm.impl;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.SiteDao;
 import com.gunmm.db.MyHibernateSessionFactory;
 import com.gunmm.model.Site;
+import com.gunmm.responseModel.SiteListModel;
 import com.gunmm.utils.JSONUtils;
 
 public class SiteImpl implements SiteDao {
@@ -124,10 +126,10 @@ public class SiteImpl implements SiteDao {
 	public JSONObject deleteSiteById(String siteId) {
 		// TODO Auto-generated method stub
 		Transaction tx = null;
+		Site site = getSiteById(siteId);
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			Site site = getSiteById(siteId);
 			session.delete(site);
 			tx.commit();
 
@@ -150,22 +152,32 @@ public class SiteImpl implements SiteDao {
 	// 查询站点列表
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Site> getSiteList(String page, String rows) {
+	public List<SiteListModel> getSiteList(String page, String rows, String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime) {
 		// TODO Auto-generated method stub
-		List<Site> siteList = null;
+		List<SiteListModel> siteList = null;
 		Transaction tx = null;
 		String sql = "";
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "SELECT site.*," 
-				 +"(select name from City where id = site.siteProvince and deep = 1),"
-				 +"(select name from City where id = site.siteCity and parent_id = site.siteProvince and deep = 2) "
-			     + "FROM site " 
-			     + "ORDER BY updateTime desc "
-			     + "LIMIT " + page + "," + rows;
+			String sql1 = "SELECT site.*," 
+					 +"(select name from City where id = site.siteProvince and deep = 1) AS siteProvinceName,"
+					 +"(select name from City where id = site.siteCity and parent_id = site.siteProvince and deep = 2) AS siteCityName "
+				     + "FROM site "
+				     + "where site.siteName like '%"+filterSiteName+"%' and site.lawsManName like '%"+filterLawsManName+"%' ";
+			String sql2 = "";
+			if(filterBeginTime.length() > 0 && filterEndTime.length() > 0) {
+				sql2 = "and (site.createTime BETWEEN '"+filterBeginTime+" 00:00:00"+"' AND '"+filterEndTime+" 23:59:59"+"') ";
+			}else if (filterBeginTime.length() > 0) {
+				sql2 = "and (site.createTime > '"+filterBeginTime+" 00:00:00') ";
+			}else if (filterEndTime.length() > 0) {
+				sql2 = "and (site.createTime < '"+filterEndTime+" 23:59:59') ";
+			}
+			String sql3 = "ORDER BY updateTime desc "
+				     + "LIMIT " + page + "," + rows;
+			sql = sql1 + sql2 +sql3;
 			SQLQuery query = session.createSQLQuery(sql);
-			query.addEntity(Site.class);
+			query.addEntity(SiteListModel.class);
 
 			siteList = query.list();
 
@@ -192,13 +204,14 @@ public class SiteImpl implements SiteDao {
 		Site site = null;
 		String hql = "";
 		try {
-			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			Session session = MyHibernateSessionFactory.getSessionFactory()
+					.getCurrentSession();
 			tx = session.beginTransaction();
 			hql = "from Site where siteId = ?";
 			Query query = session.createQuery(hql);
 			query.setParameter(0, siteId);
 			site = (Site) query.uniqueResult();
-
+			
 			tx.commit();
 			return site;
 
@@ -239,17 +252,29 @@ public class SiteImpl implements SiteDao {
 
 	// 查询站点条数
 	@Override
-	public Long getSiteCount() {
+	public Long getSiteCount(String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime) {
 		// TODO Auto-generated method stub
 		Transaction tx = null;
 		Long siteCount = (long) 0;
-		String hql = "";
+		String sql = "";
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			hql = "select count(*) from Site";
-			Query query = session.createQuery(hql);
-			siteCount = (Long)query.uniqueResult();
+			String sql1 = "select count(*) from site " 
+				     + "where site.siteName like '%"+filterSiteName+"%' and site.lawsManName like '%"+filterLawsManName+"%' ";
+			String sql2 = "";
+			if(filterBeginTime.length() > 0 && filterEndTime.length() > 0) {
+				sql2 = "and (site.createTime BETWEEN '"+filterBeginTime+" 00:00:00"+"' AND '"+filterEndTime+" 23:59:59"+"') ";
+			}else if (filterBeginTime.length() > 0) {
+				sql2 = "and (site.createTime > '"+filterBeginTime+" 00:00:00') ";
+			}else if (filterEndTime.length() > 0) {
+				sql2 = "and (site.createTime < '"+filterEndTime+" 23:59:59') ";
+			}
+			sql = sql1 + sql2;
+			
+			SQLQuery query = session.createSQLQuery(sql);
+			siteCount = ((BigInteger)query.uniqueResult()).longValue();
+
 
 			tx.commit();
 			return siteCount;
