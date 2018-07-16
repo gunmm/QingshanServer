@@ -104,8 +104,6 @@ public class UserInfoController {
 		user.setNowLongitude(nowLongitude);
 		return userDao.updateUserInfo(user);
 	}
-	
-	
 
 	// 查询司机列表
 	@RequestMapping("/getDriverList")
@@ -116,46 +114,144 @@ public class UserInfoController {
 		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
 
 		String siteId = object.getString("siteId");
-		
+
 		UserDao userDao = new UserDaoImpl();
 		List<DriverListModel> driverList = userDao.getDriverListBySiteId(page, rows, siteId);
 
 		Long driverCount = userDao.getDriverCount(siteId);
-		
+
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("driverCount", driverCount);
 		jsonObject.put("driverList", driverList);
 
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
 	}
-	
-	//添加司机
+
+	// 添加司机
 	@RequestMapping("/addDriver")
 	@ResponseBody
 	private JSONObject addDriver(HttpServletRequest request) {
 		JSONObject object = (JSONObject) request.getAttribute("body");
-		
+
 		JSONObject userObject = object.getJSONObject("user");
 		JSONObject vehicleObject = object.getJSONObject("vehicle");
 		Vehicle vehicle = new Vehicle();
 		vehicle = JSONObject.parseObject(vehicleObject.toJSONString(), Vehicle.class);
-		
+
 		User user = new User();
 		user = JSONObject.parseObject(userObject.toJSONString(), User.class);
-		
+
+		UserDao userDao = new UserDaoImpl();
 		VehicleDao vehicleDao = new VehicleImpl();
-		
+
+		// 判断手机号
+		if (userDao.judgeUserByPhone(user.getPhoneNumber())) {
+			return JSONUtils.responseToJsonString("0", "手机号已被注册！", "手机号已被注册！", "");
+		}
+
+		// 判断身份证号
+		if (userDao.judgeUserIdCardNumber(user.getUserIdCardNumber())) {
+			return JSONUtils.responseToJsonString("0", "身份证号已被注册！", "身份证号已被注册！", "");
+		}
+
+		// 判断驾驶证
+		if (userDao.judgeDriverLicenseNumber(user.getDriverLicenseNumber())) {
+			return JSONUtils.responseToJsonString("0", "驾驶证号已被注册！", "驾驶证号已被注册！", "");
+		}
+
+		// 判断车牌号
+		if (vehicleDao.judgeVehicleByPlateNumber(vehicle.getPlateNumber())) {
+			return JSONUtils.responseToJsonString("0", "车牌号已被注册！", "车牌号已被注册！", "");
+		}
+		// 判断营运证
+		if (vehicleDao.judgeVehicleByOperationCertificateNumber(vehicle.getOperationCertificateNumber())) {
+			return JSONUtils.responseToJsonString("0", "营运证号已被注册！", "营运证号已被注册！", "");
+		}
+
+		// 判断行驶证
+		if (vehicleDao.judgeVehicleByDrivingCardNumber(vehicle.getDrivingCardNumber())) {
+			return JSONUtils.responseToJsonString("0", "行驶证号已被注册！", "行驶证号已被注册！", "");
+		}
+
+		// 判断车辆登记证
+		if (vehicleDao.judgeVehicleByVehicleRegistrationNumber(vehicle.getVehicleRegistrationNumber())) {
+			return JSONUtils.responseToJsonString("0", "车辆登记证号已被注册！", "车辆登记证号已被注册！", "");
+		}
+
 		JSONObject jsonObj = vehicleDao.addVehicle(vehicle);
 		String result_code = jsonObj.getString("result_code");
+
+		if (!"1".equals(result_code)) {
+			return jsonObj;
+		}
+
+		user.setVehicleId(jsonObj.getString("object"));
+
+		return userDao.addDriver(user);
+	}
+
+	// 编辑司机
+	@RequestMapping("/editDriver")
+	@ResponseBody
+	private JSONObject editDriver(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		JSONObject userObject = object.getJSONObject("user");
+		JSONObject vehicleObject = object.getJSONObject("vehicle");
+		Vehicle vehicle = new Vehicle();
+		vehicle = JSONObject.parseObject(vehicleObject.toJSONString(), Vehicle.class);
+
+		User user = new User();
+		user = JSONObject.parseObject(userObject.toJSONString(), User.class);
+
+		UserDao userDao = new UserDaoImpl();
+		VehicleDao vehicleDao = new VehicleImpl();
 		
+		Vehicle newVehicle = vehicleDao.getVehicleById(vehicle.getVehicleId());
+		newVehicle.setPlateNumber(vehicle.getPlateNumber());
+		newVehicle.setVehicleType(vehicle.getVehicleType());
+		newVehicle.setVehicleBrand(vehicle.getVehicleBrand());
+		newVehicle.setVehicleModel(vehicle.getVehicleModel());
+		newVehicle.setLoadWeight(vehicle.getLoadWeight());
+		newVehicle.setVehicleMakeDate(vehicle.getVehicleMakeDate());
+		newVehicle.setDrivingCardNumber(vehicle.getDrivingCardNumber());
+		newVehicle.setVehicleRegistrationNumber(vehicle.getVehicleRegistrationNumber());
+		newVehicle.setOperationCertificateNumber(vehicle.getOperationCertificateNumber());
+		newVehicle.setGpsType(vehicle.getGpsType());
+		newVehicle.setGpsSerialNumber(vehicle.getGpsSerialNumber());
+		newVehicle.setVehiclePhoto(vehicle.getVehiclePhoto());
+		newVehicle.setInsuranceNumber(vehicle.getInsuranceNumber());
+		newVehicle.setBusinessLicenseNumber(vehicle.getBusinessLicenseNumber());
+		newVehicle.setVehicleIdCardNumber(vehicle.getVehicleIdCardNumber());
+		
+		JSONObject jsonObj = vehicleDao.updateVehicleInfo(newVehicle);
+		String result_code = jsonObj.getString("result_code");
 		if (!"1".equals(result_code)) {
 			return jsonObj;
 		}
 		
-		user.setVehicleId(jsonObj.getString("object"));
+		User newUser = userDao.getUserById(user.getUserId());
+		newUser.setNickname(user.getNickname());
+		newUser.setPhoneNumber(user.getPhoneNumber());
+		newUser.setUserIdCardNumber(user.getUserIdCardNumber());
+		newUser.setDriverLicenseNumber(user.getDriverLicenseNumber());
+		newUser.setDriverQualificationNumber(user.getDriverQualificationNumber());
+		newUser.setVehicleType(user.getVehicleType());
 		
-		UserDao userDao = new UserDaoImpl();
-		return userDao.addDriver(user);
+		return userDao.updateUserInfo(newUser);
+		
 	}
-	
+
+	// 删除司机
+	@RequestMapping("/deleteDriver")
+	@ResponseBody
+	private JSONObject deleteDriver(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		String driverId = object.getString("driverId");
+
+		UserDao userDao = new UserDaoImpl();
+		return userDao.deleteDriver(driverId);
+	}
+
 }
