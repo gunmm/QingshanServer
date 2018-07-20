@@ -226,7 +226,8 @@ public class UserDaoImpl implements UserDao {
 	// 查询的司机列表
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DriverListModel> getDriverListBySiteId(String page, String rows, String siteId) {
+	public List<DriverListModel> getDriverListBySiteId(String page, String rows, String siteId, String filterDriverName,
+			String filterPlateNumber) {
 		// TODO Auto-generated method stub
 		List<DriverListModel> driverList = null;
 		Transaction tx = null;
@@ -234,26 +235,20 @@ public class UserDaoImpl implements UserDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			String sql1 = "SELECT user.*,"
-					+ "vehicle.gpsType,"
-					+ "vehicle.gpsSerialNumber,"
-					+ "vehicle.drivingCardNumber,"
-					+ "vehicle.vehicleRegistrationNumber,"
-					+ "vehicle.operationCertificateNumber,"
-					+ "vehicle.insuranceNumber,"
-					+ "vehicle.vehicleIdCardNumber,"
-					+ "vehicle.businessLicenseNumber,"
-					+ "vehicle.vehicleBrand,"
-					+ "vehicle.vehicleModel,"
-					+ "vehicle.vehiclePhoto,"
-					+ "vehicle.loadWeight,"
+			String sql1 = "SELECT user.*," + "vehicle.gpsType," + "vehicle.gpsSerialNumber,"
+					+ "vehicle.drivingCardNumber," + "vehicle.vehicleRegistrationNumber,"
+					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
+					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
+					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight,"+ "vehicle.plateNumber,"
 					+ "vehicle.vehicleMakeDate,"
-					
+
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType) as vehicleTypeName,"
-					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName,"
-					+ "(select plateNumber from vehicle where vehicleId = user.vehicleId) as plateNumber "
-					+ "FROM user,vehicle " 
-					+ "where user.vehicleId = vehicle.vehicleId and user.type = '6' ";
+					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
+					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
+					+ "FROM user,vehicle " + "where user.vehicleId = vehicle.vehicleId and user.type = '6' "
+					+ "and user.nickname like '%" + filterDriverName + "%' and vehicle.plateNumber like '%"
+					+ filterPlateNumber + "%' ";
+
 			String sql2 = "";
 			if (siteId != null) {
 				sql2 = "and user.belongSiteId = '" + siteId + "' ";
@@ -282,9 +277,49 @@ public class UserDaoImpl implements UserDao {
 		}
 	}
 
+	// 根据ID查司机详情信息
+	public JSONObject getDriverInfoByDriverId(String driverId) {
+		DriverListModel driverListModel = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			sql = "SELECT user.*," + "vehicle.gpsType," + "vehicle.gpsSerialNumber,"
+					+ "vehicle.drivingCardNumber," + "vehicle.vehicleRegistrationNumber,"
+					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
+					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
+					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight,"+ "vehicle.plateNumber,"
+					+ "vehicle.vehicleMakeDate,"
+
+					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType) as vehicleTypeName,"
+					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
+					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
+					+ "FROM user,vehicle " + "where user.vehicleId = vehicle.vehicleId and user.userId = '"+driverId+"'";
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(DriverListModel.class);
+
+			driverListModel = (DriverListModel) query.uniqueResult();
+
+			tx.commit();
+			return JSONUtils.responseToJsonString("1", "", "查询成功！", driverListModel);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
 	// 查询司机条数
 	@Override
-	public Long getDriverCount(String siteId) {
+	public Long getDriverCount(String siteId, String filterDriverName, String filterPlateNumber) {
 		// TODO Auto-generated method stub
 		Transaction tx = null;
 		Long driverCount = (long) 0;
@@ -292,7 +327,10 @@ public class UserDaoImpl implements UserDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			String sql1 = "select count(*) from user where user.type = '6' ";
+			String sql1 = "select count(*) from user,vehicle where user.vehicleId = vehicle.vehicleId and user.type = '6' "
+					+ "and user.nickname like '%" + filterDriverName + "%' and vehicle.plateNumber like '%"
+					+ filterPlateNumber + "%' ";
+
 			String sql2 = "";
 			if (siteId != null) {
 				sql2 = "and user.belongSiteId = '" + siteId + "' ";

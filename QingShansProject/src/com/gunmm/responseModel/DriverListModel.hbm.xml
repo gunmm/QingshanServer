@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-7-16 22:54:18 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-7-19 21:50:37 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.DriverListModel" table="DRIVERLISTMODEL">
         <id name="userId" type="java.lang.String">
@@ -85,6 +85,9 @@
         </property>
         <property name="gpsType" type="java.lang.String">
             <column name="GPSTYPE" />
+        </property>
+        <property name="gpsTypeName" type="java.lang.String">
+            <column name="GPSTYPENAME" />
         </property>
         <property name="gpsSerialNumber" type="java.lang.String">
             <column name="GPSSERIALNUMBER" />

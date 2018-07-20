@@ -47,6 +47,7 @@ public class DriverListModel {
 	
 	
 	private String gpsType;              // gps类型
+	private String gpsTypeName;  
 	private String gpsSerialNumber;              // gps序列号
 	
 	private String drivingCardNumber;              // 行驶证号
@@ -330,6 +331,18 @@ public class DriverListModel {
 
 	public void setGpsSerialNumber(String gpsSerialNumber) {
 		this.gpsSerialNumber = gpsSerialNumber;
+	}
+	
+	
+
+
+	public String getGpsTypeName() {
+		return gpsTypeName;
+	}
+
+
+	public void setGpsTypeName(String gpsTypeName) {
+		this.gpsTypeName = gpsTypeName;
 	}
 
 

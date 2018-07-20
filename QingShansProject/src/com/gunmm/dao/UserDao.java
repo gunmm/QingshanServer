@@ -29,10 +29,13 @@ public interface UserDao {
 	public JSONObject updateUserInfo(User user);
 
 	// 查询的司机列表
-	public List<DriverListModel> getDriverListBySiteId(String page, String rows, String siteId);
+	public List<DriverListModel> getDriverListBySiteId(String page, String rows, String siteId, String filterDriverName, String filterPlateNumber);
 
 	// 查询司机条数
-	public Long getDriverCount(String siteId);
+	public Long getDriverCount(String siteId, String filterDriverName, String filterPlateNumber);
+	
+	//根据ID查司机详情信息
+	public JSONObject getDriverInfoByDriverId(String driverId);
 
 	// 添加司机
 	public JSONObject addDriver(User user);

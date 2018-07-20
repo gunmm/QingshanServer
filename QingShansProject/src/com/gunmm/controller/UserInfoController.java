@@ -112,19 +112,35 @@ public class UserInfoController {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 		String rows = object.getString("rows");
 		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+		String filterDriverName = object.getString("filterDriverName");
+		String filterPlateNumber = object.getString("filterPlateNumber");
 
 		String siteId = object.getString("siteId");
 
 		UserDao userDao = new UserDaoImpl();
-		List<DriverListModel> driverList = userDao.getDriverListBySiteId(page, rows, siteId);
+		List<DriverListModel> driverList = userDao.getDriverListBySiteId(page, rows, siteId, filterDriverName,
+				filterPlateNumber);
 
-		Long driverCount = userDao.getDriverCount(siteId);
+		Long driverCount = userDao.getDriverCount(siteId, filterDriverName, filterPlateNumber);
 
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("driverCount", driverCount);
 		jsonObject.put("driverList", driverList);
 
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
+	}
+
+	// 根据id查询详情
+	@RequestMapping("/getDriverInfoById")
+	@ResponseBody
+	private JSONObject getDriverInfoById(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		
+		String driverId = object.getString("driverId");
+		
+		UserDao userDao = new UserDaoImpl();
+		
+		return userDao.getDriverInfoByDriverId(driverId);
 	}
 
 	// 添加司机
@@ -206,7 +222,7 @@ public class UserInfoController {
 
 		UserDao userDao = new UserDaoImpl();
 		VehicleDao vehicleDao = new VehicleImpl();
-		
+
 		Vehicle newVehicle = vehicleDao.getVehicleById(vehicle.getVehicleId());
 		newVehicle.setPlateNumber(vehicle.getPlateNumber());
 		newVehicle.setVehicleType(vehicle.getVehicleType());
@@ -223,13 +239,13 @@ public class UserInfoController {
 		newVehicle.setInsuranceNumber(vehicle.getInsuranceNumber());
 		newVehicle.setBusinessLicenseNumber(vehicle.getBusinessLicenseNumber());
 		newVehicle.setVehicleIdCardNumber(vehicle.getVehicleIdCardNumber());
-		
+
 		JSONObject jsonObj = vehicleDao.updateVehicleInfo(newVehicle);
 		String result_code = jsonObj.getString("result_code");
 		if (!"1".equals(result_code)) {
 			return jsonObj;
 		}
-		
+
 		User newUser = userDao.getUserById(user.getUserId());
 		newUser.setNickname(user.getNickname());
 		newUser.setPhoneNumber(user.getPhoneNumber());
@@ -237,9 +253,9 @@ public class UserInfoController {
 		newUser.setDriverLicenseNumber(user.getDriverLicenseNumber());
 		newUser.setDriverQualificationNumber(user.getDriverQualificationNumber());
 		newUser.setVehicleType(user.getVehicleType());
-		
+
 		return userDao.updateUserInfo(newUser);
-		
+
 	}
 
 	// 删除司机
