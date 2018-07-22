@@ -11,16 +11,29 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.alibaba.fastjson.JSONObject;
+import com.gunmm.dao.SiteDao;
 import com.gunmm.dao.UserDao;
 import com.gunmm.dao.VehicleDao;
 import com.gunmm.db.MyHibernateSessionFactory;
+import com.gunmm.model.Site;
 import com.gunmm.model.User;
 import com.gunmm.responseModel.DriverListModel;
+import com.gunmm.responseModel.ManageListModel;
+import com.gunmm.responseModel.MasterListModel;
 import com.gunmm.utils.JSONUtils;
 
 public class UserDaoImpl implements UserDao {
 
-	// 注册
+	// 获取accesstoken
+	public String getaccessTokenById(String userId) {
+		User user = getUserById(userId);
+		if (user == null) {
+			return "";
+		}
+		return user.getAccessToken();
+	}
+
+	// 注册管理员
 	@Override
 	public JSONObject addUser(User user) {
 		// TODO Auto-generated method stub
@@ -33,7 +46,6 @@ public class UserDaoImpl implements UserDao {
 		user.setCreateTime(new Date());
 		user.setUpdateTime(new Date());
 		user.setScore(5.0);
-		user.setStatus("2");
 		// user.setDriverCertificationStatus("0");
 		Transaction tx = null;
 		try {
@@ -93,6 +105,17 @@ public class UserDaoImpl implements UserDao {
 			if (user == null) {
 				return JSONUtils.responseToJsonString("0", "密码错误！", "密码错误！", "");
 			} else {
+				// 判断站点状态
+				if ("3".equals(user.getType()) || "4".equals(user.getType())) {
+					SiteDao siteDao = new SiteImpl();
+					Site site = siteDao.getSiteById(user.getBelongSiteId());
+					if (!"1".equals(site.getSiteCheckStatus())) {
+						return JSONUtils.responseToJsonString("0", "", "站点信息审核中！", "");
+					}
+
+					user.setSiteType(site.getSiteType());
+				}
+
 				// 设置
 				user.setLoginPlate(plateform);
 				user.setLastLoginTime(new Date());
@@ -239,7 +262,7 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.drivingCardNumber," + "vehicle.vehicleRegistrationNumber,"
 					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
-					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight,"+ "vehicle.plateNumber,"
+					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
 					+ "vehicle.vehicleMakeDate,"
 
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType) as vehicleTypeName,"
@@ -251,7 +274,10 @@ public class UserDaoImpl implements UserDao {
 
 			String sql2 = "";
 			if (siteId != null) {
-				sql2 = "and user.belongSiteId = '" + siteId + "' ";
+				if (siteId.length() > 0) {
+					sql2 = "and user.belongSiteId = '" + siteId + "' ";
+				}
+
 			}
 
 			String sql3 = "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
@@ -285,17 +311,17 @@ public class UserDaoImpl implements UserDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "SELECT user.*," + "vehicle.gpsType," + "vehicle.gpsSerialNumber,"
-					+ "vehicle.drivingCardNumber," + "vehicle.vehicleRegistrationNumber,"
-					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
-					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
-					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight,"+ "vehicle.plateNumber,"
-					+ "vehicle.vehicleMakeDate,"
+			sql = "SELECT user.*," + "vehicle.gpsType," + "vehicle.gpsSerialNumber," + "vehicle.drivingCardNumber,"
+					+ "vehicle.vehicleRegistrationNumber," + "vehicle.operationCertificateNumber,"
+					+ "vehicle.insuranceNumber," + "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber,"
+					+ "vehicle.vehicleBrand," + "vehicle.vehicleModel," + "vehicle.vehiclePhoto,"
+					+ "vehicle.loadWeight," + "vehicle.plateNumber," + "vehicle.vehicleMakeDate,"
 
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
-					+ "FROM user,vehicle " + "where user.vehicleId = vehicle.vehicleId and user.userId = '"+driverId+"'";
+					+ "FROM user,vehicle " + "where user.vehicleId = vehicle.vehicleId and user.userId = '" + driverId
+					+ "'";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(DriverListModel.class);
@@ -333,7 +359,9 @@ public class UserDaoImpl implements UserDao {
 
 			String sql2 = "";
 			if (siteId != null) {
-				sql2 = "and user.belongSiteId = '" + siteId + "' ";
+				if (siteId.length() > 0) {
+					sql2 = "and user.belongSiteId = '" + siteId + "' ";
+				}
 			}
 			sql = sql1 + sql2;
 
@@ -413,6 +441,300 @@ public class UserDaoImpl implements UserDao {
 			}
 		}
 	}
+
+	// 查询的货主列表
+	@SuppressWarnings("unchecked")
+	public List<MasterListModel> getMasterListBySiteId(String page, String rows, String siteId, String filterMasterName,
+			String filterPhoneNumber) {
+		List<MasterListModel> masterList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			String sql1 = "SELECT user.*,"
+					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName " + "FROM user "
+					+ "where user.type = '5' " + "and user.nickname like '%" + filterMasterName
+					+ "%' and user.phoneNumber like '%" + filterPhoneNumber + "%' ";
+
+			String sql2 = "";
+			if (siteId != null) {
+				if (siteId.length() > 0) {
+					sql2 = "and user.belongSiteId = '" + siteId + "' ";
+				}
+			}
+
+			String sql3 = "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
+			sql = sql1 + sql2 + sql3;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(MasterListModel.class);
+
+			masterList = query.list();
+
+			tx.commit();
+			return masterList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return masterList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	// 查询货主条数
+	public Long getMasterCount(String siteId, String filterMasterName, String filterPhoneNumber) {
+		Transaction tx = null;
+		Long driverCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			String sql1 = "select count(*) from user where user.type = '5' " + "and user.nickname like '%"
+					+ filterMasterName + "%' and user.phoneNumber like '%" + filterPhoneNumber + "%' ";
+
+			String sql2 = "";
+			if (siteId != null) {
+				if (siteId.length() > 0) {
+					sql2 = "and user.belongSiteId = '" + siteId + "' ";
+				}
+			}
+			sql = sql1 + sql2;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			driverCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return driverCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return driverCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 根据ID查货主详情信息
+	public JSONObject getMasterInfoByMasterId(String masterId) {
+		MasterListModel masterListModel = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			sql = "SELECT user.*," + "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
+					+ "FROM user " + "where user.userId = '" + masterId + "'";
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(MasterListModel.class);
+
+			masterListModel = (MasterListModel) query.uniqueResult();
+
+			tx.commit();
+			return JSONUtils.responseToJsonString("1", "", "查询成功！", masterListModel);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	// 添加货主
+	public JSONObject addMaster(User user) {
+		// TODO Auto-generated method stub
+		user.setUserId(UUID.randomUUID().toString());
+
+		user.setCreateTime(new Date());
+		user.setUpdateTime(new Date());
+		user.setPassword("e10adc3949ba59abbe56e057f20f883e");
+		user.setScore(5.0);
+		user.setType("5");
+
+		Transaction tx = null;
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			session.save(user);
+			tx.commit();
+			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 删除货主
+	public JSONObject deleteMaster(String masterId) {
+		Transaction tx = null;
+		User master = getUserById(masterId);
+
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			session.delete(master);
+			tx.commit();
+
+			if (master != null) {
+				return JSONUtils.responseToJsonString("1", "", "删除成功！", "");
+			}
+			return JSONUtils.responseToJsonString("0", "对应记录不存在", "删除失败！", "");
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 查询管理员列表
+	@SuppressWarnings("unchecked")
+	public List<ManageListModel> getManageListBySiteId(String page, String rows, String siteId, String filterNickName,
+			String filterPhoneNumber) {
+		List<ManageListModel> manageList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			String sql1 = "SELECT userId, phoneNumber, nickname, personImageUrl, belongSiteId, userIdCardNumber, createTime, updateTime "
+				    + "FROM user "
+					+ "where user.nickname like '%" + filterNickName
+					+ "%' and user.phoneNumber like '%" + filterPhoneNumber + "%' ";
+
+			String sql2 = "";
+			if (siteId != null) {
+				if (siteId.length() > 0) {
+					sql2 = "and user.belongSiteId = '" + siteId + "' and user.type = '4' ";
+				}else {
+					sql2 = "and user.type = '1' ";
+				}
+			}else {
+				sql2 = "and user.type = '1' ";
+			}
+
+			String sql3 = "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
+			sql = sql1 + sql2 + sql3;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(ManageListModel.class);
+
+			manageList = query.list();
+
+			tx.commit();
+			return manageList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return manageList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	// 查询管理员条数
+	public Long getManageCount(String siteId, String filterNickName, String filterPhoneNumber) {
+		Transaction tx = null;
+		Long manageCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			String sql1 = "select count(*) from user where user.nickname like '%"
+					+ filterNickName + "%' and user.phoneNumber like '%" + filterPhoneNumber + "%' ";
+
+			String sql2 = "";
+			if (siteId != null) {
+				if (siteId.length() > 0) {
+					sql2 = "and user.belongSiteId = '" + siteId + "' and user.type = '4' ";
+				}else {
+					sql2 = "and user.type = '1' ";
+				}
+			}else {
+				sql2 = "and user.type = '1' ";
+			}
+			sql = sql1 + sql2;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			manageCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return manageCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return manageCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 添加管理员
+	public JSONObject addManage(User user) {
+		user.setUserId(UUID.randomUUID().toString());
+
+		user.setCreateTime(new Date());
+		user.setUpdateTime(new Date());
+		user.setPassword("e10adc3949ba59abbe56e057f20f883e");
+		if (user.getBelongSiteId() != null) {
+			if (user.getBelongSiteId().length() > 0) {
+				user.setType("4");
+			}else {
+				user.setType("1");
+			}
+		}else {
+			user.setType("1");
+		}
+		
+
+		Transaction tx = null;
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			session.save(user);
+			tx.commit();
+			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
 
 	// 判断手机号是否已经注册
 	public boolean judgeUserByPhone(String phoneNumber) {

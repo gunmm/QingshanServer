@@ -14,8 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
+import com.gunmm.dao.UserDao;
+import com.gunmm.impl.UserDaoImpl;
 import com.gunmm.utils.JSONUtils;
-
 
 /**
  * Servlet Filter implementation class UTFFilter
@@ -23,12 +24,12 @@ import com.gunmm.utils.JSONUtils;
 @WebFilter("/mobile/*")
 public class UTFFilter implements Filter {
 
-    /**
-     * Default constructor. 
-     */
-    public UTFFilter() {
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * Default constructor.
+	 */
+	public UTFFilter() {
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see Filter#destroy()
@@ -38,36 +39,48 @@ public class UTFFilter implements Filter {
 	}
 
 	/**
-	 * @throws IOException 
-	 * @throws  
-	 * @throws IOException 
+	 * @throws IOException
+	 * @throws @throws
+	 *             IOException
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-				
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws ServletException, IOException {
+
 		byte[] data;
-		
-		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+
+		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
 		httpServletResponse.setContentType("text/html;charset=utf-8");
 		try {
-			HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			httpServletRequest.setCharacterEncoding("utf-8");
-			data =JSONUtils.readInputStream(httpServletRequest);
+			data = JSONUtils.readInputStream(httpServletRequest);
 			JSONObject head = JSONUtils.getHead(data);
-			
-			if (head.getString("token").length() > 0) {
-				JSONObject body = JSONUtils.getBody(data);
-				request.setAttribute("body", body);
-				chain.doFilter(request, response);
-			}else {
+
+			UserDao userDao = new UserDaoImpl();
+			String reallyToken = userDao.getaccessTokenById(head.getString("userId"));
+			String nowToken = head.getString("token");
+			if (nowToken != null) {
+				if (nowToken.length() > 0 && nowToken.equals(reallyToken)) {
+					JSONObject body = JSONUtils.getBody(data);
+					request.setAttribute("body", body);
+					chain.doFilter(request, response);
+				} else {
+					PrintWriter out = httpServletResponse.getWriter();
+					out.println(JSONUtils.responseToJsonString("-9", "token无效", "请求失败！", ""));
+					out.flush();
+					out.close();
+					return;
+				}
+			} else {
 				PrintWriter out = httpServletResponse.getWriter();
-				out.println(JSONUtils.responseToJsonString("0", "token无效", "请求失败！", "").toString());
+				out.println(JSONUtils.responseToJsonString("-9", "token无效", "请求失败！", ""));
 				out.flush();
 				out.close();
 				return;
 			}
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -77,7 +90,7 @@ public class UTFFilter implements Filter {
 			out.close();
 			return;
 		}
-		
+
 	}
 
 	/**

@@ -15,10 +15,10 @@ public interface SiteDao {
 	public JSONObject deleteSiteById(String siteId);
 	
 	//查询站点列表
-	public List<SiteListModel> getSiteList(String page, String rows, String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime);
+	public List<SiteListModel> getSiteList(String page, String rows, String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime, String superSiteId);
 	
 	//查询站点条数
-	public Long getSiteCount(String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime);
+	public Long getSiteCount(String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime, String superSiteId);
 	
 	//根据站点id拿站点信息
 	public Site getSiteById(String siteId);

@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.CityDao;
 import com.gunmm.dao.SiteDao;
+import com.gunmm.dao.UserDao;
 import com.gunmm.impl.CityImpl;
 import com.gunmm.impl.SiteImpl;
+import com.gunmm.impl.UserDaoImpl;
 import com.gunmm.model.Site;
+import com.gunmm.model.User;
 import com.gunmm.responseModel.SiteListModel;
 import com.gunmm.utils.JSONUtils;
 
@@ -22,19 +25,49 @@ import com.gunmm.utils.JSONUtils;
 public class SiteController {
 
 	// 添加站点
+	@SuppressWarnings("unused")
 	@RequestMapping("/addSite")
 	@ResponseBody
 	private JSONObject addSite(HttpServletRequest request) {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 		Site site = new Site();
 		site = JSONObject.parseObject(object.toJSONString(), Site.class);
+		
+		UserDao userDao = new UserDaoImpl();
+		if(userDao.judgeUserByPhone(site.getLawsManPhone())) {
+			return JSONUtils.responseToJsonString("0", "法人手机号已被注册！", "法人手机号已被注册！", "");
+		}
 
 		if (site == null) {
 			return JSONUtils.responseToJsonString("0", "未接收到数据", "添加失败！", "");
 		}
-
+		
 		SiteDao siteDao = new SiteImpl();
-		return siteDao.addSite(site);
+		JSONObject jsonObj = siteDao.addSite(site);
+		String result_code = jsonObj.getString("result_code");
+
+		if (!"1".equals(result_code)) {
+			return jsonObj;
+		}
+		String addSiteId = jsonObj.getString("object");
+		
+		
+		User user = new User();
+		user.setPhoneNumber(site.getLawsManPhone());
+		user.setUserIdCardNumber(site.getLawsManIdCardNumber());
+		user.setNickname(site.getLawsManName());
+		user.setType("3");
+		user.setBelongSiteId(addSiteId);
+		user.setPassword("e10adc3949ba59abbe56e057f20f883e");
+		
+		JSONObject jsonObj2 = userDao.addUser(user);
+		String result_code2 = jsonObj2.getString("result_code");
+
+		if (!"1".equals(result_code2)) {
+			siteDao.deleteSiteById(addSiteId);
+			return jsonObj2;
+		}
+		return JSONUtils.responseToJsonString("1", "", "添加成功！", addSiteId);
 	}
 
 	// 删除站点
@@ -136,12 +169,13 @@ public class SiteController {
 		String filterLawsManName = object.getString("filterLawsManName");
 		String filterBeginTime = object.getString("filterBeginTime");
 		String filterEndTime = object.getString("filterEndTime");
+		String superSiteId = object.getString("superSiteId");
 
 		SiteDao siteDao = new SiteImpl();
 		List<SiteListModel> siteList = siteDao.getSiteList(page, rows, filterSiteName, filterLawsManName, filterBeginTime,
-				filterEndTime);
+				filterEndTime, superSiteId);
 
-		Long siteCount = siteDao.getSiteCount(filterSiteName, filterLawsManName, filterBeginTime, filterEndTime);
+		Long siteCount = siteDao.getSiteCount(filterSiteName, filterLawsManName, filterBeginTime, filterEndTime, superSiteId);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("siteCount", siteCount);
 		jsonObject.put("siteList", siteList);

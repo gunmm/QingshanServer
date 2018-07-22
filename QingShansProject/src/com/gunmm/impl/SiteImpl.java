@@ -152,7 +152,7 @@ public class SiteImpl implements SiteDao {
 	// 查询站点列表
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SiteListModel> getSiteList(String page, String rows, String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime) {
+	public List<SiteListModel> getSiteList(String page, String rows, String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime, String superSiteId) {
 		// TODO Auto-generated method stub
 		List<SiteListModel> siteList = null;
 		Transaction tx = null;
@@ -173,9 +173,15 @@ public class SiteImpl implements SiteDao {
 			}else if (filterEndTime.length() > 0) {
 				sql2 = "and (site.createTime < '"+filterEndTime+" 23:59:59') ";
 			}
+			String sql4 = "";
+			if (superSiteId != null) {
+				if (superSiteId.length() > 0) {
+					sql4 = "and site.superSiteId = '"+ superSiteId +"' ";
+				}
+			}
 			String sql3 = "ORDER BY updateTime desc "
 				     + "LIMIT " + page + "," + rows;
-			sql = sql1 + sql2 +sql3;
+			sql = sql1 + sql2 + sql4 +sql3;
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(SiteListModel.class);
 
@@ -252,7 +258,7 @@ public class SiteImpl implements SiteDao {
 
 	// 查询站点条数
 	@Override
-	public Long getSiteCount(String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime) {
+	public Long getSiteCount(String filterSiteName, String filterLawsManName, String filterBeginTime, String filterEndTime, String superSiteId) {
 		// TODO Auto-generated method stub
 		Transaction tx = null;
 		Long siteCount = (long) 0;
@@ -270,7 +276,14 @@ public class SiteImpl implements SiteDao {
 			}else if (filterEndTime.length() > 0) {
 				sql2 = "and (site.createTime < '"+filterEndTime+" 23:59:59') ";
 			}
-			sql = sql1 + sql2;
+			
+			String sql4 = "";
+			if (superSiteId != null) {
+				if (superSiteId.length() > 0) {
+					sql4 = "and site.superSiteId = '"+ superSiteId +"' ";
+				}
+			}
+			sql = sql1 + sql4 + sql2;
 			
 			SQLQuery query = session.createSQLQuery(sql);
 			siteCount = ((BigInteger)query.uniqueResult()).longValue();

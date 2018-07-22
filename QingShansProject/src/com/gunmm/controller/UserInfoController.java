@@ -18,6 +18,8 @@ import com.gunmm.impl.VehicleImpl;
 import com.gunmm.model.User;
 import com.gunmm.model.Vehicle;
 import com.gunmm.responseModel.DriverListModel;
+import com.gunmm.responseModel.ManageListModel;
+import com.gunmm.responseModel.MasterListModel;
 import com.gunmm.utils.JSONUtils;
 
 @Controller
@@ -35,11 +37,8 @@ public class UserInfoController {
 			return JSONUtils.responseToJsonString("0", "", "未接收到用户ID！", "");
 		}
 
-		DictionaryDao dictionaryDao = new DictionaryImpl();
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.getUserById(userId);
-		// user.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型",
-		// user.getVehicleType()));
 		return JSONUtils.responseToJsonString("1", "", "请求成功！", user);
 	}
 
@@ -49,28 +48,24 @@ public class UserInfoController {
 	private JSONObject updateUserInfo(HttpServletRequest request) {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 		String userId = object.getString("userId");
-		String personImageUrl = object.getString("personImageUrl");
-		String nickname = object.getString("nickname");
-		String plateNumber = object.getString("plateNumber");
-		String vehicleType = object.getString("vehicleType");
-		String driverLicenseImageUrl = object.getString("driverLicenseImageUrl");
-		String driverVehicleImageUrl = object.getString("driverVehicleImageUrl");
-		String driverThirdImageUrl = object.getString("driverThirdImageUrl");
-
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.getUserById(userId);
-		user.setPersonImageUrl(personImageUrl);
-		user.setNickname(nickname);
-		// user.setPlateNumber(plateNumber);
-		// user.setVehicleType(vehicleType);
-		// user.setDriverLicenseImageUrl(driverLicenseImageUrl);
-		// user.setDriverVehicleImageUrl(driverVehicleImageUrl);
-		// user.setDriverThirdImageUrl(driverThirdImageUrl);
-		// if ("2".equals(user.getDriverCertificationStatus())) {
-		// user.setDriverCertificationStatus("2");
-		// }else {
-		// user.setDriverCertificationStatus("1");
-		// }
+		String personImageUrl = object.getString("personImageUrl");
+		String nickname = object.getString("nickname");
+		
+		if (personImageUrl != null) {
+			if (personImageUrl.length() > 0) {
+				user.setPersonImageUrl(personImageUrl);
+			}
+		}
+		
+		if (nickname != null) {
+			if (nickname.length() > 0) {
+				user.setNickname(nickname);
+			}
+		}
+		
+		
 
 		return userDao.updateUserInfo(user);
 	}
@@ -135,11 +130,11 @@ public class UserInfoController {
 	@ResponseBody
 	private JSONObject getDriverInfoById(HttpServletRequest request) {
 		JSONObject object = (JSONObject) request.getAttribute("body");
-		
+
 		String driverId = object.getString("driverId");
-		
+
 		UserDao userDao = new UserDaoImpl();
-		
+
 		return userDao.getDriverInfoByDriverId(driverId);
 	}
 
@@ -200,10 +195,19 @@ public class UserInfoController {
 		if (!"1".equals(result_code)) {
 			return jsonObj;
 		}
+		String addVehicleId = jsonObj.getString("object");
 
-		user.setVehicleId(jsonObj.getString("object"));
+		user.setVehicleId(addVehicleId);
 
-		return userDao.addDriver(user);
+		JSONObject jsonObj2 = userDao.addDriver(user);
+		String result_code2 = jsonObj2.getString("result_code");
+
+		if (!"1".equals(result_code2)) {
+			vehicleDao.deleteVehicle(addVehicleId);
+			return jsonObj2;
+		}
+
+		return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 	}
 
 	// 编辑司机
@@ -268,6 +272,166 @@ public class UserInfoController {
 
 		UserDao userDao = new UserDaoImpl();
 		return userDao.deleteDriver(driverId);
+	}
+
+	// 查询货主列表
+	@RequestMapping("/getMasterList")
+	@ResponseBody
+	private JSONObject getMasterList(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String rows = object.getString("rows");
+		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+		String filterMasterName = object.getString("filterMasterName");
+		String filterPhoneNumber = object.getString("filterPhoneNumber");
+
+		String siteId = object.getString("siteId");
+
+		UserDao userDao = new UserDaoImpl();
+		List<MasterListModel> masterList = userDao.getMasterListBySiteId(page, rows, siteId, filterMasterName,
+				filterPhoneNumber);
+
+		Long masterCount = userDao.getMasterCount(siteId, filterMasterName, filterPhoneNumber);
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("masterCount", masterCount);
+		jsonObject.put("masterList", masterList);
+
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
+	}
+
+	// 根据id查询详情
+	@RequestMapping("/getMasterInfoById")
+	@ResponseBody
+	private JSONObject getMasterInfoById(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		String masterId = object.getString("masterId");
+
+		UserDao userDao = new UserDaoImpl();
+
+		return userDao.getMasterInfoByMasterId(masterId);
+	}
+
+	// 添加货主
+	@RequestMapping("/addMaster")
+	@ResponseBody
+	private JSONObject addMaster(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		User user = new User();
+		user = JSONObject.parseObject(object.toJSONString(), User.class);
+
+		UserDao userDao = new UserDaoImpl();
+
+		// 判断手机号
+		if (userDao.judgeUserByPhone(user.getPhoneNumber())) {
+			return JSONUtils.responseToJsonString("0", "手机号已被注册！", "手机号已被注册！", "");
+		}
+
+		// 判断身份证号
+		if (userDao.judgeUserIdCardNumber(user.getUserIdCardNumber())) {
+			return JSONUtils.responseToJsonString("0", "身份证号已被注册！", "身份证号已被注册！", "");
+		}
+
+		return userDao.addMaster(user);
+	}
+
+	// 编辑货主
+	@RequestMapping("/editMaster")
+	@ResponseBody
+	private JSONObject editMaster(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		User user = new User();
+		user = JSONObject.parseObject(object.toJSONString(), User.class);
+
+		UserDao userDao = new UserDaoImpl();
+
+		User newUser = userDao.getUserById(user.getUserId());
+		newUser.setNickname(user.getNickname());
+		newUser.setPhoneNumber(user.getPhoneNumber());
+		newUser.setUserIdCardNumber(user.getUserIdCardNumber());
+		newUser.setMainGoodsName(user.getMainGoodsName());
+		return userDao.updateUserInfo(newUser);
+	}
+
+	// 删除货主
+	@RequestMapping("/deleteMaster")
+	@ResponseBody
+	private JSONObject deleteMaster(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		String masterId = object.getString("masterId");
+
+		UserDao userDao = new UserDaoImpl();
+		return userDao.deleteMaster(masterId);
+	}
+
+	// 查询管理员列表
+	@RequestMapping("/getManageList")
+	@ResponseBody
+	private JSONObject getManageList(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String rows = object.getString("rows");
+		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+		String filterNickName = object.getString("filterNickName");
+		String filterPhoneNumber = object.getString("filterPhoneNumber");
+
+		String siteId = object.getString("siteId");
+
+		UserDao userDao = new UserDaoImpl();
+		List<ManageListModel> manageList = userDao.getManageListBySiteId(page, rows, siteId, filterNickName,
+				filterPhoneNumber);
+
+		Long manageCount = userDao.getManageCount(siteId, filterNickName, filterPhoneNumber);
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("manageCount", manageCount);
+		jsonObject.put("manageList", manageList);
+
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
+	}
+
+	// 添加管理员
+	@RequestMapping("/addManage")
+	@ResponseBody
+	private JSONObject addManage(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		User user = new User();
+		user = JSONObject.parseObject(object.toJSONString(), User.class);
+
+		UserDao userDao = new UserDaoImpl();
+
+		// 判断手机号
+		if (userDao.judgeUserByPhone(user.getPhoneNumber())) {
+			return JSONUtils.responseToJsonString("0", "手机号已被注册！", "手机号已被注册！", "");
+		}
+
+		// 判断身份证号
+		if (userDao.judgeUserIdCardNumber(user.getUserIdCardNumber())) {
+			return JSONUtils.responseToJsonString("0", "身份证号已被注册！", "身份证号已被注册！", "");
+		}
+
+		return userDao.addManage(user);
+	}
+
+	// 编辑管理员
+	@RequestMapping("/editManage")
+	@ResponseBody
+	private JSONObject editManage(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		User user = new User();
+		user = JSONObject.parseObject(object.toJSONString(), User.class);
+
+		UserDao userDao = new UserDaoImpl();
+
+		User newUser = userDao.getUserById(user.getUserId());
+		newUser.setNickname(user.getNickname());
+		newUser.setPhoneNumber(user.getPhoneNumber());
+		newUser.setUserIdCardNumber(user.getUserIdCardNumber());
+		return userDao.updateUserInfo(newUser);
 	}
 
 }
