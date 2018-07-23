@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-7-8 9:18:08 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-7-23 21:45:29 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.model.Order" table="`ORDER`">
         <id name="orderId" type="java.lang.String">
@@ -17,6 +17,9 @@
         <property name="appointStatus" type="java.lang.String">
             <column name="APPOINTSTATUS" />
         </property>
+        <property name="needInvoice" type="java.lang.String">
+            <column name="NEEDINVOICE" />
+        </property>
         <property name="createManId" type="java.lang.String">
             <column name="CREATEMANID" />
         </property>
@@ -31,9 +34,6 @@
         </property>
         <property name="carType" type="java.lang.String">
             <column name="CARTYPE" />
-        </property>
-        <property name="carTypeName" type="java.lang.String">
-            <column name="CARTYPENAME" />
         </property>
         <property name="note" type="java.lang.String">
             <column name="NOTE" />
@@ -62,11 +62,26 @@
         <property name="distance" type="java.lang.Double">
             <column name="DISTANCE" />
         </property>
-        <property name="payType" type="java.lang.String">
-            <column name="PAYTYPE" />
+        <property name="withdrawMoneyStatus" type="java.lang.String">
+            <column name="WITHDRAWMONEYSTATUS" />
         </property>
-        <property name="payStatus" type="java.lang.String">
-            <column name="PAYSTATUS" />
+        <property name="freightFeePayType" type="java.lang.String">
+            <column name="FREIGHTFEEPAYTYPE" />
+        </property>
+        <property name="freightFeePayStatus" type="java.lang.String">
+            <column name="FREIGHTFEEPAYSTATUS" />
+        </property>
+        <property name="freightFeePayId" type="java.lang.String">
+            <column name="FREIGHTFEEPAYID" />
+        </property>
+        <property name="serviceFeePayType" type="java.lang.String">
+            <column name="SERVICEFEEPAYTYPE" />
+        </property>
+        <property name="serviceFeePayStatus" type="java.lang.String">
+            <column name="SERVICEFEEPAYSTATUS" />
+        </property>
+        <property name="serviceFeePayId" type="java.lang.String">
+            <column name="SERVICEFEEPAYID" />
         </property>
         <property name="commentContent" type="java.lang.String">
             <column name="COMMENTCONTENT" />
@@ -74,11 +89,11 @@
         <property name="commentStar" type="java.lang.Double">
             <column name="COMMENTSTAR" />
         </property>
-        <property name="siteComplaint" type="java.lang.String">
-            <column name="SITECOMPLAINT" />
+        <property name="siteComplaintId" type="java.lang.String">
+            <column name="SITECOMPLAINTID" />
         </property>
-        <property name="driverComplaint" type="java.lang.String">
-            <column name="DRIVERCOMPLAINT" />
+        <property name="driverComplaintId" type="java.lang.String">
+            <column name="DRIVERCOMPLAINTID" />
         </property>
         <property name="createTime" type="java.util.Date">
             <column name="CREATETIME" />

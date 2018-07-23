@@ -1,9 +1,11 @@
 package com.gunmm.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -11,6 +13,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.VehicleDao;
 import com.gunmm.db.MyHibernateSessionFactory;
 import com.gunmm.model.Vehicle;
+import com.gunmm.responseModel.DriverListModel;
+import com.gunmm.responseModel.VehicleListModel;
 import com.gunmm.utils.JSONUtils;
 
 public class VehicleImpl implements VehicleDao {
@@ -113,6 +117,50 @@ public class VehicleImpl implements VehicleDao {
 			if (tx != null) {
 				tx = null;
 			}
+		}
+	}
+
+	// 查询地图车辆列表
+	@SuppressWarnings("unchecked")
+	public List<VehicleListModel> getVehicleListBySiteId(String siteId) {
+		List<VehicleListModel> vehicleList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			String sql1 = "SELECT vehicle.*,user.userId "
+					+ "FROM user,vehicle " 
+					+ "where user.vehicleId = vehicle.vehicleId ";
+
+			String sql2 = "";
+			if (siteId != null) {
+				if (siteId.length() > 0) {
+					sql2 = "and user.belongSiteId = '" + siteId + "' ";
+				}
+
+			}
+
+			
+			sql = sql1 + sql2;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(VehicleListModel.class);
+
+			vehicleList = query.list();
+
+			tx.commit();
+			return vehicleList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return vehicleList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
 		}
 	}
 

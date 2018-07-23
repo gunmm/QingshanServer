@@ -9,9 +9,10 @@ public class Order {
 
 	
 	private String orderId;
-	private String status; //订单状态 0：刚新建未被接单  1：已被接单  2：已发货  3：发货完成  9：订单取消
+	private String status; //订单状态 0：刚新建未被接单 1:已被抢单  2：已被接单  3：已发货  4：发货完成  9：订单取消
 	private String type; //订单类型   0：全部   1：实时  2：预约
 	private String appointStatus; //预约订单司机方的执行状态   0：未开始   1：已开始
+	private String needInvoice; //是否需要发票   0：不需要   1：需要   需要发票则需要支付货款到平台
 
 	private String createManId; //发布人id
 	private String driverId; //接单司机id
@@ -20,7 +21,6 @@ public class Order {
 	private String linkPhone; //联系电话
 	
 	private String carType; //车辆类型
-	private String carTypeName; //车辆类型
 
 	private String note; //备注
 
@@ -34,11 +34,18 @@ public class Order {
 	private Double receiveLatitude = 0.0; 
 	private Double receiveLongitude = 0.0; 
 	
-	private Double price = 0.0; //费用
+	private Double price = 0.0; //总运费用
 	private Double distance = 0.0; //距离
+	
+	private String withdrawMoneyStatus; //提现状态 0：未提现  1：已提现
+	
+	private String freightFeePayType; //运费  支付方式   1:支付宝支付    2:微信支付   3:现金支付
+	private String freightFeePayStatus; //运费 支付状态   0:未支付   1:已支付
+	private String freightFeePayId; //运费 支付号 
 
-	private String payType; //支付方式   1:支付宝支付    2:微信支付   3:现金支付
-	private String payStatus; //支付状态   0:未支付   1:已支付
+	private String serviceFeePayType; //服务费  支付方式   1:支付宝支付    2:微信支付   3:现金支付
+	private String serviceFeePayStatus; //服务费 支付状态   0:未支付   1:已支付
+	private String serviceFeePayId; //服务费 支付号 
 	
 
 	private String commentContent;  //评价内容
@@ -46,8 +53,8 @@ public class Order {
 
 
 	
-	private String siteComplaint;  //站点投诉
-	private String driverComplaint; //司机投诉
+	private String siteComplaintId;  //站点投诉ID
+	private String driverComplaintId; //司机投诉ID
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime; // 创建时间
@@ -57,6 +64,7 @@ public class Order {
 
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date appointTime; //预约时间  
+
 	
 	
 	public Order() {
@@ -64,9 +72,11 @@ public class Order {
 	}
 
 
+
 	public String getOrderId() {
 		return orderId;
 	}
+
 
 
 	public void setOrderId(String orderId) {
@@ -74,9 +84,11 @@ public class Order {
 	}
 
 
+
 	public String getStatus() {
 		return status;
 	}
+
 
 
 	public void setStatus(String status) {
@@ -84,9 +96,11 @@ public class Order {
 	}
 
 
+
 	public String getType() {
 		return type;
 	}
+
 
 
 	public void setType(String type) {
@@ -94,9 +108,11 @@ public class Order {
 	}
 
 
+
 	public String getAppointStatus() {
 		return appointStatus;
 	}
+
 
 
 	public void setAppointStatus(String appointStatus) {
@@ -104,9 +120,23 @@ public class Order {
 	}
 
 
+
+	public String getNeedInvoice() {
+		return needInvoice;
+	}
+
+
+
+	public void setNeedInvoice(String needInvoice) {
+		this.needInvoice = needInvoice;
+	}
+
+
+
 	public String getCreateManId() {
 		return createManId;
 	}
+
 
 
 	public void setCreateManId(String createManId) {
@@ -114,9 +144,11 @@ public class Order {
 	}
 
 
+
 	public String getDriverId() {
 		return driverId;
 	}
+
 
 
 	public void setDriverId(String driverId) {
@@ -124,9 +156,11 @@ public class Order {
 	}
 
 
+
 	public String getLinkMan() {
 		return linkMan;
 	}
+
 
 
 	public void setLinkMan(String linkMan) {
@@ -134,9 +168,11 @@ public class Order {
 	}
 
 
+
 	public String getLinkPhone() {
 		return linkPhone;
 	}
+
 
 
 	public void setLinkPhone(String linkPhone) {
@@ -144,9 +180,11 @@ public class Order {
 	}
 
 
+
 	public String getCarType() {
 		return carType;
 	}
+
 
 
 	public void setCarType(String carType) {
@@ -154,19 +192,11 @@ public class Order {
 	}
 
 
-	public String getCarTypeName() {
-		return carTypeName;
-	}
-
-
-	public void setCarTypeName(String carTypeName) {
-		this.carTypeName = carTypeName;
-	}
-
 
 	public String getNote() {
 		return note;
 	}
+
 
 
 	public void setNote(String note) {
@@ -174,9 +204,11 @@ public class Order {
 	}
 
 
+
 	public String getSendAddress() {
 		return sendAddress;
 	}
+
 
 
 	public void setSendAddress(String sendAddress) {
@@ -184,9 +216,11 @@ public class Order {
 	}
 
 
+
 	public Double getSendLatitude() {
 		return sendLatitude;
 	}
+
 
 
 	public void setSendLatitude(Double sendLatitude) {
@@ -194,9 +228,11 @@ public class Order {
 	}
 
 
+
 	public Double getSendLongitude() {
 		return sendLongitude;
 	}
+
 
 
 	public void setSendLongitude(Double sendLongitude) {
@@ -204,9 +240,11 @@ public class Order {
 	}
 
 
+
 	public String getReceiveAddress() {
 		return receiveAddress;
 	}
+
 
 
 	public void setReceiveAddress(String receiveAddress) {
@@ -214,9 +252,11 @@ public class Order {
 	}
 
 
+
 	public Double getReceiveLatitude() {
 		return receiveLatitude;
 	}
+
 
 
 	public void setReceiveLatitude(Double receiveLatitude) {
@@ -224,9 +264,11 @@ public class Order {
 	}
 
 
+
 	public Double getReceiveLongitude() {
 		return receiveLongitude;
 	}
+
 
 
 	public void setReceiveLongitude(Double receiveLongitude) {
@@ -234,9 +276,11 @@ public class Order {
 	}
 
 
+
 	public Double getPrice() {
 		return price;
 	}
+
 
 
 	public void setPrice(Double price) {
@@ -244,9 +288,11 @@ public class Order {
 	}
 
 
+
 	public Double getDistance() {
 		return distance;
 	}
+
 
 
 	public void setDistance(Double distance) {
@@ -254,28 +300,89 @@ public class Order {
 	}
 
 
-	public String getPayType() {
-		return payType;
+
+	public String getWithdrawMoneyStatus() {
+		return withdrawMoneyStatus;
 	}
 
 
-	public void setPayType(String payType) {
-		this.payType = payType;
+
+	public void setWithdrawMoneyStatus(String withdrawMoneyStatus) {
+		this.withdrawMoneyStatus = withdrawMoneyStatus;
 	}
 
 
-	public String getPayStatus() {
-		return payStatus;
+
+	public String getFreightFeePayType() {
+		return freightFeePayType;
 	}
 
 
-	public void setPayStatus(String payStatus) {
-		this.payStatus = payStatus;
+
+	public void setFreightFeePayType(String freightFeePayType) {
+		this.freightFeePayType = freightFeePayType;
 	}
-	
-	
-	
-	
+
+
+
+	public String getFreightFeePayStatus() {
+		return freightFeePayStatus;
+	}
+
+
+
+	public void setFreightFeePayStatus(String freightFeePayStatus) {
+		this.freightFeePayStatus = freightFeePayStatus;
+	}
+
+
+
+	public String getFreightFeePayId() {
+		return freightFeePayId;
+	}
+
+
+
+	public void setFreightFeePayId(String freightFeePayId) {
+		this.freightFeePayId = freightFeePayId;
+	}
+
+
+
+	public String getServiceFeePayType() {
+		return serviceFeePayType;
+	}
+
+
+
+	public void setServiceFeePayType(String serviceFeePayType) {
+		this.serviceFeePayType = serviceFeePayType;
+	}
+
+
+
+	public String getServiceFeePayStatus() {
+		return serviceFeePayStatus;
+	}
+
+
+
+	public void setServiceFeePayStatus(String serviceFeePayStatus) {
+		this.serviceFeePayStatus = serviceFeePayStatus;
+	}
+
+
+
+	public String getServiceFeePayId() {
+		return serviceFeePayId;
+	}
+
+
+
+	public void setServiceFeePayId(String serviceFeePayId) {
+		this.serviceFeePayId = serviceFeePayId;
+	}
+
 
 
 	public String getCommentContent() {
@@ -283,9 +390,11 @@ public class Order {
 	}
 
 
+
 	public void setCommentContent(String commentContent) {
 		this.commentContent = commentContent;
 	}
+
 
 
 	public Double getCommentStar() {
@@ -293,29 +402,35 @@ public class Order {
 	}
 
 
+
 	public void setCommentStar(Double commentStar) {
 		this.commentStar = commentStar;
 	}
 
 
-	public String getSiteComplaint() {
-		return siteComplaint;
+
+	public String getSiteComplaintId() {
+		return siteComplaintId;
 	}
 
 
-	public void setSiteComplaint(String siteComplaint) {
-		this.siteComplaint = siteComplaint;
+
+	public void setSiteComplaintId(String siteComplaintId) {
+		this.siteComplaintId = siteComplaintId;
 	}
 
 
-	public String getDriverComplaint() {
-		return driverComplaint;
+
+	public String getDriverComplaintId() {
+		return driverComplaintId;
 	}
 
 
-	public void setDriverComplaint(String driverComplaint) {
-		this.driverComplaint = driverComplaint;
+
+	public void setDriverComplaintId(String driverComplaintId) {
+		this.driverComplaintId = driverComplaintId;
 	}
+
 
 
 	public Date getCreateTime() {
@@ -323,9 +438,11 @@ public class Order {
 	}
 
 
+
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
+
 
 
 	public Date getUpdateTime() {
@@ -333,9 +450,11 @@ public class Order {
 	}
 
 
+
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+
 
 
 	public Date getAppointTime() {
@@ -343,13 +462,11 @@ public class Order {
 	}
 
 
+
 	public void setAppointTime(Date appointTime) {
 		this.appointTime = appointTime;
 	}
 
-	
-	
-	
 	
 	
 	

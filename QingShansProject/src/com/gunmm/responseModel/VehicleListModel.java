@@ -1,10 +1,10 @@
-package com.gunmm.model;
+package com.gunmm.responseModel;
 
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class Vehicle {
+public class VehicleListModel {
 
 	private String vehicleId;              // 车辆id
 	private String plateNumber;              // 车牌号
@@ -35,10 +35,16 @@ public class Vehicle {
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;              // 更新时间
 	
+	private String userId;   //司机ID
+
 	
-	public Vehicle() {
+	
+	
+	public VehicleListModel() {
 
 	}
+
+
 
 
 	public String getVehicleId() {
@@ -46,9 +52,13 @@ public class Vehicle {
 	}
 
 
+
+
 	public void setVehicleId(String vehicleId) {
 		this.vehicleId = vehicleId;
 	}
+
+
 
 
 	public String getPlateNumber() {
@@ -56,9 +66,13 @@ public class Vehicle {
 	}
 
 
+
+
 	public void setPlateNumber(String plateNumber) {
 		this.plateNumber = plateNumber;
 	}
+
+
 
 
 	public String getVehicleType() {
@@ -66,139 +80,13 @@ public class Vehicle {
 	}
 
 
+
+
 	public void setVehicleType(String vehicleType) {
 		this.vehicleType = vehicleType;
 	}
 
 
-	public String getDrivingCardNumber() {
-		return drivingCardNumber;
-	}
-
-
-	public void setDrivingCardNumber(String drivingCardNumber) {
-		this.drivingCardNumber = drivingCardNumber;
-	}
-
-
-	public String getVehicleRegistrationNumber() {
-		return vehicleRegistrationNumber;
-	}
-
-
-	public void setVehicleRegistrationNumber(String vehicleRegistrationNumber) {
-		this.vehicleRegistrationNumber = vehicleRegistrationNumber;
-	}
-
-
-	public String getOperationCertificateNumber() {
-		return operationCertificateNumber;
-	}
-
-
-	public void setOperationCertificateNumber(String operationCertificateNumber) {
-		this.operationCertificateNumber = operationCertificateNumber;
-	}
-
-
-	public String getInsuranceNumber() {
-		return insuranceNumber;
-	}
-
-
-	public void setInsuranceNumber(String insuranceNumber) {
-		this.insuranceNumber = insuranceNumber;
-	}
-
-
-	public String getVehicleIdCardNumber() {
-		return vehicleIdCardNumber;
-	}
-
-
-	public void setVehicleIdCardNumber(String vehicleIdCardNumber) {
-		this.vehicleIdCardNumber = vehicleIdCardNumber;
-	}
-
-
-	public String getBusinessLicenseNumber() {
-		return businessLicenseNumber;
-	}
-
-
-	public void setBusinessLicenseNumber(String businessLicenseNumber) {
-		this.businessLicenseNumber = businessLicenseNumber;
-	}
-
-
-	public String getVehicleBrand() {
-		return vehicleBrand;
-	}
-
-
-	public void setVehicleBrand(String vehicleBrand) {
-		this.vehicleBrand = vehicleBrand;
-	}
-
-
-	public String getVehicleModel() {
-		return vehicleModel;
-	}
-
-
-	public void setVehicleModel(String vehicleModel) {
-		this.vehicleModel = vehicleModel;
-	}
-
-
-	public String getVehiclePhoto() {
-		return vehiclePhoto;
-	}
-
-
-	public void setVehiclePhoto(String vehiclePhoto) {
-		this.vehiclePhoto = vehiclePhoto;
-	}
-
-
-	public String getLoadWeight() {
-		return loadWeight;
-	}
-
-
-	public void setLoadWeight(String loadWeight) {
-		this.loadWeight = loadWeight;
-	}
-
-
-	public String getVehicleMakeDate() {
-		return vehicleMakeDate;
-	}
-
-
-	public void setVehicleMakeDate(String vehicleMakeDate) {
-		this.vehicleMakeDate = vehicleMakeDate;
-	}
-
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
 
 
 	public String getGpsType() {
@@ -206,9 +94,13 @@ public class Vehicle {
 	}
 
 
+
+
 	public void setGpsType(String gpsType) {
 		this.gpsType = gpsType;
 	}
+
+
 
 
 	public String getGpsSerialNumber() {
@@ -216,9 +108,167 @@ public class Vehicle {
 	}
 
 
+
+
 	public void setGpsSerialNumber(String gpsSerialNumber) {
 		this.gpsSerialNumber = gpsSerialNumber;
 	}
+
+
+
+
+	public String getDrivingCardNumber() {
+		return drivingCardNumber;
+	}
+
+
+
+
+	public void setDrivingCardNumber(String drivingCardNumber) {
+		this.drivingCardNumber = drivingCardNumber;
+	}
+
+
+
+
+	public String getVehicleRegistrationNumber() {
+		return vehicleRegistrationNumber;
+	}
+
+
+
+
+	public void setVehicleRegistrationNumber(String vehicleRegistrationNumber) {
+		this.vehicleRegistrationNumber = vehicleRegistrationNumber;
+	}
+
+
+
+
+	public String getOperationCertificateNumber() {
+		return operationCertificateNumber;
+	}
+
+
+
+
+	public void setOperationCertificateNumber(String operationCertificateNumber) {
+		this.operationCertificateNumber = operationCertificateNumber;
+	}
+
+
+
+
+	public String getInsuranceNumber() {
+		return insuranceNumber;
+	}
+
+
+
+
+	public void setInsuranceNumber(String insuranceNumber) {
+		this.insuranceNumber = insuranceNumber;
+	}
+
+
+
+
+	public String getVehicleIdCardNumber() {
+		return vehicleIdCardNumber;
+	}
+
+
+
+
+	public void setVehicleIdCardNumber(String vehicleIdCardNumber) {
+		this.vehicleIdCardNumber = vehicleIdCardNumber;
+	}
+
+
+
+
+	public String getBusinessLicenseNumber() {
+		return businessLicenseNumber;
+	}
+
+
+
+
+	public void setBusinessLicenseNumber(String businessLicenseNumber) {
+		this.businessLicenseNumber = businessLicenseNumber;
+	}
+
+
+
+
+	public String getVehicleBrand() {
+		return vehicleBrand;
+	}
+
+
+
+
+	public void setVehicleBrand(String vehicleBrand) {
+		this.vehicleBrand = vehicleBrand;
+	}
+
+
+
+
+	public String getVehicleModel() {
+		return vehicleModel;
+	}
+
+
+
+
+	public void setVehicleModel(String vehicleModel) {
+		this.vehicleModel = vehicleModel;
+	}
+
+
+
+
+	public String getVehiclePhoto() {
+		return vehiclePhoto;
+	}
+
+
+
+
+	public void setVehiclePhoto(String vehiclePhoto) {
+		this.vehiclePhoto = vehiclePhoto;
+	}
+
+
+
+
+	public String getLoadWeight() {
+		return loadWeight;
+	}
+
+
+
+
+	public void setLoadWeight(String loadWeight) {
+		this.loadWeight = loadWeight;
+	}
+
+
+
+
+	public String getVehicleMakeDate() {
+		return vehicleMakeDate;
+	}
+
+
+
+
+	public void setVehicleMakeDate(String vehicleMakeDate) {
+		this.vehicleMakeDate = vehicleMakeDate;
+	}
+
+
 
 
 	public Double getNowLatitude() {
@@ -226,9 +276,13 @@ public class Vehicle {
 	}
 
 
+
+
 	public void setNowLatitude(Double nowLatitude) {
 		this.nowLatitude = nowLatitude;
 	}
+
+
 
 
 	public Double getNowLongitude() {
@@ -236,15 +290,53 @@ public class Vehicle {
 	}
 
 
+
+
 	public void setNowLongitude(Double nowLongitude) {
 		this.nowLongitude = nowLongitude;
 	}
-	
-	
-	
-	
-	
-	
+
+
+
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+
+
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+
+
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+
+
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+
+
+
+	public String getUserId() {
+		return userId;
+	}
+
+
+
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 	
 	
 }

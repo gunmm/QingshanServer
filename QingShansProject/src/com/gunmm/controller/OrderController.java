@@ -53,7 +53,7 @@ public class OrderController {
 			Thread t = new Thread(new Runnable() {
 				public void run() {
 					DictionaryDao dictionaryDao = new DictionaryImpl();
-					addOrder.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", addOrder.getCarType()));
+//					addOrder.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", addOrder.getCarType()));
 					PushDao pushDao = new PushDaoImpl();
 					pushDao.pushForOrder(addOrder);
 				}
@@ -151,7 +151,7 @@ public class OrderController {
 
 		UserDao userDao = new UserDaoImpl();
 		User wayDriver = userDao.getUserById(wayOrder.getDriverId());
-		wayOrder.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", wayOrder.getCarType()));
+//		wayOrder.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", wayOrder.getCarType()));
 
 		if (wayOrder != null && wayDriver != null) {
 			JSONObject jsonObject = new JSONObject();

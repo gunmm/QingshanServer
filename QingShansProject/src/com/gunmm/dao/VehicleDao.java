@@ -1,7 +1,11 @@
 package com.gunmm.dao;
 
+import java.util.List;
+
 import com.alibaba.fastjson.JSONObject;
 import com.gunmm.model.Vehicle;
+import com.gunmm.responseModel.MasterListModel;
+import com.gunmm.responseModel.VehicleListModel;
 
 public interface VehicleDao {
 
@@ -16,6 +20,9 @@ public interface VehicleDao {
 
 	// 更新车辆
 	public JSONObject updateVehicleInfo(Vehicle vehicle);
+	
+	//查询地图车辆列表
+	public List<VehicleListModel> getVehicleListBySiteId(String siteId);
 
 	// 判断车牌号是否被注册
 	public boolean judgeVehicleByPlateNumber(String plateNumber);
@@ -28,5 +35,8 @@ public interface VehicleDao {
 	
 	// 判断车辆登记证证号是否被注册
 	public boolean judgeVehicleByVehicleRegistrationNumber(String vehicleRegistrationNumber);
+	
+	
+	
 
 }
