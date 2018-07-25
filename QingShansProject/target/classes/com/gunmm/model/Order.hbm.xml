@@ -104,5 +104,9 @@
         <property name="appointTime" type="java.util.Date">
             <column name="APPOINTTIME" />
         </property>
+        
+        <property name="timeOut" type="java.util.Date">
+            <column name="timeOut" />
+        </property>
     </class>
 </hibernate-mapping>

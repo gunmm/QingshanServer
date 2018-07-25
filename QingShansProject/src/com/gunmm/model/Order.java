@@ -64,6 +64,9 @@ public class Order {
 
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date appointTime; //预约时间  
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date timeOut; //超时时间  
 
 	
 	
@@ -465,6 +468,18 @@ public class Order {
 
 	public void setAppointTime(Date appointTime) {
 		this.appointTime = appointTime;
+	}
+
+
+
+	public Date getTimeOut() {
+		return timeOut;
+	}
+
+
+
+	public void setTimeOut(Date timeOut) {
+		this.timeOut = timeOut;
 	}
 
 	

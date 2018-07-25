@@ -13,7 +13,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.VehicleDao;
 import com.gunmm.db.MyHibernateSessionFactory;
 import com.gunmm.model.Vehicle;
-import com.gunmm.responseModel.DriverListModel;
 import com.gunmm.responseModel.VehicleListModel;
 import com.gunmm.utils.JSONUtils;
 

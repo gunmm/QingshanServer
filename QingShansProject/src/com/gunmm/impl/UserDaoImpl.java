@@ -119,7 +119,7 @@ public class UserDaoImpl implements UserDao {
 				// 设置
 				user.setLoginPlate(plateform);
 				user.setLastLoginTime(new Date());
-				user.setAccessToken(UUID.randomUUID().toString());
+				user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
 				updateUserInfo(user);
 				user.setPassword(null);
 				return JSONUtils.responseToJsonString("1", "", "登陆成功！", user);

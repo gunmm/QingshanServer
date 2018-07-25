@@ -48,18 +48,16 @@ public class OrderController {
 		}
 		OrderDao orderDao = new OrderDaoImpl();
 		JSONObject jsonObj = orderDao.addOrder(addOrder);
-		String result_code = jsonObj.getString("result_code");
-		if ("1".equals(result_code)) {
-			Thread t = new Thread(new Runnable() {
-				public void run() {
-					DictionaryDao dictionaryDao = new DictionaryImpl();
-//					addOrder.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", addOrder.getCarType()));
-					PushDao pushDao = new PushDaoImpl();
-					pushDao.pushForOrder(addOrder);
-				}
-			});
-			t.start();
-		}
+//		String result_code = jsonObj.getString("result_code");
+//		if ("1".equals(result_code)) {
+//			Thread t = new Thread(new Runnable() {
+//				public void run() {
+//					PushDao pushDao = new PushDaoImpl();
+//					pushDao.pushForOrder(addOrder);
+//				}
+//			});
+//			t.start();
+//		}
 		return jsonObj;
 	}
 	
