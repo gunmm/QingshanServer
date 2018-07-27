@@ -10,15 +10,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.DictionaryDao;
+import com.gunmm.dao.InvoiceDao;
 import com.gunmm.dao.OrderDao;
 import com.gunmm.dao.PushDao;
 import com.gunmm.dao.UserDao;
 import com.gunmm.impl.DictionaryImpl;
+import com.gunmm.impl.InvoiceImpl;
 import com.gunmm.impl.OrderDaoImpl;
 import com.gunmm.impl.PushDaoImpl;
 import com.gunmm.impl.UserDaoImpl;
+import com.gunmm.model.Invoice;
 import com.gunmm.model.Order;
 import com.gunmm.model.User;
+import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
 import com.gunmm.utils.JSONUtils;
 
@@ -40,24 +44,43 @@ public class OrderController {
 	@ResponseBody
 	private JSONObject addOrder(HttpServletRequest request) {
 		JSONObject object = (JSONObject) request.getAttribute("body");
-		addOrder = new Order();
-		addOrder = JSONObject.parseObject(object.toJSONString(), Order.class);
-
-		if (addOrder == null) {
-			return JSONUtils.responseToJsonString("0", "未接收到数据", "下单失败！", "");
+		JSONObject orderObject = object.getJSONObject("orderParam");
+		JSONObject invoiceObject = object.getJSONObject("invoiceParam");
+				
+		Invoice invoice = null;
+		String invoiceId = null;
+		if(invoiceObject != null) {
+			invoice = new Invoice();
+			invoice = JSONObject.parseObject(invoiceObject.toJSONString(), Invoice.class);
+			
+			InvoiceDao invoiceDao = new InvoiceImpl();
+			JSONObject jsonObj = invoiceDao.addInvoiceDao(invoice);
+			String result_code = jsonObj.getString("result_code");
+			
+			if ("1".equals(result_code)) {
+				invoiceId = jsonObj.getString("object");
+			}else {
+				return jsonObj;
+			}			
 		}
+				
+		
+		addOrder = new Order();
+		addOrder = JSONObject.parseObject(orderObject.toJSONString(), Order.class);
+		addOrder.setInvoiceId(invoiceId);
+
 		OrderDao orderDao = new OrderDaoImpl();
 		JSONObject jsonObj = orderDao.addOrder(addOrder);
-//		String result_code = jsonObj.getString("result_code");
-//		if ("1".equals(result_code)) {
-//			Thread t = new Thread(new Runnable() {
-//				public void run() {
-//					PushDao pushDao = new PushDaoImpl();
-//					pushDao.pushForOrder(addOrder);
-//				}
-//			});
-//			t.start();
-//		}
+		String result_code = jsonObj.getString("result_code");
+		if ("1".equals(result_code)) {
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					PushDao pushDao = new PushDaoImpl();
+					pushDao.pushForOrder(addOrder);
+				}
+			});
+			t.start();
+		}
 		return jsonObj;
 	}
 	
@@ -125,7 +148,7 @@ public class OrderController {
 
 		Order midOrder = orderDao.getOrderById(orderId);
 
-		List<User> userList = orderDao.queryDriverForOrder(midOrder);
+		List<NearbyDriverListModel> userList = orderDao.queryDriverForOrder(midOrder);
 
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", userList);
 	}

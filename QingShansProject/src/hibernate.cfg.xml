@@ -29,6 +29,7 @@
 	    <mapping resource="com/gunmm/model/Complain.hbm.xml" />
 	    <mapping resource="com/gunmm/model/Vehicle.hbm.xml" />
 	    <mapping resource="com/gunmm/model/City.hbm.xml" />
+	    <mapping resource="com/gunmm/model/Invoice.hbm.xml" />
 	    
 				
 		<mapping resource="com/gunmm/responseModel/OrderListModel.hbm.xml" />
@@ -37,6 +38,7 @@
 		<mapping resource="com/gunmm/responseModel/MasterListModel.hbm.xml" />
 		<mapping resource="com/gunmm/responseModel/ManageListModel.hbm.xml" /> 
 		<mapping resource="com/gunmm/responseModel/VehicleListModel.hbm.xml" /> 
+		<mapping resource="com/gunmm/responseModel/NearbyDriverListModel.hbm.xml" /> 
 		
 		
     </session-factory>

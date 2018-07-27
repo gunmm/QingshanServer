@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-7-26 16:21:04 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.responseModel.NearbyDriverListModel" table="NEARBYDRIVERLISTMODEL">
+        <id name="userId" type="java.lang.String">
+            <column name="USERID" />
+            <generator class="assigned" />
+        </id>
+        <property name="plateNumber" type="java.lang.String">
+            <column name="PLATENUMBER" />
+        </property>
+        <property name="nowLatitude" type="java.lang.Double">
+            <column name="NOWLATITUDE" />
+        </property>
+        <property name="nowLongitude" type="java.lang.Double">
+            <column name="NOWLONGITUDE" />
+        </property>
+        <property name="distance" type="java.lang.Double">
+            <column name="DISTANCE" />
+        </property>
+    </class>
+</hibernate-mapping>

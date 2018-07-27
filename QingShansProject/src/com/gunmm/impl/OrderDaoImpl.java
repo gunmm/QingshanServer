@@ -15,6 +15,8 @@ import com.gunmm.dao.UserDao;
 import com.gunmm.db.MyHibernateSessionFactory;
 import com.gunmm.model.Order;
 import com.gunmm.model.User;
+import com.gunmm.responseModel.DriverListModel;
+import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
 import com.gunmm.utils.JSONUtils;
 
@@ -47,40 +49,77 @@ public class OrderDaoImpl implements OrderDao {
 
 	@SuppressWarnings("unchecked")
 	@Override   //请求300公里以内司机
-	public List<User> queryDriverForOrder(Order order) {
+	public List<NearbyDriverListModel> queryDriverForOrder(Order order) {
 		// TODO Auto-generated method stub
-		List<User> userList = null;
+		List<NearbyDriverListModel> driverList = null;
 		Transaction tx = null;
-		String hql = "";
+		String sql = "";
 		try {
-			Session session = MyHibernateSessionFactory.getSessionFactory()
-					.getCurrentSession();
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			hql = 
-					"select new User(userId,phoneNumber,nickname,personImageUrl,plateNumber,vehicleType,loginPlate,nowLatitude,nowLongitude," + 
-					"(ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 ) *SIN((NOWLATITUDE * 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" * 3.1415) / 180 ) * COS((NOWLATITUDE * 3.1415) / 180 ) *COS(("+order.getSendLongitude()+"* 3.1415) / 180 - (NOWLONGITUDE * 3.1415) / 180 ) ) * 6380) AS distance,score) " + 
-					"from User " + 
-					"WHERE (ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 ) *SIN((NOWLATITUDE * 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" * 3.1415) / 180 ) * COS((NOWLATITUDE * 3.1415) / 180 ) *COS(("+order.getSendLongitude()+"* 3.1415) / 180 - (NOWLONGITUDE * 3.1415) / 180 ) ) * 6380) < 300 AND type = '2' AND status = '0' AND vehicleType = '"+order.getCarType()+"' "
-					+"order by (ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 ) *SIN((NOWLATITUDE * 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" * 3.1415) / 180 ) * COS((NOWLATITUDE * 3.1415) / 180 ) *COS(("+order.getSendLongitude()+"* 3.1415) / 180 - (NOWLONGITUDE * 3.1415) / 180 ) ) * 6380)";
-			Query query = session.createQuery(hql);
-			query.setMaxResults(30);
-			userList = query.list();
-			
-			
+			sql = "select user.userId,vehicle.plateNumber,vehicle.nowLatitude,vehicle.nowLongitude,"
+					+ "ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 ) *SIN((vehicle.nowLatitude * 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" * 3.1415) / 180 ) * COS((vehicle.nowLatitude * 3.1415) / 180 ) *COS(("+order.getSendLongitude()+"* 3.1415) / 180 - (vehicle.nowLongitude * 3.1415) / 180 ) ) * 6380 AS distance "
+					+ "FROM user,vehicle " 
+					+ "where user.vehicleId = vehicle.vehicleId and user.type = '6' and vehicle.vehicleType = '"+ order.getCarType() +"' "
+					+ "and (ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 ) *SIN((vehicle.nowLatitude * 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" * 3.1415) / 180 ) * COS((vehicle.nowLatitude * 3.1415) / 180 ) *COS(("+order.getSendLongitude()+"* 3.1415) / 180 - (vehicle.nowLongitude * 3.1415) / 180 ) ) * 6380) < 300 "
+					+ "order by (ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 ) *SIN((vehicle.nowLatitude * 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" * 3.1415) / 180 ) * COS((vehicle.nowLatitude * 3.1415) / 180 ) *COS(("+order.getSendLongitude()+"* 3.1415) / 180 - (vehicle.nowLongitude * 3.1415) / 180 ) ) * 6380)";
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(NearbyDriverListModel.class);
+
+			driverList = query.list();
+
 			tx.commit();
-			return userList;
-			
+			return driverList;
 
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			return userList;
+			return driverList;
 		} finally {
 			if (tx != null) {
 				tx = null;
 			}
-			
+
 		}
+		
+		
+		
+		
+		
+		
+		
+//		List<User> userList = null;
+//		Transaction tx = null;
+//		String hql = "";
+//		try {
+//			Session session = MyHibernateSessionFactory.getSessionFactory()
+//					.getCurrentSession();
+//			tx = session.beginTransaction();
+//			hql = 
+//					"select new User(userId,phoneNumber,nickname,personImageUrl,plateNumber,vehicleType,loginPlate,nowLatitude,nowLongitude," + 
+//					"(ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 ) *SIN((NOWLATITUDE * 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" * 3.1415) / 180 ) * COS((NOWLATITUDE * 3.1415) / 180 ) *COS(("+order.getSendLongitude()+"* 3.1415) / 180 - (NOWLONGITUDE * 3.1415) / 180 ) ) * 6380) AS distance,score) " + 
+//					"from User " + 
+//					"WHERE (ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 ) *SIN((NOWLATITUDE * 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" * 3.1415) / 180 ) * COS((NOWLATITUDE * 3.1415) / 180 ) *COS(("+order.getSendLongitude()+"* 3.1415) / 180 - (NOWLONGITUDE * 3.1415) / 180 ) ) * 6380) < 300 AND type = '2' AND status = '0' AND vehicleType = '"+order.getCarType()+"' "
+//					+"order by (ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 ) *SIN((NOWLATITUDE * 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" * 3.1415) / 180 ) * COS((NOWLATITUDE * 3.1415) / 180 ) *COS(("+order.getSendLongitude()+"* 3.1415) / 180 - (NOWLONGITUDE * 3.1415) / 180 ) ) * 6380)";
+//			Query query = session.createQuery(hql);
+//			query.setMaxResults(30);
+//			userList = query.list();
+//			
+//			
+//			tx.commit();
+//			return userList;
+//			
+//
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//			return userList;
+//		} finally {
+//			if (tx != null) {
+//				tx = null;
+//			}
+//			
+//		}
 	}
 
 	

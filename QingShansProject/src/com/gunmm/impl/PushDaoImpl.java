@@ -28,16 +28,12 @@ public class PushDaoImpl implements PushDao {
 		//推送中自定义信息
 		Map<String, String> hashmap = new HashMap<String, String>();
 		hashmap.put("type", order.getType());
-		hashmap.put("linkMan", order.getLinkMan());
-		hashmap.put("carType", order.getCarType());
-//		hashmap.put("carTypeName", order.getCarTypeName());
+		hashmap.put("orderId", order.getOrderId());
 		hashmap.put("note", order.getNote());
 		hashmap.put("sendAddress", order.getSendAddress());
 		hashmap.put("receiveAddress", order.getReceiveAddress());
-		hashmap.put("orderId", order.getOrderId());
 		hashmap.put("price", order.getPrice().toString());
 		hashmap.put("distance", order.getDistance().toString());
-
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateString = formatter.format(order.getCreateTime());
@@ -55,7 +51,7 @@ public class PushDaoImpl implements PushDao {
 			messageModel.setMessageId(UUID.randomUUID().toString());
 			messageModel.setMessageType("newOrderNotify");
 			messageModel.setReceiveUserId(user.getUserId());
-			messageModel.setAlias(user.getPhoneNumber());
+			messageModel.setAlias(user.getus);
 			messageModel.setOrderId(order.getOrderId());
 			messageModel.setOrderStatus(order.getStatus());
 			messageModel.setOrderType(order.getType());
