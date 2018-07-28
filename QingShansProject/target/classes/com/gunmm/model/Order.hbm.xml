@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-7-23 21:45:29 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-7-26 14:46:37 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.model.Order" table="`ORDER`">
         <id name="orderId" type="java.lang.String">
@@ -17,8 +17,8 @@
         <property name="appointStatus" type="java.lang.String">
             <column name="APPOINTSTATUS" />
         </property>
-        <property name="needInvoice" type="java.lang.String">
-            <column name="NEEDINVOICE" />
+        <property name="invoiceId" type="java.lang.String">
+            <column name="INVOICEID" />
         </property>
         <property name="createManId" type="java.lang.String">
             <column name="CREATEMANID" />
@@ -104,9 +104,8 @@
         <property name="appointTime" type="java.util.Date">
             <column name="APPOINTTIME" />
         </property>
-        
         <property name="timeOut" type="java.util.Date">
-            <column name="timeOut" />
+            <column name="TIMEOUT" />
         </property>
     </class>
 </hibernate-mapping>

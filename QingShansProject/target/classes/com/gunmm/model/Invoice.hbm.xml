@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-7-26 14:46:37 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.model.Invoice" table="INVOICE">
+        <id name="invoiceId" type="java.lang.String">
+            <column name="INVOICEID" />
+            <generator class="assigned" />
+        </id>
+        <property name="invoiceType" type="java.lang.String">
+            <column name="INVOICETYPE" />
+        </property>
+        <property name="receiverName" type="java.lang.String">
+            <column name="RECEIVERNAME" />
+        </property>
+        <property name="receiverPhone" type="java.lang.String">
+            <column name="RECEIVERPHONE" />
+        </property>
+        <property name="receiverAddress" type="java.lang.String">
+            <column name="RECEIVERADDRESS" />
+        </property>
+        <property name="companyName" type="java.lang.String">
+            <column name="COMPANYNAME" />
+        </property>
+        <property name="companyNumber" type="java.lang.String">
+            <column name="COMPANYNUMBER" />
+        </property>
+        <property name="createTime" type="java.util.Date">
+            <column name="CREATETIME" />
+        </property>
+        <property name="updateTime" type="java.util.Date">
+            <column name="UPDATETIME" />
+        </property>
+    </class>
+</hibernate-mapping>

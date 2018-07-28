@@ -12,7 +12,7 @@ public class Order {
 	private String status; //订单状态 0：刚新建未被接单 1:已被抢单  2：已被接单  3：已发货  4：发货完成  9：订单取消
 	private String type; //订单类型   0：全部   1：实时  2：预约
 	private String appointStatus; //预约订单司机方的执行状态   0：未开始   1：已开始
-	private String needInvoice; //是否需要发票   0：不需要   1：需要   需要发票则需要支付货款到平台
+	private String invoiceId; //发票id   
 
 	private String createManId; //发布人id
 	private String driverId; //接单司机id
@@ -43,7 +43,7 @@ public class Order {
 	private String freightFeePayStatus; //运费 支付状态   0:未支付   1:已支付
 	private String freightFeePayId; //运费 支付号 
 
-	private String serviceFeePayType; //服务费  支付方式   1:支付宝支付    2:微信支付   3:现金支付
+	private String serviceFeePayType; //服务费  支付方式   1:支付宝支付    2:微信支付
 	private String serviceFeePayStatus; //服务费 支付状态   0:未支付   1:已支付
 	private String serviceFeePayId; //服务费 支付号 
 	
@@ -121,17 +121,17 @@ public class Order {
 	public void setAppointStatus(String appointStatus) {
 		this.appointStatus = appointStatus;
 	}
+	
+	
 
-
-
-	public String getNeedInvoice() {
-		return needInvoice;
+	public String getInvoiceId() {
+		return invoiceId;
 	}
 
 
 
-	public void setNeedInvoice(String needInvoice) {
-		this.needInvoice = needInvoice;
+	public void setInvoiceId(String invoiceId) {
+		this.invoiceId = invoiceId;
 	}
 
 

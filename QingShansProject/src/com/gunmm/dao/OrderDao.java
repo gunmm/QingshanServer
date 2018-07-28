@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gunmm.model.Order;
-import com.gunmm.model.User;
+import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
 
 public interface OrderDao {
@@ -21,8 +21,8 @@ public interface OrderDao {
 	public Order getOrderById(String orderId);
 
 	
-	//查询200公里以内司机
-	public List<User> queryDriverForOrder(Order order);
+	//查询300公里以内司机
+	public List<NearbyDriverListModel> queryDriverForOrder(Order order);
 	
 	//根据userid查询订单列表
 	public List<OrderListModel> getOrderListByUserId(String userId, String page, String rows);

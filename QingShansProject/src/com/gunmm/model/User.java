@@ -546,28 +546,7 @@ public class User {
 		this.siteType = siteType;
 	}
 	
-	
-	
-	
-	
-	
-	
-//	public User(String userId, String phoneNumber, String nickname, String personImageUrl, String plateNumber,
-//			String vehicleType, String loginPlate, Double nowLatitude, Double nowLongitude, Double distance,
-//			Double score) {
-//		super();
-//		this.userId = userId;
-//		this.phoneNumber = phoneNumber;
-//		this.nickname = nickname;
-//		this.personImageUrl = personImageUrl;
-//		this.plateNumber = plateNumber;
-//		this.vehicleType = vehicleType;
-//		this.loginPlate = loginPlate;
-//		this.nowLatitude = nowLatitude;
-//		this.nowLongitude = nowLongitude;
-//		this.distance = distance;
-//		this.score = score;
-//	}
+
 	
 	
 	
