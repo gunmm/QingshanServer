@@ -52,6 +52,7 @@ public class UserInfoController {
 		User user = userDao.getUserById(userId);
 		String personImageUrl = object.getString("personImageUrl");
 		String nickname = object.getString("nickname");
+		String bankCardNumber = object.getString("bankCardNumber");
 		
 		if (personImageUrl != null) {
 			if (personImageUrl.length() > 0) {
@@ -65,9 +66,28 @@ public class UserInfoController {
 			}
 		}
 		
+		if (bankCardNumber != null) {
+			if (bankCardNumber.length() > 0) {
+				user.setBankCardNumber(bankCardNumber);
+			}
+		}
+		
 		
 
 		return userDao.updateUserInfo(user);
+	}
+	
+	
+	//站点管理员修改银行卡获取验证码
+	@RequestMapping("/getBankCode")
+	@ResponseBody
+	private JSONObject getBankCode(HttpServletRequest request) {
+		
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String userId = object.getString("userId");
+		UserDao userDao = new UserDaoImpl();
+		User user = userDao.getUserById(userId);
+		return userDao.getVerificationCode(user.getPhoneNumber(), "1");
 	}
 
 	// 司机上下班
