@@ -8,7 +8,9 @@ public class Invoice {
 
 	private String invoiceId;
 	
-	private String invoiceType;  //发票类型  1：个人  2：单位
+	private String status;   //发票状态   0:未开  1：已开 9:订单取消
+	
+	private String invoiceType;  //发票类型  1：个人  2：单位 
 	private String receiverName; //收票人姓名
 	private String receiverPhone; //收票人电话
 	private String receiverAddress; //收票人地址
@@ -31,6 +33,16 @@ public class Invoice {
 
 	public void setInvoiceId(String invoiceId) {
 		this.invoiceId = invoiceId;
+	}
+	
+	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getInvoiceType() {

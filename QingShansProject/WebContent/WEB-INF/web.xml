@@ -11,6 +11,12 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
+
+	<listener>
+		<listener-class>com.gunmm.listener.TimeListener</listener-class>
+	</listener>
+
+
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.css</url-pattern>

@@ -14,6 +14,7 @@ import com.gunmm.dao.UserDao;
 import com.gunmm.model.MessageModel;
 import com.gunmm.model.Order;
 import com.gunmm.model.User;
+import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.utils.JPushUtils;
 
 import cn.jiguang.common.resp.APIConnectionException;
@@ -30,8 +31,8 @@ public class PushDaoImpl implements PushDao {
 		hashmap.put("type", order.getType());
 		hashmap.put("orderId", order.getOrderId());
 		hashmap.put("note", order.getNote());
-		hashmap.put("sendAddress", order.getSendAddress());
-		hashmap.put("receiveAddress", order.getReceiveAddress());
+		hashmap.put("sendDetailAddress", order.getSendDetailAddress());
+		hashmap.put("receiveDetailAddress", order.getReceiveDetailAddress());
 		hashmap.put("price", order.getPrice().toString());
 		hashmap.put("distance", order.getDistance().toString());
 
@@ -44,56 +45,56 @@ public class PushDaoImpl implements PushDao {
 		}
 		
 
-//		OrderDao orderDao = new OrderDaoImpl();
-//		List<User> userList = orderDao.queryDriverForOrder(order);
-//		for (User user : userList) {
-//			MessageModel messageModel = new MessageModel();
-//			messageModel.setMessageId(UUID.randomUUID().toString());
-//			messageModel.setMessageType("newOrderNotify");
-//			messageModel.setReceiveUserId(user.getUserId());
-//			messageModel.setAlias(user.getus);
-//			messageModel.setOrderId(order.getOrderId());
-//			messageModel.setOrderStatus(order.getStatus());
-//			messageModel.setOrderType(order.getType());
-//			messageModel.setOrderAppointStatus(order.getAppointStatus());
-//			
-//			MessageDao messageDao = new MessageImpl();
-//			messageDao.addMessage(messageModel);
-//			
-//			hashmap.put("messageId", messageModel.getMessageId());
-//
-//			if ("iOS".equals(user.getLoginPlate())) {
-//				List<String> person = new ArrayList<>();
-//				person.add(user.getPhoneNumber());
-//				try {
-//					PushResult resultIOS = JPushUtils.getJPushClient()
-//							.sendPush(JPushUtils.buildPushPayLoad(person, "newOrderNotify", "有新的订单", "iOS", hashmap));
-//					System.out.println("Got result iOS- " + resultIOS);
-//
-//			    } catch (APIConnectionException e) {
-//			        // Connection error, should retry later
-//			        System.out.println("错误:"+e);
-//			    } catch (APIRequestException e) {
-//			        // Should review the error, and fix the request
-//			        System.out.println("错误  状态："+e.getStatus()+ "    错误码："+e.getErrorCode()+"   错误信息："+e.getErrorMessage());
-//			    }
-//			}else {
-//				List<String> person = new ArrayList<>();
-//				person.add(user.getPhoneNumber());
-//				try {
-//					PushResult resultAndroid = JPushUtils.getJPushClient().sendPush(
-//							JPushUtils.buildPushPayLoad(person, "newOrderNotify", "有新的订单", "android", hashmap));
-//			        System.out.println("Got result android- " + resultAndroid);
-//
-//			    } catch (APIConnectionException e) {
-//			        // Connection error, should retry later
-//			        System.out.println("错误:"+e);
-//			    } catch (APIRequestException e) {
-//			        // Should review the error, and fix the request
-//			        System.out.println("错误  状态："+e.getStatus()+ "    错误码："+e.getErrorCode()+"   错误信息："+e.getErrorMessage());
-//			    }
-//			}
-//		}
+		OrderDao orderDao = new OrderDaoImpl();
+		List<NearbyDriverListModel> userList = orderDao.queryDriverForOrder(order);
+		for (NearbyDriverListModel nearbyDriverListModel : userList) {
+			MessageModel messageModel = new MessageModel();
+			messageModel.setMessageId(UUID.randomUUID().toString());
+			messageModel.setMessageType("newOrderNotify");
+			messageModel.setReceiveUserId(nearbyDriverListModel.getUserId());
+			messageModel.setAlias(nearbyDriverListModel.getAccessToken());
+			messageModel.setOrderId(order.getOrderId());
+			messageModel.setOrderStatus(order.getStatus());
+			messageModel.setOrderType(order.getType());
+			messageModel.setOrderAppointStatus(order.getAppointStatus());
+			
+			MessageDao messageDao = new MessageImpl();
+			messageDao.addMessage(messageModel);
+			
+			hashmap.put("messageId", messageModel.getMessageId());
+
+			if ("iOS".equals(nearbyDriverListModel.getLoginPlate())) {
+				List<String> person = new ArrayList<>();
+				person.add(nearbyDriverListModel.getAccessToken());
+				try {
+					PushResult resultIOS = JPushUtils.getJPushClient()
+							.sendPush(JPushUtils.buildPushPayLoad(person, "newOrderNotify", "有新的订单", "iOS", hashmap));
+					System.out.println("Got result iOS- " + resultIOS);
+
+			    } catch (APIConnectionException e) {
+			        // Connection error, should retry later
+			        System.out.println("错误:"+e);
+			    } catch (APIRequestException e) {
+			        // Should review the error, and fix the request
+			        System.out.println("错误  状态："+e.getStatus()+ "    错误码："+e.getErrorCode()+"   错误信息："+e.getErrorMessage());
+			    }
+			}else {
+				List<String> person = new ArrayList<>();
+				person.add(nearbyDriverListModel.getAccessToken());
+				try {
+					PushResult resultAndroid = JPushUtils.getJPushClient().sendPush(
+							JPushUtils.buildPushPayLoad(person, "newOrderNotify", "有新的订单", "android", hashmap));
+			        System.out.println("Got result android- " + resultAndroid);
+
+			    } catch (APIConnectionException e) {
+			        // Connection error, should retry later
+			        System.out.println("错误:"+e);
+			    } catch (APIRequestException e) {
+			        // Should review the error, and fix the request
+			        System.out.println("错误  状态："+e.getStatus()+ "    错误码："+e.getErrorCode()+"   错误信息："+e.getErrorMessage());
+			    }
+			}
+		}
 		
 	
 	}

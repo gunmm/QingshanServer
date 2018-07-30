@@ -27,10 +27,12 @@ public class Order {
 
 	
 	private String sendAddress; //发货地址
-	
+	private String sendDetailAddress;
 	private Double sendLatitude = 0.0; 
 	private Double sendLongitude = 0.0; 
+	
 	private String receiveAddress; //送货目标地址
+	private String receiveDetailAddress;
 	private Double receiveLatitude = 0.0; 
 	private Double receiveLongitude = 0.0; 
 	
@@ -240,6 +242,31 @@ public class Order {
 
 	public void setSendLongitude(Double sendLongitude) {
 		this.sendLongitude = sendLongitude;
+	}
+
+
+	
+
+	public String getSendDetailAddress() {
+		return sendDetailAddress;
+	}
+
+
+
+	public void setSendDetailAddress(String sendDetailAddress) {
+		this.sendDetailAddress = sendDetailAddress;
+	}
+
+
+
+	public String getReceiveDetailAddress() {
+		return receiveDetailAddress;
+	}
+
+
+
+	public void setReceiveDetailAddress(String receiveDetailAddress) {
+		this.receiveDetailAddress = receiveDetailAddress;
 	}
 
 

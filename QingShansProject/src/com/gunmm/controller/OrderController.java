@@ -72,15 +72,15 @@ public class OrderController {
 		OrderDao orderDao = new OrderDaoImpl();
 		JSONObject jsonObj = orderDao.addOrder(addOrder);
 		String result_code = jsonObj.getString("result_code");
-		if ("1".equals(result_code)) {
-			Thread t = new Thread(new Runnable() {
-				public void run() {
-					PushDao pushDao = new PushDaoImpl();
-					pushDao.pushForOrder(addOrder);
-				}
-			});
-			t.start();
-		}
+//		if ("1".equals(result_code)) {
+//			Thread t = new Thread(new Runnable() {
+//				public void run() {
+//					PushDao pushDao = new PushDaoImpl();
+//					pushDao.pushForOrder(addOrder);
+//				}
+//			});
+//			t.start();
+//		}
 		return jsonObj;
 	}
 	

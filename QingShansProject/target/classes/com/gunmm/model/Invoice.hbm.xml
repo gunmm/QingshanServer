@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-7-26 14:46:37 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-7-29 14:28:16 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.model.Invoice" table="INVOICE">
         <id name="invoiceId" type="java.lang.String">
             <column name="INVOICEID" />
             <generator class="assigned" />
         </id>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
         <property name="invoiceType" type="java.lang.String">
             <column name="INVOICETYPE" />
         </property>

@@ -18,6 +18,7 @@ public class InvoiceImpl implements InvoiceDao {
 	// 添加发票
 	public JSONObject addInvoiceDao(Invoice invoice) {
 		invoice.setInvoiceId(UUID.randomUUID().toString());
+		invoice.setStatus("0");
 		invoice.setCreateTime(new Date());
 		invoice.setUpdateTime(new Date());
 		Transaction tx = null;
@@ -38,7 +39,7 @@ public class InvoiceImpl implements InvoiceDao {
 		}
 	}
 
-	//根据ID拿invoice
+	// 根据ID拿invoice
 	@Override
 	public Invoice getInvoiceById(String invoiceId) {
 		// TODO Auto-generated method stub
@@ -60,6 +61,28 @@ public class InvoiceImpl implements InvoiceDao {
 			// TODO: handle exception
 			e.printStackTrace();
 			return null;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 更新订单信息
+	public JSONObject updateInvoiceInfo(Invoice invoice) {
+		invoice.setUpdateTime(new Date());
+		Transaction tx = null;
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			session.update(invoice);
+			tx.commit();
+			
+			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", invoice);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", invoice);
 		} finally {
 			if (tx != null) {
 				tx = null;

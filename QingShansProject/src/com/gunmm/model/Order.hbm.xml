@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-7-26 14:46:37 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-7-29 19:13:41 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.model.Order" table="`ORDER`">
         <id name="orderId" type="java.lang.String">
@@ -41,6 +41,9 @@
         <property name="sendAddress" type="java.lang.String">
             <column name="SENDADDRESS" />
         </property>
+        <property name="sendDetailAddress" type="java.lang.String">
+            <column name="SENDDETAILADDRESS" />
+        </property>
         <property name="sendLatitude" type="java.lang.Double">
             <column name="SENDLATITUDE" />
         </property>
@@ -49,6 +52,9 @@
         </property>
         <property name="receiveAddress" type="java.lang.String">
             <column name="RECEIVEADDRESS" />
+        </property>
+        <property name="receiveDetailAddress" type="java.lang.String">
+            <column name="RECEIVEDETAILADDRESS" />
         </property>
         <property name="receiveLatitude" type="java.lang.Double">
             <column name="RECEIVELATITUDE" />

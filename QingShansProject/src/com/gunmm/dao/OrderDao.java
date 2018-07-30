@@ -39,6 +39,13 @@ public interface OrderDao {
 	
 	//查询带部分司机信息的订单信息
 	public OrderListModel getBigOrderInfo(String orderId);
+	
+	
+	//将所有已被抢单但是付款超时订单状态置0
+	public JSONObject setTimeOutOrderStatus();
+	
+	
+	
 
 
 
