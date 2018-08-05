@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-7-29 19:29:52 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-8-4 16:16:27 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.NearbyDriverListModel" table="NEARBYDRIVERLISTMODEL">
         <id name="userId" type="java.lang.String">
@@ -13,6 +13,9 @@
         </property>
         <property name="accessToken" type="java.lang.String">
             <column name="ACCESSTOKEN" />
+        </property>
+        <property name="loginPlate" type="java.lang.String">
+            <column name="LOGINPLATE" />
         </property>
         <property name="nowLatitude" type="java.lang.Double">
             <column name="NOWLATITUDE" />

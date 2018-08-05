@@ -10,16 +10,17 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.alibaba.fastjson.JSONObject;
+import com.gunmm.dao.FlowDao;
 import com.gunmm.dao.InvoiceDao;
 import com.gunmm.dao.OrderDao;
 import com.gunmm.dao.UserDao;
 import com.gunmm.db.MyHibernateSessionFactory;
+import com.gunmm.model.Flow;
 import com.gunmm.model.Invoice;
 import com.gunmm.model.Order;
 import com.gunmm.model.User;
 import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
-import com.gunmm.responseModel.SiteListModel;
 import com.gunmm.utils.JSONUtils;
 
 public class OrderDaoImpl implements OrderDao {
@@ -59,14 +60,14 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "select user.userId,user.accessToken,vehicle.plateNumber,vehicle.nowLatitude,vehicle.nowLongitude,"
+			sql = "select user.userId,user.accessToken,user.loginPlate,vehicle.plateNumber,vehicle.nowLatitude,vehicle.nowLongitude,"
 					+ "ACOS(SIN((" + order.getSendLatitude()
 					+ " * 3.1415) / 180 ) *SIN((vehicle.nowLatitude * 3.1415) / 180 ) +COS((" + order.getSendLatitude()
 					+ " * 3.1415) / 180 ) * COS((vehicle.nowLatitude * 3.1415) / 180 ) *COS(("
 					+ order.getSendLongitude()
 					+ "* 3.1415) / 180 - (vehicle.nowLongitude * 3.1415) / 180 ) ) * 6380 AS distance "
 					+ "FROM user,vehicle "
-					+ "where user.vehicleId = vehicle.vehicleId and user.type = '6' and vehicle.vehicleType = '"
+					+ "where user.vehicleId = vehicle.vehicleId and user.type = '6' and user.status = '0' and vehicle.vehicleType = '"
 					+ order.getCarType() + "' " + "and (ACOS(SIN((" + order.getSendLatitude()
 					+ " * 3.1415) / 180 ) *SIN((vehicle.nowLatitude * 3.1415) / 180 ) +COS((" + order.getSendLatitude()
 					+ " * 3.1415) / 180 ) * COS((vehicle.nowLatitude * 3.1415) / 180 ) *COS(("
@@ -163,6 +164,8 @@ public class OrderDaoImpl implements OrderDao {
 			order.setStatus("1");
 			order.setDriverId(driverId);
 			order.setUpdateTime(new Date());
+			Date now = new Date();
+			order.setTimeOut(new Date(now.getTime() + 300000));
 			if ("2".equals(order.getType())) {
 				order.setAppointStatus("0");
 			}
@@ -175,6 +178,13 @@ public class OrderDaoImpl implements OrderDao {
 					user.setStatus("1");
 					userDao.updateUserInfo(user);
 				}
+				FlowDao flowDao = new FlowImpl();
+				Flow flow = flowDao.getFlowByDriverId(driverId, orderId);
+				flow.setFlowStatus("2");
+				flowDao.updateFlow(flow);
+				flowDao.setFlowStatusByOrderId(orderId, "1");
+				
+				
 				return JSONUtils.responseToJsonString("1", "", "抢单成功！", "");
 			} else {
 				return JSONUtils.responseToJsonString("0", reason, "抢单失败！", "");
@@ -379,11 +389,17 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "SELECT " + "`order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl,"
-					+ "user.nowLatitude," + "user.nowLongitude," + "user.plateNumber," + "user.score,"
+			sql = "SELECT `order`.*," 
+			        + "user.nickname," 
+					+ "user.phoneNumber," 
+			        + "user.personImageUrl,"
+					+ "user.score," 
+			        + "vehicle.nowLongitude," 
+					+ "vehicle.nowLatitude," 
+			        + "vehicle.plateNumber,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
-					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId "
-					+ "where `order`.orderId = '" + orderId + "'";
+					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId,vehicle "
+					+ "where `order`.orderId = '" + orderId + "' and user.vehicleId = vehicle.vehicleId";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(OrderListModel.class);
@@ -411,9 +427,9 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "update `order` " + 
-				  "set `order`.status = 0,`order`.timeOut = NULL " + 
-				  "where `order`.status = 1 AND NOW() >= `order`.timeOut";
+			sql = "update `order`,user " + 
+				  "set `order`.status = '0',`order`.timeOut = NULL,`order`.driverId = NULL,user.status = '0',user.score = user.score-0.1 " + 
+				  "where `order`.status = '1' AND NOW() >= `order`.timeOut and user.userId = order.driverId ";
 			SQLQuery query = session.createSQLQuery(sql);
 			query.executeUpdate();
 			
@@ -429,6 +445,39 @@ public class OrderDaoImpl implements OrderDao {
 				tx = null;
 			}
 
+		}
+	}
+	
+	//查询所有未被接单的订单
+	@SuppressWarnings("unchecked")
+	public List<Order> getUnReceiveOrderList() {
+		List<Order> orderList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			sql = "select * " 
+			    + "FROM `order` "
+			    + "where `order`.status = '0'";
+					
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(Order.class);
+
+			orderList = query.list();
+
+			tx.commit();
+			return orderList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return orderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
 		}
 	}
 

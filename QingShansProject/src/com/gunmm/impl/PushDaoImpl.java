@@ -24,7 +24,7 @@ import cn.jpush.api.push.PushResult;
 public class PushDaoImpl implements PushDao {
 
 	@Override
-	public void pushForOrder(Order order) {
+	public void pushForOrder(Order order , List<NearbyDriverListModel> pushDriverList) {
 		// TODO Auto-generated method stub
 		//推送中自定义信息
 		Map<String, String> hashmap = new HashMap<String, String>();
@@ -45,9 +45,7 @@ public class PushDaoImpl implements PushDao {
 		}
 		
 
-		OrderDao orderDao = new OrderDaoImpl();
-		List<NearbyDriverListModel> userList = orderDao.queryDriverForOrder(order);
-		for (NearbyDriverListModel nearbyDriverListModel : userList) {
+		for (NearbyDriverListModel nearbyDriverListModel : pushDriverList) {
 			MessageModel messageModel = new MessageModel();
 			messageModel.setMessageId(UUID.randomUUID().toString());
 			messageModel.setMessageType("newOrderNotify");
@@ -59,9 +57,10 @@ public class PushDaoImpl implements PushDao {
 			messageModel.setOrderAppointStatus(order.getAppointStatus());
 			
 			MessageDao messageDao = new MessageImpl();
-			messageDao.addMessage(messageModel);
+//			messageDao.addMessage(messageModel);
 			
 			hashmap.put("messageId", messageModel.getMessageId());
+			hashmap.put("toSendDistance", nearbyDriverListModel.getDistance().toString());
 
 			if ("iOS".equals(nearbyDriverListModel.getLoginPlate())) {
 				List<String> person = new ArrayList<>();

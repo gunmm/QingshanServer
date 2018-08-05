@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-6-12 0:03:52 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-8-4 20:02:11 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.OrderListModel" table="ORDERLISTMODEL">
         <id name="orderId" type="java.lang.String">
@@ -16,6 +16,9 @@
         </property>
         <property name="appointStatus" type="java.lang.String">
             <column name="APPOINTSTATUS" />
+        </property>
+        <property name="invoiceId" type="java.lang.String">
+            <column name="INVOICEID" />
         </property>
         <property name="createManId" type="java.lang.String">
             <column name="CREATEMANID" />
@@ -41,6 +44,9 @@
         <property name="sendAddress" type="java.lang.String">
             <column name="SENDADDRESS" />
         </property>
+        <property name="sendDetailAddress" type="java.lang.String">
+            <column name="SENDDETAILADDRESS" />
+        </property>
         <property name="sendLatitude" type="java.lang.Double">
             <column name="SENDLATITUDE" />
         </property>
@@ -49,6 +55,9 @@
         </property>
         <property name="receiveAddress" type="java.lang.String">
             <column name="RECEIVEADDRESS" />
+        </property>
+        <property name="receiveDetailAddress" type="java.lang.String">
+            <column name="RECEIVEDETAILADDRESS" />
         </property>
         <property name="receiveLatitude" type="java.lang.Double">
             <column name="RECEIVELATITUDE" />
@@ -62,11 +71,26 @@
         <property name="distance" type="java.lang.Double">
             <column name="DISTANCE" />
         </property>
-        <property name="payType" type="java.lang.String">
-            <column name="PAYTYPE" />
+        <property name="withdrawMoneyStatus" type="java.lang.String">
+            <column name="WITHDRAWMONEYSTATUS" />
         </property>
-        <property name="payStatus" type="java.lang.String">
-            <column name="PAYSTATUS" />
+        <property name="freightFeePayType" type="java.lang.String">
+            <column name="FREIGHTFEEPAYTYPE" />
+        </property>
+        <property name="freightFeePayStatus" type="java.lang.String">
+            <column name="FREIGHTFEEPAYSTATUS" />
+        </property>
+        <property name="freightFeePayId" type="java.lang.String">
+            <column name="FREIGHTFEEPAYID" />
+        </property>
+        <property name="serviceFeePayType" type="java.lang.String">
+            <column name="SERVICEFEEPAYTYPE" />
+        </property>
+        <property name="serviceFeePayStatus" type="java.lang.String">
+            <column name="SERVICEFEEPAYSTATUS" />
+        </property>
+        <property name="serviceFeePayId" type="java.lang.String">
+            <column name="SERVICEFEEPAYID" />
         </property>
         <property name="commentContent" type="java.lang.String">
             <column name="COMMENTCONTENT" />
@@ -74,11 +98,11 @@
         <property name="commentStar" type="java.lang.Double">
             <column name="COMMENTSTAR" />
         </property>
-        <property name="siteComplaint" type="java.lang.String">
-            <column name="SITECOMPLAINT" />
+        <property name="siteComplaintId" type="java.lang.String">
+            <column name="SITECOMPLAINTID" />
         </property>
-        <property name="driverComplaint" type="java.lang.String">
-            <column name="DRIVERCOMPLAINT" />
+        <property name="driverComplaintId" type="java.lang.String">
+            <column name="DRIVERCOMPLAINTID" />
         </property>
         <property name="createTime" type="java.util.Date">
             <column name="CREATETIME" />
@@ -88,6 +112,9 @@
         </property>
         <property name="appointTime" type="java.util.Date">
             <column name="APPOINTTIME" />
+        </property>
+        <property name="timeOut" type="java.util.Date">
+            <column name="TIMEOUT" />
         </property>
         <property name="phoneNumber" type="java.lang.String">
             <column name="PHONENUMBER" />

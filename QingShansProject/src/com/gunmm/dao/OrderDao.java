@@ -44,6 +44,9 @@ public interface OrderDao {
 	//将所有已被抢单但是付款超时订单状态置0
 	public JSONObject setTimeOutOrderStatus();
 	
+	//查询所有未被接单的订单
+	public List<Order> getUnReceiveOrderList();
+	
 	
 	
 

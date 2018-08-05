@@ -30,7 +30,7 @@ public class TimeListener implements ServletContextListener {
 
 		sce.getServletContext().log("定时器已启动");
 		
-		timer.schedule(new PushNewOrderTimer(), 0, 5000);  
+		timer.schedule(new PushNewOrderTimer(), 0, 30000);  
 
 		sce.getServletContext().log("已经添加任务调度表"); 
 		

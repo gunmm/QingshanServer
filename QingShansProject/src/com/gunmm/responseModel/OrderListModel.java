@@ -7,9 +7,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class OrderListModel {
 
 	private String orderId;
-	private String status; //订单状态 0：刚新建未被接单  1：已被接单  2：已发货  3：发货完成  9：订单取消
+	private String status; //订单状态 0：刚新建未被接单 1:已被抢单  2：已被接单  3：已发货  4：发货完成  9：订单取消
 	private String type; //订单类型   0：全部   1：实时  2：预约
 	private String appointStatus; //预约订单司机方的执行状态   0：未开始   1：已开始
+	private String invoiceId; //发票id   
 
 	private String createManId; //发布人id
 	private String driverId; //接单司机id
@@ -19,33 +20,43 @@ public class OrderListModel {
 	
 	private String carType; //车辆类型
 	private String carTypeName; //车辆类型
+	
 
 	private String note; //备注
 
 
 	
 	private String sendAddress; //发货地址
-	
+	private String sendDetailAddress;
 	private Double sendLatitude = 0.0; 
 	private Double sendLongitude = 0.0; 
+	
 	private String receiveAddress; //送货目标地址
+	private String receiveDetailAddress;
 	private Double receiveLatitude = 0.0; 
 	private Double receiveLongitude = 0.0; 
 	
-	private Double price = 0.0; //费用
+	private Double price = 0.0; //总运费用
 	private Double distance = 0.0; //距离
+	
+	private String withdrawMoneyStatus; //提现状态 0：未提现  1：已提现
+	
+	private String freightFeePayType; //运费  支付方式   1:支付宝支付    2:微信支付   3:现金支付
+	private String freightFeePayStatus; //运费 支付状态   0:未支付   1:已支付
+	private String freightFeePayId; //运费 支付号 
 
-	private String payType; //支付方式   1:支付宝支付    2:微信支付   3:现金支付
-	private String payStatus; //支付状态   0:未支付   1:已支付
+	private String serviceFeePayType; //服务费  支付方式   1:支付宝支付    2:微信支付
+	private String serviceFeePayStatus; //服务费 支付状态   0:未支付   1:已支付
+	private String serviceFeePayId; //服务费 支付号 
 	
 
 	private String commentContent;  //评价内容
 	private Double commentStar;  //评价星级
-	
+
 
 	
-	private String siteComplaint;  //站点投诉
-	private String driverComplaint; //司机投诉
+	private String siteComplaintId;  //站点投诉ID
+	private String driverComplaintId; //司机投诉ID
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime; // 创建时间
@@ -55,6 +66,9 @@ public class OrderListModel {
 
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date appointTime; //预约时间  
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date timeOut; //超时时间  
 	
 	
 	
@@ -101,6 +115,14 @@ public class OrderListModel {
 
 	public void setAppointStatus(String appointStatus) {
 		this.appointStatus = appointStatus;
+	}
+
+	public String getInvoiceId() {
+		return invoiceId;
+	}
+
+	public void setInvoiceId(String invoiceId) {
+		this.invoiceId = invoiceId;
 	}
 
 	public String getCreateManId() {
@@ -167,6 +189,14 @@ public class OrderListModel {
 		this.sendAddress = sendAddress;
 	}
 
+	public String getSendDetailAddress() {
+		return sendDetailAddress;
+	}
+
+	public void setSendDetailAddress(String sendDetailAddress) {
+		this.sendDetailAddress = sendDetailAddress;
+	}
+
 	public Double getSendLatitude() {
 		return sendLatitude;
 	}
@@ -189,6 +219,14 @@ public class OrderListModel {
 
 	public void setReceiveAddress(String receiveAddress) {
 		this.receiveAddress = receiveAddress;
+	}
+
+	public String getReceiveDetailAddress() {
+		return receiveDetailAddress;
+	}
+
+	public void setReceiveDetailAddress(String receiveDetailAddress) {
+		this.receiveDetailAddress = receiveDetailAddress;
 	}
 
 	public Double getReceiveLatitude() {
@@ -223,23 +261,61 @@ public class OrderListModel {
 		this.distance = distance;
 	}
 
-	public String getPayType() {
-		return payType;
+	public String getWithdrawMoneyStatus() {
+		return withdrawMoneyStatus;
 	}
 
-	public void setPayType(String payType) {
-		this.payType = payType;
+	public void setWithdrawMoneyStatus(String withdrawMoneyStatus) {
+		this.withdrawMoneyStatus = withdrawMoneyStatus;
 	}
 
-	public String getPayStatus() {
-		return payStatus;
+	public String getFreightFeePayType() {
+		return freightFeePayType;
 	}
 
-	public void setPayStatus(String payStatus) {
-		this.payStatus = payStatus;
+	public void setFreightFeePayType(String freightFeePayType) {
+		this.freightFeePayType = freightFeePayType;
 	}
-	
-	
+
+	public String getFreightFeePayStatus() {
+		return freightFeePayStatus;
+	}
+
+	public void setFreightFeePayStatus(String freightFeePayStatus) {
+		this.freightFeePayStatus = freightFeePayStatus;
+	}
+
+	public String getFreightFeePayId() {
+		return freightFeePayId;
+	}
+
+	public void setFreightFeePayId(String freightFeePayId) {
+		this.freightFeePayId = freightFeePayId;
+	}
+
+	public String getServiceFeePayType() {
+		return serviceFeePayType;
+	}
+
+	public void setServiceFeePayType(String serviceFeePayType) {
+		this.serviceFeePayType = serviceFeePayType;
+	}
+
+	public String getServiceFeePayStatus() {
+		return serviceFeePayStatus;
+	}
+
+	public void setServiceFeePayStatus(String serviceFeePayStatus) {
+		this.serviceFeePayStatus = serviceFeePayStatus;
+	}
+
+	public String getServiceFeePayId() {
+		return serviceFeePayId;
+	}
+
+	public void setServiceFeePayId(String serviceFeePayId) {
+		this.serviceFeePayId = serviceFeePayId;
+	}
 
 	public String getCommentContent() {
 		return commentContent;
@@ -257,20 +333,20 @@ public class OrderListModel {
 		this.commentStar = commentStar;
 	}
 
-	public String getSiteComplaint() {
-		return siteComplaint;
+	public String getSiteComplaintId() {
+		return siteComplaintId;
 	}
 
-	public void setSiteComplaint(String siteComplaint) {
-		this.siteComplaint = siteComplaint;
+	public void setSiteComplaintId(String siteComplaintId) {
+		this.siteComplaintId = siteComplaintId;
 	}
 
-	public String getDriverComplaint() {
-		return driverComplaint;
+	public String getDriverComplaintId() {
+		return driverComplaintId;
 	}
 
-	public void setDriverComplaint(String driverComplaint) {
-		this.driverComplaint = driverComplaint;
+	public void setDriverComplaintId(String driverComplaintId) {
+		this.driverComplaintId = driverComplaintId;
 	}
 
 	public Date getCreateTime() {
@@ -295,6 +371,14 @@ public class OrderListModel {
 
 	public void setAppointTime(Date appointTime) {
 		this.appointTime = appointTime;
+	}
+
+	public Date getTimeOut() {
+		return timeOut;
+	}
+
+	public void setTimeOut(Date timeOut) {
+		this.timeOut = timeOut;
 	}
 
 	public String getPhoneNumber() {
@@ -352,6 +436,8 @@ public class OrderListModel {
 	public void setScore(Float score) {
 		this.score = score;
 	}
+
+	
 
 	
 }

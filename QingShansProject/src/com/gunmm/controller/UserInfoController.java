@@ -39,6 +39,7 @@ public class UserInfoController {
 
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.getUserById(userId);
+		user.setPassword("");
 		return JSONUtils.responseToJsonString("1", "", "请求成功！", user);
 	}
 
