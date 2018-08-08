@@ -11,9 +11,11 @@ import com.gunmm.dao.MessageDao;
 import com.gunmm.dao.OrderDao;
 import com.gunmm.dao.PushDao;
 import com.gunmm.dao.UserDao;
+import com.gunmm.dao.VehicleDao;
 import com.gunmm.model.MessageModel;
 import com.gunmm.model.Order;
 import com.gunmm.model.User;
+import com.gunmm.model.Vehicle;
 import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.utils.JPushUtils;
 
@@ -57,7 +59,7 @@ public class PushDaoImpl implements PushDao {
 			messageModel.setOrderAppointStatus(order.getAppointStatus());
 			
 			MessageDao messageDao = new MessageImpl();
-//			messageDao.addMessage(messageModel);
+			messageDao.addMessage(messageModel);
 			
 			hashmap.put("messageId", messageModel.getMessageId());
 			hashmap.put("toSendDistance", nearbyDriverListModel.getDistance().toString());
@@ -104,14 +106,16 @@ public class PushDaoImpl implements PushDao {
 		OrderDao orderDao = new OrderDaoImpl();
 		Order order = orderDao.getOrderById(orderId);
 		
-		if(order != null && order.getLinkPhone() != null) {
-			List<String> person = new ArrayList<>();
-			person.add(order.getLinkPhone());
-			
+		if(order != null) {
 			UserDao userDao = new UserDaoImpl();
-			User user = userDao.getUserById(order.getDriverId());
+			User goodsMan = userDao.getUserById(order.getCreateManId());
+			User driver = userDao.getUserById(order.getDriverId());
+			VehicleDao vehicleDao = new VehicleImpl();
+			Vehicle vehicle = vehicleDao.getVehicleById(driver.getVehicleId());
+			List<String> person = new ArrayList<>();
+			person.add(goodsMan.getAccessToken());
 			String plateStr = "";
-			if ("iOS".equals(user.getLoginPlate())) {
+			if ("iOS".equals(goodsMan.getLoginPlate())) {
 				plateStr = "iOS";
 			}else {
 				plateStr = "android";
@@ -122,7 +126,7 @@ public class PushDaoImpl implements PushDao {
 			messageModel.setMessageId(UUID.randomUUID().toString());
 			messageModel.setMessageType("OrderBeReceivedNotify");
 			messageModel.setReceiveUserId(order.getCreateManId());
-			messageModel.setAlias(order.getLinkPhone());
+			messageModel.setAlias(goodsMan.getAccessToken());
 			messageModel.setOrderId(order.getOrderId());
 			messageModel.setOrderStatus(order.getStatus());
 			messageModel.setOrderType(order.getType());
@@ -135,11 +139,11 @@ public class PushDaoImpl implements PushDao {
 			hashmap.put("appointStatus", order.getAppointStatus());
 			hashmap.put("type", order.getType());
 			hashmap.put("orderId", order.getOrderId());
-			hashmap.put("sendAddress", order.getSendAddress());
-			hashmap.put("receiveAddress", order.getReceiveAddress());
-			hashmap.put("driverName", user.getNickname());
-			hashmap.put("driverPhone", user.getPhoneNumber());
-//			hashmap.put("plateNumber", user.getPlateNumber());
+			hashmap.put("sendAddress", order.getSendDetailAddress());
+			hashmap.put("receiveAddress", order.getReceiveDetailAddress());
+			hashmap.put("driverName", driver.getNickname());
+			hashmap.put("driverPhone", driver.getPhoneNumber());
+			hashmap.put("plateNumber", vehicle.getPlateNumber());
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String createTime = formatter.format(order.getCreateTime());
 			hashmap.put("createTime", createTime);
@@ -175,11 +179,11 @@ public class PushDaoImpl implements PushDao {
 		if(order != null && order.getDriverId() != null) {
 			List<String> person = new ArrayList<>();
 			UserDao userDao = new UserDaoImpl();
-			User user = userDao.getUserById(order.getDriverId());
-			person.add(user.getPhoneNumber());
+			User driver = userDao.getUserById(order.getDriverId());
+			person.add(driver.getAccessToken());
 			
 			String plateStr = "";
-			if ("iOS".equals(user.getLoginPlate())) {
+			if ("iOS".equals(driver.getLoginPlate())) {
 				plateStr = "iOS";
 			}else {
 				plateStr = "android";
@@ -190,7 +194,7 @@ public class PushDaoImpl implements PushDao {
 			messageModel.setMessageId(UUID.randomUUID().toString());
 			messageModel.setMessageType("OrderBeCanceledNotify");
 			messageModel.setReceiveUserId(order.getDriverId());
-			messageModel.setAlias(user.getPhoneNumber());
+			messageModel.setAlias(driver.getAccessToken());
 			messageModel.setOrderId(order.getOrderId());
 			messageModel.setOrderStatus(order.getStatus());
 			messageModel.setOrderType(order.getType());
@@ -237,14 +241,19 @@ public class PushDaoImpl implements PushDao {
 		OrderDao orderDao = new OrderDaoImpl();
 		Order order = orderDao.getOrderById(orderId);
 		
-		if(order != null && order.getLinkPhone() != null) {
-			List<String> person = new ArrayList<>();
-			person.add(order.getLinkPhone());
-			
+		if(order != null) {
 			UserDao userDao = new UserDaoImpl();
-			User user = userDao.getUserById(order.getDriverId());
+			User driver = userDao.getUserById(order.getDriverId());
+			User goodsMan = userDao.getUserById(order.getCreateManId());
+			VehicleDao vehicleDao = new VehicleImpl();
+			Vehicle vehicle = vehicleDao.getVehicleById(driver.getVehicleId());
+			
+			List<String> person = new ArrayList<>();
+			person.add(goodsMan.getAccessToken());
+			
+			
 			String plateStr = "";
-			if ("iOS".equals(user.getLoginPlate())) {
+			if ("iOS".equals(goodsMan.getLoginPlate())) {
 				plateStr = "iOS";
 			}else {
 				plateStr = "android";
@@ -254,7 +263,7 @@ public class PushDaoImpl implements PushDao {
 			messageModel.setMessageId(UUID.randomUUID().toString());
 			messageModel.setMessageType("AppointOrderBeginNotify");
 			messageModel.setReceiveUserId(order.getCreateManId());
-			messageModel.setAlias(order.getLinkPhone());
+			messageModel.setAlias(goodsMan.getAccessToken());
 			messageModel.setOrderId(order.getOrderId());
 			messageModel.setOrderStatus(order.getStatus());
 			messageModel.setOrderType(order.getType());
@@ -266,11 +275,11 @@ public class PushDaoImpl implements PushDao {
 			Map<String, String> hashmap = new HashMap<String, String>();
 			hashmap.put("type", order.getType());
 			hashmap.put("orderId", order.getOrderId());
-			hashmap.put("sendAddress", order.getSendAddress());
-			hashmap.put("receiveAddress", order.getReceiveAddress());
-			hashmap.put("driverName", user.getNickname());
-			hashmap.put("driverPhone", user.getPhoneNumber());
-//			hashmap.put("plateNumber", user.getPlateNumber());
+			hashmap.put("sendAddress", order.getSendDetailAddress());
+			hashmap.put("receiveAddress", order.getReceiveDetailAddress());
+			hashmap.put("driverName", driver.getNickname());
+			hashmap.put("driverPhone", driver.getPhoneNumber());
+			hashmap.put("plateNumber", vehicle.getPlateNumber());
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String createTime = formatter.format(order.getCreateTime());
 			hashmap.put("createTime", createTime);

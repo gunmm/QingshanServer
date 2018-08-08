@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -39,6 +40,8 @@ public class AllFilter implements Filter {
 
 		// pass the request along the filter chain
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+		System.out.println(httpServletRequest.getServletPath());
 		httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
 		httpServletResponse.setContentType("text/html;charset=utf-8");
 		chain.doFilter(request, response);

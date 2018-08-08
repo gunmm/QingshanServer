@@ -53,6 +53,7 @@ public class UTFFilter implements Filter {
 		httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
 		httpServletResponse.setContentType("text/html;charset=utf-8");
 		try {
+			
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			httpServletRequest.setCharacterEncoding("utf-8");
 			data = JSONUtils.readInputStream(httpServletRequest);
@@ -67,6 +68,7 @@ public class UTFFilter implements Filter {
 					request.setAttribute("body", body);
 					chain.doFilter(request, response);
 				} else {
+					System.out.println(httpServletRequest.getServletPath() + "token无效");
 					PrintWriter out = httpServletResponse.getWriter();
 					out.println(JSONUtils.responseToJsonString("-9", "token无效", "请求失败！", ""));
 					out.flush();
@@ -74,6 +76,7 @@ public class UTFFilter implements Filter {
 					return;
 				}
 			} else {
+				System.out.println(httpServletRequest.getServletPath() + "token无效");
 				PrintWriter out = httpServletResponse.getWriter();
 				out.println(JSONUtils.responseToJsonString("-9", "token无效", "请求失败！", ""));
 				out.flush();

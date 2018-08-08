@@ -268,12 +268,18 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "SELECT " + "`order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl,"
-					+ "user.nowLatitude," + "user.nowLongitude," + "user.plateNumber," + "user.score,"
+			sql = "SELECT `order`.*," 
+			        + "user.nickname," 
+					+ "user.phoneNumber," 
+			        + "user.personImageUrl,"
+			        + "user.score,"
+					+ "vehicle.nowLatitude," 
+			        + "vehicle.nowLongitude," 
+					+ "vehicle.plateNumber," 
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
-					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId "
-					+ "where `order`.createManId = '" + userId + "' " + "ORDER BY updateTime desc " + "LIMIT " + page
-					+ "," + rows;
+					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
+					+ "where `order`.createManId = '" + userId + "' " 
+					+ "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(OrderListModel.class);
@@ -306,12 +312,29 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "SELECT " + "`order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl,"
-					+ "user.nowLatitude," + "user.nowLongitude," + "user.plateNumber," + "user.score,"
+//			sql = "SELECT " + "`order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl,"
+//					+ "user.nowLatitude," + "user.nowLongitude," + "user.plateNumber," + "user.score,"
+//					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+//					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId "
+//					+ "where `order`.driverId = '" + driverId + "'" + condition + "ORDER BY updateTime desc " + "LIMIT "
+//					+ page + "," + rows;
+			
+			
+			sql = "SELECT `order`.*," 
+			        + "user.nickname," 
+					+ "user.phoneNumber," 
+			        + "user.personImageUrl,"
+					+ "user.score," 
+			        + "vehicle.nowLongitude," 
+					+ "vehicle.nowLatitude," 
+			        + "vehicle.plateNumber,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
-					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId "
-					+ "where `order`.driverId = '" + driverId + "'" + condition + "ORDER BY updateTime desc " + "LIMIT "
+					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId,vehicle "
+					+ "where `order`.driverId = '" + driverId + "' and user.vehicleId = vehicle.vehicleId " + condition + "ORDER BY updateTime desc " + "LIMIT "
 					+ page + "," + rows;
+			
+			
+			
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(OrderListModel.class);
@@ -398,8 +421,8 @@ public class OrderDaoImpl implements OrderDao {
 					+ "vehicle.nowLatitude," 
 			        + "vehicle.plateNumber,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
-					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId,vehicle "
-					+ "where `order`.orderId = '" + orderId + "' and user.vehicleId = vehicle.vehicleId";
+					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
+					+ "where `order`.orderId = '" + orderId + "'";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(OrderListModel.class);
@@ -428,7 +451,7 @@ public class OrderDaoImpl implements OrderDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			sql = "update `order`,user " + 
-				  "set `order`.status = '0',`order`.timeOut = NULL,`order`.driverId = NULL,user.status = '0',user.score = user.score-0.1 " + 
+				  "set `order`.status = '0',`order`.timeOut = NULL,`order`.driverId = NULL,`order`.driverId = NULL,user.status = '0',user.score = user.score-0.1 " + 
 				  "where `order`.status = '1' AND NOW() >= `order`.timeOut and user.userId = order.driverId ";
 			SQLQuery query = session.createSQLQuery(sql);
 			query.executeUpdate();

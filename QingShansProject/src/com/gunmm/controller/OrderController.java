@@ -26,65 +26,49 @@ import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
 import com.gunmm.utils.JSONUtils;
 
-
 @Controller
 @RequestMapping("/mobile")
 public class OrderController {
-	static Order addOrder = null;
 	static String robOrderId = null;
 	static String cancelOrderId = null;
 	static String beginAppointOrderId = null;
 	static String updateStatusOrderId = null;
+	static String payServiceFeeOrderId = null;
 
-
-
-
-	//添加订单
+	// 添加订单
 	@RequestMapping("/addOrder")
 	@ResponseBody
 	private JSONObject addOrder(HttpServletRequest request) {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 		JSONObject orderObject = object.getJSONObject("orderParam");
 		JSONObject invoiceObject = object.getJSONObject("invoiceParam");
-				
+
 		Invoice invoice = null;
 		String invoiceId = null;
-		if(invoiceObject != null) {
+		if (invoiceObject != null) {
 			invoice = new Invoice();
 			invoice = JSONObject.parseObject(invoiceObject.toJSONString(), Invoice.class);
-			
+
 			InvoiceDao invoiceDao = new InvoiceImpl();
 			JSONObject jsonObj = invoiceDao.addInvoiceDao(invoice);
 			String result_code = jsonObj.getString("result_code");
-			
+
 			if ("1".equals(result_code)) {
 				invoiceId = jsonObj.getString("object");
-			}else {
+			} else {
 				return jsonObj;
-			}			
+			}
 		}
-				
-		
-		addOrder = new Order();
+
+		Order addOrder = new Order();
 		addOrder = JSONObject.parseObject(orderObject.toJSONString(), Order.class);
 		addOrder.setInvoiceId(invoiceId);
 
 		OrderDao orderDao = new OrderDaoImpl();
-		JSONObject jsonObj = orderDao.addOrder(addOrder);
-		String result_code = jsonObj.getString("result_code");
-//		if ("1".equals(result_code)) {
-//			Thread t = new Thread(new Runnable() {
-//				public void run() {
-//					PushDao pushDao = new PushDaoImpl();
-//					pushDao.pushForOrder(addOrder);
-//				}
-//			});
-//			t.start();
-//		}
-		return jsonObj;
+		return orderDao.addOrder(addOrder);
 	}
-	
-	//取消订单
+
+	// 取消订单
 	@RequestMapping("/cancelOrder")
 	@ResponseBody
 	private JSONObject cancelOrder(HttpServletRequest request) {
@@ -105,11 +89,11 @@ public class OrderController {
 				}
 			});
 			t.start();
-		} 
+		}
 		return jsonObj;
 	}
-	
-	//抢单
+
+	// 抢单
 	@RequestMapping("/robOrder")
 	@ResponseBody
 	private JSONObject robOrder(HttpServletRequest request) {
@@ -135,7 +119,7 @@ public class OrderController {
 		return jsonObj;
 
 	}
-	
+
 	// 查询订单起点附近车辆
 	@RequestMapping("/getOrderCarList")
 	@ResponseBody
@@ -143,7 +127,6 @@ public class OrderController {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 		String orderId = object.getString("orderId");
 
-		
 		OrderDao orderDao = new OrderDaoImpl();
 
 		Order midOrder = orderDao.getOrderById(orderId);
@@ -152,38 +135,7 @@ public class OrderController {
 
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", userList);
 	}
-	
-	// 根据订单ID查被接单的订单信息和司机信息
-	@RequestMapping("/getOnWayOrder")
-	@ResponseBody
-	private JSONObject getOnWayOrder(HttpServletRequest request) {
-		JSONObject object = (JSONObject) request.getAttribute("body");
-		String orderId = object.getString("orderId");
 
-		if(orderId == null) {
-			return JSONUtils.responseToJsonString("0", "参数错误！", "查询失败！", "");
-		}
-		
-		OrderDao orderDao = new OrderDaoImpl();
-		Order wayOrder = orderDao.getOrderById(orderId);
-		DictionaryDao dictionaryDao = new DictionaryImpl();
-
-		
-
-		UserDao userDao = new UserDaoImpl();
-		User wayDriver = userDao.getUserById(wayOrder.getDriverId());
-//		wayOrder.setCarTypeName(dictionaryDao.getValueTextByNameAndkey("车辆类型", wayOrder.getCarType()));
-
-		if (wayOrder != null && wayDriver != null) {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("order", wayOrder);
-			jsonObject.put("driver", wayDriver);
-			return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
-		} else {
-			return JSONUtils.responseToJsonString("0", "", "查询失败！", "");
-		}
-	}
-	
 	// 根据订单ID查寻包含部分司机信息的大订单信息
 	@RequestMapping("/getBigOrderInfo")
 	@ResponseBody
@@ -199,7 +151,7 @@ public class OrderController {
 		OrderListModel orderListModel = orderDao.getBigOrderInfo(orderId);
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderListModel);
 	}
-	
+
 	// 订单列表
 	@RequestMapping("/getOrderList")
 	@ResponseBody
@@ -210,18 +162,17 @@ public class OrderController {
 
 		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
 
-		if(userId == null) {
+		if (userId == null) {
 			return JSONUtils.responseToJsonString("0", "参数错误！", "查询失败！", "");
 		}
 
 		OrderDao orderDao = new OrderDaoImpl();
 		List<OrderListModel> orderList = orderDao.getOrderListByUserId(userId, page, rows);
-		
-		
+
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);
 	}
-	
-	//司机订单列表
+
+	// 司机订单列表
 	@RequestMapping("/getDriverOrderList")
 	@ResponseBody
 	private JSONObject getDriverOrderList(HttpServletRequest request) {
@@ -233,19 +184,17 @@ public class OrderController {
 
 		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
 
-		if(userId == null) {
+		if (userId == null) {
 			return JSONUtils.responseToJsonString("0", "参数错误！", "查询失败！", "");
 		}
 
 		OrderDao orderDao = new OrderDaoImpl();
 		List<OrderListModel> orderList = orderDao.getDriverOrderListByDriverId(userId, page, rows, condition);
-		
-		
+
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);
 	}
-	
-	
-	//司机设置预约订单开始执行
+
+	// 司机设置预约订单开始执行
 	@RequestMapping("/setAppointOrderBegin")
 	@ResponseBody
 	private JSONObject setAppointOrderBegin(HttpServletRequest request) {
@@ -253,10 +202,10 @@ public class OrderController {
 		String driverId = object.getString("userId");
 		String orderId = object.getString("orderId");
 
-		if(driverId == null || orderId == null) {
+		if (driverId == null || orderId == null) {
 			return JSONUtils.responseToJsonString("0", "参数错误！", "执行失败！", "");
 		}
-		
+
 		OrderDao orderDao = new OrderDaoImpl();
 		beginAppointOrderId = orderId;
 		JSONObject jsonObj = orderDao.setAppointOrderBegin(driverId, orderId);
@@ -269,12 +218,11 @@ public class OrderController {
 				}
 			});
 			t.start();
-		} 
+		}
 		return jsonObj;
 	}
-	
-	
-	//司机更新订单完成状态
+
+	// 司机更新订单完成状态
 	@RequestMapping("/updateOrderStatus")
 	@ResponseBody
 	private JSONObject updateOrderStatus(HttpServletRequest request) {
@@ -282,15 +230,14 @@ public class OrderController {
 		String orderId = object.getString("orderId");
 		String status = object.getString("status");
 
-
-		if(orderId == null) {
+		if (orderId == null) {
 			return JSONUtils.responseToJsonString("0", "参数错误！", "操作失败！", "");
 		}
-		
+
 		OrderDao orderDao = new OrderDaoImpl();
-		
+
 		Order order = orderDao.getOrderById(orderId);
-		if(order == null) {
+		if (order == null) {
 			return JSONUtils.responseToJsonString("0", "未找到对应订单！", "操作失败！", "");
 		}
 		order.setStatus(status);
@@ -300,7 +247,7 @@ public class OrderController {
 			driver.setStatus("0");
 			userDao.updateUserInfo(driver);
 		}
-		
+
 		updateStatusOrderId = orderId;
 		JSONObject jsonObj = orderDao.updateOrderInfo(order);
 		String result_code = jsonObj.getString("result_code");
@@ -315,13 +262,12 @@ public class OrderController {
 			});
 			t.start();
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
-		}else {
+		} else {
 			return JSONUtils.responseToJsonString("0", reason, "操作失败！", "");
 		}
 	}
-	
-	
-	//货主评价订单
+
+	// 货主评价订单
 	@RequestMapping("/commentOrder")
 	@ResponseBody
 	private JSONObject commentOrder(HttpServletRequest request) {
@@ -330,32 +276,96 @@ public class OrderController {
 		String commentContent = object.getString("commentContent");
 		Double commentStar = object.getDouble("commentStar");
 
-
-
-		if(orderId == null) {
+		if (orderId == null) {
 			return JSONUtils.responseToJsonString("0", "参数错误！", "评价失败！", "");
 		}
-		
+
 		OrderDao orderDao = new OrderDaoImpl();
-		
+
 		Order order = orderDao.getOrderById(orderId);
-		if(order == null) {
+		if (order == null) {
 			return JSONUtils.responseToJsonString("0", "未找到对应订单！", "评价失败！", "");
 		}
 		order.setCommentContent(commentContent);
 		order.setCommentStar(commentStar);
 		JSONObject jsonObj = orderDao.updateOrderInfo(order);
-		
+
 		String result_code = jsonObj.getString("result_code");
 		String reason = jsonObj.getString("reason");
 
 		if ("1".equals(result_code)) {
 			return JSONUtils.responseToJsonString("1", "", "评价成功！", "");
-		}else {
+		} else {
 			return JSONUtils.responseToJsonString("0", reason, "评价失败！", "");
 		}
-		
-		
-	}	
-		
+
+	}
+
+	// 司机支付订单服务费
+	@RequestMapping("/driverPayOrderServiceFee")
+	@ResponseBody
+	private JSONObject driverPayOrderServiceFee(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String orderId = object.getString("orderId");
+		String serviceFeePayType = object.getString("serviceFeePayType");
+		String serviceFeePayId = object.getString("serviceFeePayId");
+		payServiceFeeOrderId = orderId;
+		OrderDao orderDao = new OrderDaoImpl();
+		Order order = orderDao.getOrderById(orderId);
+		order.setServiceFeePayId(serviceFeePayId);
+		order.setServiceFeePayType(serviceFeePayType);
+		order.setServiceFeePayStatus("1");
+		order.setStatus("2");
+		JSONObject jsonObj = orderDao.updateOrderInfo(order);
+
+		String result_code = jsonObj.getString("result_code");
+		String reason = jsonObj.getString("reason");
+
+		if ("1".equals(result_code)) {
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					PushDao pushDao = new PushDaoImpl();
+					pushDao.updateOrderSuccessPushForUser(payServiceFeeOrderId);
+				}
+			});
+			t.start();
+			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
+		} else {
+			return JSONUtils.responseToJsonString("0", reason, "操作失败！", "");
+		}
+
+	}
+
+	// 司机放弃抢到的订单
+	@RequestMapping("/driverGiveUpOrder")
+	@ResponseBody
+	private JSONObject driverGiveUpOrder(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String orderId = object.getString("orderId");
+		String driverId = object.getString("driverId");
+
+		OrderDao orderDao = new OrderDaoImpl();
+		Order order = orderDao.getOrderById(orderId);
+		order.setStatus("0");
+		order.setTimeOut(null);
+		order.setDriverId(null);
+		JSONObject jsonObj = orderDao.updateOrderInfo(order);
+
+		String result_code = jsonObj.getString("result_code");
+		String reason = jsonObj.getString("reason");
+
+		UserDao userDao = new UserDaoImpl();
+		User user = userDao.getUserById(driverId);
+		user.setStatus("0");
+		user.setScore(user.getScore() - 0.1);
+		userDao.updateUserInfo(user);
+
+		if ("1".equals(result_code)) {
+			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
+		} else {
+			return JSONUtils.responseToJsonString("0", reason, "操作失败！", "");
+		}
+
+	}
+
 }
