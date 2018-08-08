@@ -95,54 +95,6 @@ public class OrderDaoImpl implements OrderDao {
 			}
 
 		}
-
-		// List<User> userList = null;
-		// Transaction tx = null;
-		// String hql = "";
-		// try {
-		// Session session = MyHibernateSessionFactory.getSessionFactory()
-		// .getCurrentSession();
-		// tx = session.beginTransaction();
-		// hql =
-		// "select new
-		// User(userId,phoneNumber,nickname,personImageUrl,plateNumber,vehicleType,loginPlate,nowLatitude,nowLongitude,"
-		// +
-		// "(ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 ) *SIN((NOWLATITUDE *
-		// 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" * 3.1415) / 180 ) *
-		// COS((NOWLATITUDE * 3.1415) / 180 ) *COS(("+order.getSendLongitude()+"*
-		// 3.1415) / 180 - (NOWLONGITUDE * 3.1415) / 180 ) ) * 6380) AS distance,score)
-		// " +
-		// "from User " +
-		// "WHERE (ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 )
-		// *SIN((NOWLATITUDE * 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" *
-		// 3.1415) / 180 ) * COS((NOWLATITUDE * 3.1415) / 180 )
-		// *COS(("+order.getSendLongitude()+"* 3.1415) / 180 - (NOWLONGITUDE * 3.1415) /
-		// 180 ) ) * 6380) < 300 AND type = '2' AND status = '0' AND vehicleType =
-		// '"+order.getCarType()+"' "
-		// +"order by (ACOS(SIN(("+order.getSendLatitude()+" * 3.1415) / 180 )
-		// *SIN((NOWLATITUDE * 3.1415) / 180 ) +COS(("+order.getSendLatitude()+" *
-		// 3.1415) / 180 ) * COS((NOWLATITUDE * 3.1415) / 180 )
-		// *COS(("+order.getSendLongitude()+"* 3.1415) / 180 - (NOWLONGITUDE * 3.1415) /
-		// 180 ) ) * 6380)";
-		// Query query = session.createQuery(hql);
-		// query.setMaxResults(30);
-		// userList = query.list();
-		//
-		//
-		// tx.commit();
-		// return userList;
-		//
-		//
-		// } catch (Exception e) {
-		// // TODO: handle exception
-		// e.printStackTrace();
-		// return userList;
-		// } finally {
-		// if (tx != null) {
-		// tx = null;
-		// }
-		//
-		// }
 	}
 
 	@Override
@@ -180,9 +132,12 @@ public class OrderDaoImpl implements OrderDao {
 				}
 				FlowDao flowDao = new FlowImpl();
 				Flow flow = flowDao.getFlowByDriverId(driverId, orderId);
-				flow.setFlowStatus("2");
-				flowDao.updateFlow(flow);
-				flowDao.setFlowStatusByOrderId(orderId, "1");
+				if (flow != null) {
+					flow.setFlowStatus("2");
+					flowDao.updateFlow(flow);
+					flowDao.setFlowStatusByOrderId(orderId, "1");
+				}
+				
 				
 				
 				return JSONUtils.responseToJsonString("1", "", "抢单成功！", "");

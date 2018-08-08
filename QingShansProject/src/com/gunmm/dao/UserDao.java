@@ -27,6 +27,9 @@ public interface UserDao {
 	// 根据id取user
 	public User getUserById(String userId);
 
+	// 根据id取user and driver
+	public DriverListModel getUserDriverById(String userId);
+
 	// 根据phone取user
 	public User getUserByPhone(String phoneNumber);
 
@@ -64,8 +67,6 @@ public interface UserDao {
 
 	// 删除货主
 	public JSONObject deleteMaster(String masterId);
-	
-	
 
 	// 查询管理员列表
 	public List<ManageListModel> getManageListBySiteId(String page, String rows, String siteId, String filterNickName,
@@ -76,10 +77,6 @@ public interface UserDao {
 
 	// 添加管理员
 	public JSONObject addManage(User user);
-
-	
-	
-	
 
 	// 判断手机号是否已经注册
 	public boolean judgeUserByPhone(String phoneNumber);

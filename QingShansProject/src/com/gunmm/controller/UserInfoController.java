@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.gunmm.dao.DictionaryDao;
 import com.gunmm.dao.UserDao;
 import com.gunmm.dao.VehicleDao;
-import com.gunmm.impl.DictionaryImpl;
 import com.gunmm.impl.UserDaoImpl;
 import com.gunmm.impl.VehicleImpl;
 import com.gunmm.model.User;
@@ -38,7 +36,7 @@ public class UserInfoController {
 		}
 
 		UserDao userDao = new UserDaoImpl();
-		User user = userDao.getUserById(userId);
+		DriverListModel user = userDao.getUserDriverById(userId);
 		user.setPassword("");
 		return JSONUtils.responseToJsonString("1", "", "请求成功！", user);
 	}

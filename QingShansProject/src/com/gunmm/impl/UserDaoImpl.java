@@ -20,6 +20,7 @@ import com.gunmm.model.User;
 import com.gunmm.responseModel.DriverListModel;
 import com.gunmm.responseModel.ManageListModel;
 import com.gunmm.responseModel.MasterListModel;
+import com.gunmm.responseModel.OrderListModel;
 import com.gunmm.utils.JSONUtils;
 
 public class UserDaoImpl implements UserDao {
@@ -192,6 +193,55 @@ public class UserDaoImpl implements UserDao {
 			if (tx != null) {
 				tx = null;
 			}
+		}
+	}
+	
+	
+	// 根据id取user and driver
+	public DriverListModel getUserDriverById(String userId) {
+		DriverListModel user = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			sql = "SELECT user.*,"
+					+ "vehicle.plateNumber," 
+			        + "vehicle.gpsType," 
+			        + "vehicle.gpsSerialNumber," 
+			        + "vehicle.drivingCardNumber," 
+			        + "vehicle.vehicleRegistrationNumber," 
+			        + "vehicle.operationCertificateNumber," 
+			        + "vehicle.insuranceNumber," 
+			        + "vehicle.vehicleIdCardNumber," 
+			        + "vehicle.businessLicenseNumber," 
+			        + "vehicle.vehicleBrand," 
+			        + "vehicle.vehicleModel," 
+			        + "vehicle.vehiclePhoto," 
+			        + "vehicle.loadWeight," 
+			        + "vehicle.vehicleMakeDate," 
+					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) AS gpsTypeName,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType) AS vehicleTypeName "
+					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
+					+ "where user.userId = '" + userId + "'" ;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(OrderListModel.class);
+
+			user = (DriverListModel)query.uniqueResult();
+
+			tx.commit();
+			return user;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return user;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
 		}
 	}
 
