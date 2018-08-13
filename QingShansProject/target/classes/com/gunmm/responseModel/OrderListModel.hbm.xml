@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-8-4 20:02:11 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-8-13 22:52:29 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.OrderListModel" table="ORDERLISTMODEL">
         <id name="orderId" type="java.lang.String">
@@ -73,6 +73,9 @@
         </property>
         <property name="withdrawMoneyStatus" type="java.lang.String">
             <column name="WITHDRAWMONEYSTATUS" />
+        </property>
+        <property name="withdrawalId" type="java.lang.String">
+            <column name="WITHDRAWALID" />
         </property>
         <property name="freightFeePayType" type="java.lang.String">
             <column name="FREIGHTFEEPAYTYPE" />

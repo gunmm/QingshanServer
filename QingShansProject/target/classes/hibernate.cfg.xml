@@ -20,8 +20,9 @@
 		
 		<property name="hibernate.current_session_context_class">thread</property>
 		
-		<mapping resource="com/gunmm/model/MessageModel.hbm.xml" />
+		<mapping resource="com/gunmm/model/Withdrawal.hbm.xml" />
 		<mapping resource="com/gunmm/model/Order.hbm.xml" />
+		<mapping resource="com/gunmm/model/MessageModel.hbm.xml" />
 		<mapping resource="com/gunmm/model/Flow.hbm.xml" />
 		<mapping resource="com/gunmm/model/Invoice.hbm.xml" />
 		<mapping resource="com/gunmm/model/User.hbm.xml" />

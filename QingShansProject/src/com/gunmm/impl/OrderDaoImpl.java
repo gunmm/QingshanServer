@@ -137,9 +137,7 @@ public class OrderDaoImpl implements OrderDao {
 					flowDao.updateFlow(flow);
 					flowDao.setFlowStatusByOrderId(orderId, "1");
 				}
-				
-				
-				
+
 				return JSONUtils.responseToJsonString("1", "", "抢单成功！", "");
 			} else {
 				return JSONUtils.responseToJsonString("0", reason, "抢单失败！", "");
@@ -223,18 +221,12 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "SELECT `order`.*," 
-			        + "user.nickname," 
-					+ "user.phoneNumber," 
-			        + "user.personImageUrl,"
-			        + "user.score,"
-					+ "vehicle.nowLatitude," 
-			        + "vehicle.nowLongitude," 
-					+ "vehicle.plateNumber," 
+			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
+					+ "vehicle.nowLatitude," + "vehicle.nowLongitude," + "vehicle.plateNumber,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
 					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
-					+ "where `order`.createManId = '" + userId + "' " 
-					+ "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
+					+ "where `order`.createManId = '" + userId + "' " + "ORDER BY updateTime desc " + "LIMIT " + page
+					+ "," + rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(OrderListModel.class);
@@ -267,29 +259,23 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-//			sql = "SELECT " + "`order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl,"
-//					+ "user.nowLatitude," + "user.nowLongitude," + "user.plateNumber," + "user.score,"
-//					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
-//					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId "
-//					+ "where `order`.driverId = '" + driverId + "'" + condition + "ORDER BY updateTime desc " + "LIMIT "
-//					+ page + "," + rows;
-			
-			
-			sql = "SELECT `order`.*," 
-			        + "user.nickname," 
-					+ "user.phoneNumber," 
-			        + "user.personImageUrl,"
-					+ "user.score," 
-			        + "vehicle.nowLongitude," 
-					+ "vehicle.nowLatitude," 
-			        + "vehicle.plateNumber,"
+			// sql = "SELECT " + "`order`.*," + "user.nickname," + "user.phoneNumber," +
+			// "user.personImageUrl,"
+			// + "user.nowLatitude," + "user.nowLongitude," + "user.plateNumber," +
+			// "user.score,"
+			// + "(select valueText from DictionaryModel where name = '车辆类型' and keyText =
+			// `order`.carType) AS carTypeName "
+			// + "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId "
+			// + "where `order`.driverId = '" + driverId + "'" + condition + "ORDER BY
+			// updateTime desc " + "LIMIT "
+			// + page + "," + rows;
+
+			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
+					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
 					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId,vehicle "
-					+ "where `order`.driverId = '" + driverId + "' and user.vehicleId = vehicle.vehicleId " + condition + "ORDER BY updateTime desc " + "LIMIT "
-					+ page + "," + rows;
-			
-			
-			
+					+ "where `order`.driverId = '" + driverId + "' and user.vehicleId = vehicle.vehicleId " + condition
+					+ "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(OrderListModel.class);
@@ -367,16 +353,11 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "SELECT `order`.*," 
-			        + "user.nickname," 
-					+ "user.phoneNumber," 
-			        + "user.personImageUrl,"
-					+ "user.score," 
-			        + "vehicle.nowLongitude," 
-					+ "vehicle.nowLatitude," 
-			        + "vehicle.plateNumber,"
+			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
+					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
-					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
+					+ "FROM "
+					+ "`order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 					+ "where `order`.orderId = '" + orderId + "'";
 
 			SQLQuery query = session.createSQLQuery(sql);
@@ -405,12 +386,12 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "update `order`,user " + 
-				  "set `order`.status = '0',`order`.timeOut = NULL,`order`.driverId = NULL,`order`.driverId = NULL,user.status = '0',user.score = user.score-0.1 " + 
-				  "where `order`.status = '1' AND NOW() >= `order`.timeOut and user.userId = order.driverId ";
+			sql = "update `order`,user "
+					+ "set `order`.status = '0',`order`.timeOut = NULL,`order`.driverId = NULL,`order`.driverId = NULL,user.status = '0',user.score = user.score-0.1 "
+					+ "where `order`.status = '1' AND NOW() >= `order`.timeOut and user.userId = order.driverId ";
 			SQLQuery query = session.createSQLQuery(sql);
 			query.executeUpdate();
-			
+
 			tx.commit();
 			return JSONUtils.responseToJsonString("1", "", "超时订单操作成功！", "");
 
@@ -425,8 +406,8 @@ public class OrderDaoImpl implements OrderDao {
 
 		}
 	}
-	
-	//查询所有未被接单的订单
+
+	// 查询所有未被接单的订单
 	@SuppressWarnings("unchecked")
 	public List<Order> getUnReceiveOrderList() {
 		List<Order> orderList = null;
@@ -435,10 +416,7 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "select * " 
-			    + "FROM `order` "
-			    + "where `order`.status = '0'";
-					
+			sql = "select * " + "FROM `order` " + "where `order`.status = '0'";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(Order.class);
@@ -457,6 +435,53 @@ public class OrderDaoImpl implements OrderDao {
 				tx = null;
 			}
 		}
+	}
+
+	// 查询指定时间段的可提现金额
+	public Double getWithdrawalCount(String dataStr, String toUserId) {
+		return (double) 0;
+	}
+
+	// 查询指定时间段内的可提现订单列表
+	public List<OrderListModel> getWithdrawalList(String dataStr, String toUserId) {
+		List<OrderListModel> orderList = null;
+		Transaction tx = null;
+		String sql = "";
+//		try {
+//			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+//			tx = session.beginTransaction();
+//
+//			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
+//					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
+//					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+//					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId,vehicle "
+//					+ "where `order`.driverId = '" + driverId + "' and user.vehicleId = vehicle.vehicleId " + condition
+//					+ "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
+//
+//			SQLQuery query = session.createSQLQuery(sql);
+//			query.addEntity(OrderListModel.class);
+//
+//			orderList = query.list();
+//
+//			tx.commit();
+//			return orderList;
+//
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//			return orderList;
+//		} finally {
+//			if (tx != null) {
+//				tx = null;
+//			}
+//		}
+		
+		return orderList;
+	}
+
+	// 编辑指定时间段内提现订单
+	public JSONObject setWithdrawal(String dataStr, String toUserId) {
+		return JSONUtils.responseToJsonString("0", "", "超时订单操作失败！", "");
 	}
 
 }

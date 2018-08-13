@@ -40,6 +40,7 @@ public class OrderListModel {
 	private Double distance = 0.0; //距离
 	
 	private String withdrawMoneyStatus; //提现状态 0：未提现  1：已提现
+	private String withdrawalId; //提现记录Id
 	
 	private String freightFeePayType; //运费  支付方式   1:支付宝支付    2:微信支付   3:现金支付
 	private String freightFeePayStatus; //运费 支付状态   0:未支付   1:已支付
@@ -267,6 +268,16 @@ public class OrderListModel {
 
 	public void setWithdrawMoneyStatus(String withdrawMoneyStatus) {
 		this.withdrawMoneyStatus = withdrawMoneyStatus;
+	}
+	
+	
+
+	public String getWithdrawalId() {
+		return withdrawalId;
+	}
+
+	public void setWithdrawalId(String withdrawalId) {
+		this.withdrawalId = withdrawalId;
 	}
 
 	public String getFreightFeePayType() {
