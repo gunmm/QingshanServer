@@ -77,7 +77,21 @@ public class SiteController {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 		String siteId = object.getString("siteId");
 		SiteDao siteDao = new SiteImpl();
-		return siteDao.deleteSiteById(siteId);
+		Site site = siteDao.getSiteById(siteId);
+		JSONObject jsonObj = siteDao.deleteSiteById(siteId);
+		String result_code = jsonObj.getString("result_code");
+		
+		if ("1".equals(result_code)) {
+			if (site != null) {
+				UserDao userDao = new UserDaoImpl();
+				User user = userDao.getUserByPhone(site.getLawsManPhone());
+				if (user != null) {
+					userDao.deleteMaster(user.getUserId());
+				}
+			}
+			
+		}
+		return jsonObj;
 	}
 
 	// 编辑站点
@@ -109,7 +123,7 @@ public class SiteController {
 		site.setLawsManPhone(lawsManPhone);
 		site.setBusinessLicensePhoto(businessLicensePhoto);
 		site.setLeaseContractPhoto(leaseContractPhoto);
-
+		
 		return siteDao.updateSiteInfo(site);
 	}
 

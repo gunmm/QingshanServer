@@ -20,7 +20,6 @@ import com.gunmm.model.User;
 import com.gunmm.responseModel.DriverListModel;
 import com.gunmm.responseModel.ManageListModel;
 import com.gunmm.responseModel.MasterListModel;
-import com.gunmm.responseModel.OrderListModel;
 import com.gunmm.utils.JSONUtils;
 
 public class UserDaoImpl implements UserDao {
@@ -220,13 +219,14 @@ public class UserDaoImpl implements UserDao {
 			        + "vehicle.vehiclePhoto," 
 			        + "vehicle.loadWeight," 
 			        + "vehicle.vehicleMakeDate," 
+			        + "(select siteName from site where user.belongSiteId = siteId) as belongSiteName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) AS gpsTypeName,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType) AS vehicleTypeName "
 					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 					+ "where user.userId = '" + userId + "'" ;
 
 			SQLQuery query = session.createSQLQuery(sql);
-			query.addEntity(OrderListModel.class);
+			query.addEntity(DriverListModel.class);
 
 			user = (DriverListModel)query.uniqueResult();
 

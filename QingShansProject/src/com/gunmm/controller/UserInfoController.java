@@ -290,6 +290,7 @@ public class UserInfoController {
 		String driverId = object.getString("driverId");
 
 		UserDao userDao = new UserDaoImpl();
+	
 		return userDao.deleteDriver(driverId);
 	}
 

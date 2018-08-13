@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gunmm.model.Vehicle;
-import com.gunmm.responseModel.MasterListModel;
 import com.gunmm.responseModel.VehicleListModel;
 
 public interface VehicleDao {
