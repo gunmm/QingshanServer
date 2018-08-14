@@ -17,8 +17,11 @@ public class Order {
 	private String createManId; //发布人id
 	private String driverId; //接单司机id
 
-	private String linkMan; //联系人
-	private String linkPhone; //联系电话
+	private String linkMan; //发货人
+	private String linkPhone; //发货联系电话
+	
+	private String receiveMan; //发货人
+	private String receivePhone; //发货联系电话
 	
 	private String carType; //车辆类型
 
@@ -184,6 +187,31 @@ public class Order {
 
 	public void setLinkPhone(String linkPhone) {
 		this.linkPhone = linkPhone;
+	}
+
+
+	
+
+	public String getReceiveMan() {
+		return receiveMan;
+	}
+
+
+
+	public void setReceiveMan(String receiveMan) {
+		this.receiveMan = receiveMan;
+	}
+
+
+
+	public String getReceivePhone() {
+		return receivePhone;
+	}
+
+
+
+	public void setReceivePhone(String receivePhone) {
+		this.receivePhone = receivePhone;
 	}
 
 

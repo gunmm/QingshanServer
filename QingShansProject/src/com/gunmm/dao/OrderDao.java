@@ -30,6 +30,12 @@ public interface OrderDao {
 	public List<OrderListModel> getDriverOrderListByDriverId(String driverId, String page, String rows,
 			String condition);
 
+	// 查询站点订单列表
+	public List<OrderListModel> getSiteOrderList(String siteId, String page, String rows);
+
+	// 查询站点订单总条数
+	public Long getSiteOrderCount(String siteId);
+
 	// 司机设置预约订单开始执行
 	public JSONObject setAppointOrderBegin(String driverId, String orderId);
 
@@ -50,7 +56,7 @@ public interface OrderDao {
 
 	// 查询指定时间段内的可提现订单列表
 	public List<OrderListModel> getWithdrawalList(String dataStr, String toUserId);
-	
+
 	// 编辑指定时间段内提现订单
 	public JSONObject setWithdrawal(String dataStr, String toUserId);
 

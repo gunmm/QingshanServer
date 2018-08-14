@@ -1,5 +1,6 @@
 package com.gunmm.impl;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -259,16 +260,6 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			// sql = "SELECT " + "`order`.*," + "user.nickname," + "user.phoneNumber," +
-			// "user.personImageUrl,"
-			// + "user.nowLatitude," + "user.nowLongitude," + "user.plateNumber," +
-			// "user.score,"
-			// + "(select valueText from DictionaryModel where name = '车辆类型' and keyText =
-			// `order`.carType) AS carTypeName "
-			// + "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId "
-			// + "where `order`.driverId = '" + driverId + "'" + condition + "ORDER BY
-			// updateTime desc " + "LIMIT "
-			// + page + "," + rows;
 
 			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
 					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
@@ -289,6 +280,77 @@ public class OrderDaoImpl implements OrderDao {
 			// TODO: handle exception
 			e.printStackTrace();
 			return orderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 查询站点订单列表
+	@SuppressWarnings("unchecked")
+	public List<OrderListModel> getSiteOrderList(String siteId, String page, String rows) {
+		List<OrderListModel> orderList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
+					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
+					+ "where `order`.driverId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '" + siteId + "' AND `user`.type = '6') OR "
+					+ "`order`.createManId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '" + siteId + "' AND `user`.type = '5') " 
+					+ "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(OrderListModel.class);
+
+			orderList = query.list();
+
+			tx.commit();
+			return orderList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return orderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 查询站点订单总条数
+	public Long getSiteOrderCount(String siteId) {
+		Transaction tx = null;
+		Long orderCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			
+			
+		
+			sql = "select count(*) " 
+				  + "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
+				  + "where `order`.driverId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '" + siteId + "' AND `user`.type = '6') OR "
+				  + "`order`.createManId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '" + siteId + "' AND `user`.type = '5')";
+			
+			SQLQuery query = session.createSQLQuery(sql);
+			orderCount = ((BigInteger)query.uniqueResult()).longValue();
+
+
+			tx.commit();
+			return orderCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return orderCount;
 		} finally {
 			if (tx != null) {
 				tx = null;
@@ -447,35 +509,40 @@ public class OrderDaoImpl implements OrderDao {
 		List<OrderListModel> orderList = null;
 		Transaction tx = null;
 		String sql = "";
-//		try {
-//			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
-//			tx = session.beginTransaction();
-//
-//			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
-//					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
-//					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
-//					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId,vehicle "
-//					+ "where `order`.driverId = '" + driverId + "' and user.vehicleId = vehicle.vehicleId " + condition
-//					+ "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
-//
-//			SQLQuery query = session.createSQLQuery(sql);
-//			query.addEntity(OrderListModel.class);
-//
-//			orderList = query.list();
-//
-//			tx.commit();
-//			return orderList;
-//
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//			return orderList;
-//		} finally {
-//			if (tx != null) {
-//				tx = null;
-//			}
-//		}
-		
+		// try {
+		// Session session =
+		// MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+		// tx = session.beginTransaction();
+		//
+		// sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," +
+		// "user.personImageUrl," + "user.score,"
+		// + "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
+		// + "(select valueText from DictionaryModel where name = '车辆类型' and keyText =
+		// `order`.carType) AS carTypeName "
+		// + "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId,vehicle
+		// "
+		// + "where `order`.driverId = '" + driverId + "' and user.vehicleId =
+		// vehicle.vehicleId " + condition
+		// + "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
+		//
+		// SQLQuery query = session.createSQLQuery(sql);
+		// query.addEntity(OrderListModel.class);
+		//
+		// orderList = query.list();
+		//
+		// tx.commit();
+		// return orderList;
+		//
+		// } catch (Exception e) {
+		// // TODO: handle exception
+		// e.printStackTrace();
+		// return orderList;
+		// } finally {
+		// if (tx != null) {
+		// tx = null;
+		// }
+		// }
+
 		return orderList;
 	}
 

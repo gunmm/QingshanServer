@@ -192,6 +192,28 @@ public class OrderController {
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);
 	}
 
+	// 站点订单列表
+	@RequestMapping("/getSiteOrderList")
+	@ResponseBody
+	private JSONObject getSiteOrderList(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String siteId = object.getString("siteId");
+		String rows = object.getString("rows");
+
+		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+
+
+		OrderDao orderDao = new OrderDaoImpl();
+		List<OrderListModel> orderList = orderDao.getSiteOrderList(siteId, page, rows);
+		
+		Long orderCount = orderDao.getSiteOrderCount(siteId);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("orderCount", orderCount);
+		jsonObject.put("orderList", orderList);
+
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
+	}
+
 	// 司机设置预约订单开始执行
 	@RequestMapping("/setAppointOrderBegin")
 	@ResponseBody

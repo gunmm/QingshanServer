@@ -18,6 +18,9 @@ public class OrderListModel {
 	private String linkMan; //联系人
 	private String linkPhone; //联系电话
 	
+	private String receiveMan; //发货人
+	private String receivePhone; //发货联系电话
+	
 	private String carType; //车辆类型
 	private String carTypeName; //车辆类型
 	
@@ -157,6 +160,24 @@ public class OrderListModel {
 
 	public void setLinkPhone(String linkPhone) {
 		this.linkPhone = linkPhone;
+	}
+	
+	
+
+	public String getReceiveMan() {
+		return receiveMan;
+	}
+
+	public void setReceiveMan(String receiveMan) {
+		this.receiveMan = receiveMan;
+	}
+
+	public String getReceivePhone() {
+		return receivePhone;
+	}
+
+	public void setReceivePhone(String receivePhone) {
+		this.receivePhone = receivePhone;
 	}
 
 	public String getCarType() {
