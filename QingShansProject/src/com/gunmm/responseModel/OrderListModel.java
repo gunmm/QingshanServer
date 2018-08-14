@@ -37,6 +37,7 @@ public class OrderListModel {
 	private Double receiveLongitude = 0.0; 
 	
 	private Double price = 0.0; //总运费用
+	private Double servicePrice = 0.0; //服务费
 	private Double distance = 0.0; //距离
 	
 	private String withdrawMoneyStatus; //提现状态 0：未提现  1：已提现
@@ -252,6 +253,16 @@ public class OrderListModel {
 
 	public void setPrice(Double price) {
 		this.price = price;
+	}
+	
+	
+
+	public Double getServicePrice() {
+		return servicePrice;
+	}
+
+	public void setServicePrice(Double servicePrice) {
+		this.servicePrice = servicePrice;
 	}
 
 	public Double getDistance() {
