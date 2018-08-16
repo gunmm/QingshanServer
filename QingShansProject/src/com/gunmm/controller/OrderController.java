@@ -170,6 +170,27 @@ public class OrderController {
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);
 	}
 
+	// PC端获取司机订单列表
+	@RequestMapping("/getPcMasterOrderList")
+	@ResponseBody
+	private JSONObject getPcMasterOrderList(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String userId = object.getString("userId");
+		String rows = object.getString("rows");
+
+		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+
+		OrderDao orderDao = new OrderDaoImpl();
+		List<OrderListModel> orderList = orderDao.getOrderListByUserId(userId, page, rows);
+
+		Long orderCount = orderDao.getMasterOrderCount(userId);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("orderCount", orderCount);
+		jsonObject.put("orderList", orderList);
+
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
+	}
+
 	// 司机订单列表
 	@RequestMapping("/getDriverOrderList")
 	@ResponseBody
@@ -192,6 +213,27 @@ public class OrderController {
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);
 	}
 
+	// PC端获取司机订单列表
+	@RequestMapping("/getPcDriverOrderList")
+	@ResponseBody
+	private JSONObject getPcDriverOrderList(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String driverId = object.getString("driverId");
+		String rows = object.getString("rows");
+
+		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+
+		OrderDao orderDao = new OrderDaoImpl();
+		List<OrderListModel> orderList = orderDao.getDriverOrderListByDriverId(driverId, page, rows, "");
+
+		Long orderCount = orderDao.getDriverOrderCount(driverId);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("orderCount", orderCount);
+		jsonObject.put("orderList", orderList);
+
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
+	}
+
 	// 站点订单列表
 	@RequestMapping("/getSiteOrderList")
 	@ResponseBody
@@ -202,10 +244,9 @@ public class OrderController {
 
 		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
 
-
 		OrderDao orderDao = new OrderDaoImpl();
 		List<OrderListModel> orderList = orderDao.getSiteOrderList(siteId, page, rows);
-		
+
 		Long orderCount = orderDao.getSiteOrderCount(siteId);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("orderCount", orderCount);

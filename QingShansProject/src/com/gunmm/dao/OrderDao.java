@@ -26,9 +26,15 @@ public interface OrderDao {
 	// 根据userid查询订单列表
 	public List<OrderListModel> getOrderListByUserId(String userId, String page, String rows);
 
+	// 查询货主订单总条数
+	public Long getMasterOrderCount(String userId);
+
 	// 查询司机订单列表
 	public List<OrderListModel> getDriverOrderListByDriverId(String driverId, String page, String rows,
 			String condition);
+
+	// 查询司机订单总条数
+	public Long getDriverOrderCount(String driverId);
 
 	// 查询站点订单列表
 	public List<OrderListModel> getSiteOrderList(String siteId, String page, String rows);

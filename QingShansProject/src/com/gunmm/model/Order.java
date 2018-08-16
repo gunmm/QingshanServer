@@ -20,8 +20,8 @@ public class Order {
 	private String linkMan; //发货人
 	private String linkPhone; //发货联系电话
 	
-	private String receiveMan; //发货人
-	private String receivePhone; //发货联系电话
+	private String receiveMan; //收货人
+	private String receivePhone; //收货人联系电话
 	
 	private String carType; //车辆类型
 

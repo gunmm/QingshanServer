@@ -249,6 +249,34 @@ public class OrderDaoImpl implements OrderDao {
 		}
 	}
 
+	// 查询货主订单总条数
+	public Long getMasterOrderCount(String userId) {
+		Transaction tx = null;
+		Long orderCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "select count(*) " + "FROM `order` " + "where `order`.createManId = '" + userId + "' ";
+
+			SQLQuery query = session.createSQLQuery(sql);
+			orderCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return orderCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return orderCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<OrderListModel> getDriverOrderListByDriverId(String driverId, String page, String rows,
@@ -287,6 +315,34 @@ public class OrderDaoImpl implements OrderDao {
 		}
 	}
 
+	// 查询司机订单总条数
+	public Long getDriverOrderCount(String driverId) {
+		Transaction tx = null;
+		Long orderCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "select count(*) " + "FROM `order` " + "where `order`.driverId = '" + driverId + "' ";
+
+			SQLQuery query = session.createSQLQuery(sql);
+			orderCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return orderCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return orderCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
 	// 查询站点订单列表
 	@SuppressWarnings("unchecked")
 	public List<OrderListModel> getSiteOrderList(String siteId, String page, String rows) {
@@ -301,9 +357,10 @@ public class OrderDaoImpl implements OrderDao {
 					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
 					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
-					+ "where `order`.driverId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '" + siteId + "' AND `user`.type = '6') OR "
-					+ "`order`.createManId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '" + siteId + "' AND `user`.type = '5') " 
-					+ "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
+					+ "where `order`.driverId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '"
+					+ siteId + "' AND `user`.type = '6') OR "
+					+ "`order`.createManId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '" + siteId
+					+ "' AND `user`.type = '5') " + "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(OrderListModel.class);
@@ -332,17 +389,16 @@ public class OrderDaoImpl implements OrderDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			
-			
-		
-			sql = "select count(*) " 
-				  + "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
-				  + "where `order`.driverId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '" + siteId + "' AND `user`.type = '6') OR "
-				  + "`order`.createManId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '" + siteId + "' AND `user`.type = '5')";
-			
-			SQLQuery query = session.createSQLQuery(sql);
-			orderCount = ((BigInteger)query.uniqueResult()).longValue();
 
+			sql = "select count(*) "
+					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
+					+ "where `order`.driverId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '"
+					+ siteId + "' AND `user`.type = '6') OR "
+					+ "`order`.createManId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '" + siteId
+					+ "' AND `user`.type = '5')";
+
+			SQLQuery query = session.createSQLQuery(sql);
+			orderCount = ((BigInteger) query.uniqueResult()).longValue();
 
 			tx.commit();
 			return orderCount;
