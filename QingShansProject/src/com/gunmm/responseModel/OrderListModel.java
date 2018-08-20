@@ -73,6 +73,9 @@ public class OrderListModel {
 	private Date appointTime; //预约时间  
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date finishTime; //完成时间  
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date timeOut; //超时时间  
 	
 	
@@ -414,6 +417,14 @@ public class OrderListModel {
 
 	public void setAppointTime(Date appointTime) {
 		this.appointTime = appointTime;
+	}
+	
+	public Date getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Date finishTime) {
+		this.finishTime = finishTime;
 	}
 
 	public Date getTimeOut() {

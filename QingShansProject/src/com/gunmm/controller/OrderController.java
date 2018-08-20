@@ -1,5 +1,6 @@
 package com.gunmm.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -307,6 +308,7 @@ public class OrderController {
 			User driver = userDao.getUserById(order.getDriverId());
 			driver.setStatus("0");
 			userDao.updateUserInfo(driver);
+			order.setFinishTime(new Date());
 		}
 
 		updateStatusOrderId = orderId;

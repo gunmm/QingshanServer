@@ -1,9 +1,12 @@
 package com.gunmm.impl;
 
+import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -11,30 +14,362 @@ import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.WithdrawalDao;
 import com.gunmm.db.MyHibernateSessionFactory;
 import com.gunmm.model.Withdrawal;
+import com.gunmm.responseModel.WithdrawalListModel;
+import com.gunmm.responseModel.WithdrawalOrderListModel;
 import com.gunmm.utils.JSONUtils;
 
 public class WithdrawalImpl implements WithdrawalDao {
 
-	// 新建提现记录
-	public Withdrawal addWithdrawal(String dataStr, String toUserId, String oprationUserId) {
-		Withdrawal withdrawal = new Withdrawal();
-		withdrawal.setWithdrawalId(UUID.randomUUID().toString());
-		withdrawal.setToUserId(toUserId);
-		withdrawal.setOprationUserId(oprationUserId);
-		withdrawal.setPeriodOfTime(dataStr);
-		withdrawal.setWithdrawalTime(new Date());
+	// 获取父站点待提现列表
+	@SuppressWarnings("unchecked")
+	public List<WithdrawalListModel> getSiteWithdrawalList(String dataStr, String page, String rows,
+			String filterSiteName, String filterLowsManName) {
+		List<WithdrawalListModel> withdrawalList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
 
+			String beginStr = dataStr + "-01 00:00:00";
+			String endStr = dataStr + "-31 23:59:59";
+			sql = "SELECT *,"
+					+ "FORMAT((ifnull(registerDriverFee,0) + ifnull(registerGoodsManFee,0) + ifnull(childDriverFee,0) + ifnull(childGoodsManFee,0)),2) AS totalFee "
+					+ "FROM " + "(SELECT  superSite.siteId, " + "superSite.siteName, " + "`user`.bankCardNumber,"
+					+ "`user`.userId," + "`user`.nickname," + "FORMAT((SELECT SUM(servicePrice) " + "FROM `order` "
+					+ "WHERE `order`.driverId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = superSite.siteId AND `user`.type = '6') "
+					+ "AND `order`.`status` = '4' " + "AND `order`.finishTime > '" + beginStr + "' "
+					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.withdrawMoneyStatus = '0'"
+					+ ") * 0.3,2) AS registerDriverFee," + "FORMAT((SELECT SUM(servicePrice) " + "FROM `order` "
+					+ "WHERE `order`.createManId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = superSite.siteId AND `user`.type = '5') "
+					+ "AND `order`.`STATUS` = '4' " + "AND `order`.finishTime > '" + beginStr + "' "
+					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.withdrawMoneyStatus = '0'"
+					+ ") * 0.5,2) AS registerGoodsManFee," +
+
+					"(SELECT SUM(registerDriverFeeChile) " + "FROM (" + "SELECT " + "childSite.SUPERSITEID,"
+					+ "FORMAT((SELECT SUM(servicePrice) " + "FROM `order` "
+					+ "WHERE `order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = childSite.SITEID AND `user`.TYPE = '6') "
+					+ "AND `order`.`STATUS` = '4' " + "AND `order`.finishTime > '" + beginStr + "' "
+					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.withdrawMoneyStatus = '0'"
+					+ ") * 0.3, 2) AS registerDriverFeeChile " + "FROM site childSite "
+					+ "WHERE childSite.SITETYPE = '2'" + ") temp " + "WHERE temp.SUPERSITEID = superSite.SITEID "
+					+ ") AS childDriverFee," +
+
+					"(SELECT SUM(registerGoodsManFeeChild) " + "FROM (" + "SELECT " + "childSite.SUPERSITEID,"
+					+ "FORMAT((SELECT SUM(servicePrice) " + "FROM `order` "
+					+ "WHERE `order`.CREATEMANID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = childSite.SITEID AND `user`.TYPE = '5') "
+					+ "AND `order`.`STATUS` = '4' " + "AND `order`.finishTime > '" + beginStr + "' "
+					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.withdrawMoneyStatus = '0'"
+					+ ")* 0.5 ,2) AS registerGoodsManFeeChild " + "FROM site childSite "
+					+ "WHERE childSite.SITETYPE = '2'" + ") temp " + "WHERE temp.SUPERSITEID = superSite.SITEID"
+					+ ") AS childGoodsManFee " +
+
+					"FROM site superSite,`user`"
+					+ "WHERE superSite.SITETYPE = '1' AND `user`.BELONGSITEID = superSite.SITEID AND `user`.TYPE = '3' AND superSite.siteName like '%"
+					+ filterSiteName + "%' AND `user`.nickname like '%" + filterLowsManName + "%') midTabel "
+					+ "ORDER BY totalFee DESC " + "LIMIT " + page + "," + rows;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(WithdrawalListModel.class);
+
+			withdrawalList = query.list();
+
+			tx.commit();
+			return withdrawalList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return withdrawalList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	// 查询父站点待提现列表条数
+	public Long getSiteWithdrawalListCount(String dataStr, String filterSiteName, String filterLowsManName) {
+		Transaction tx = null;
+		Long withdrawalCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "SELECT  count(*)" + "FROM site superSite,`user`"
+					+ "WHERE superSite.SITETYPE = '1' AND `user`.BELONGSITEID = superSite.SITEID AND `user`.TYPE = '3' AND superSite.siteName like '%"
+					+ filterSiteName + "%' AND `user`.nickname like '%" + filterLowsManName + "%' ";
+			SQLQuery query = session.createSQLQuery(sql);
+			withdrawalCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return withdrawalCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return withdrawalCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 获取子站点待提现列表
+	@SuppressWarnings("unchecked")
+	public List<WithdrawalListModel> getChildSiteWithdrawalList(String dataStr, String siteId, String type, String page,
+			String rows, String filterSiteName, String filterLowsManName) {
+		List<WithdrawalListModel> withdrawalList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			String typeStr = "";
+			if (type.equals("3")) {
+				typeStr = "registerDriverFee+0";
+			} else if (type.equals("4")) {
+				typeStr = "registerGoodsManFee+0";
+			} else {
+				typeStr = "totalFee";
+			}
+			String beginStr = dataStr + "-01 00:00:00";
+			String endStr = dataStr + "-31 23:59:59";
+
+			sql = "SELECT *," + "FORMAT((ifnull(registerDriverFee,0) + ifnull(registerGoodsManFee,0)),2) AS totalFee "
+					+ "FROM (SELECT siteId,siteName,`user`.USERID,`user`.NICKNAME, `user`.bankCardNumber, null AS childDriverFee, null AS childGoodsManFee,"
+					+ "FORMAT((SELECT SUM(servicePrice) " + "FROM `order` "
+					+ "WHERE `order`.DRIVERID in (SELECT `user`.USERID " + "FROM `user` "
+					+ "WHERE `user`.BELONGSITEID = site.SITEID AND `user`.TYPE = '6') " + "AND `order`.`STATUS` = '4' "
+					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
+					+ "AND `order`.withdrawMoneyStatus = '0'" + ") * 0.3 ,2) AS registerDriverFee,"
+					+ "FORMAT((SELECT SUM(servicePrice) " + "FROM `order` "
+					+ "WHERE `order`.createManId in (SELECT `user`.USERID " + "FROM `user` "
+					+ "WHERE `user`.BELONGSITEID = site.SITEID AND `user`.TYPE = '5') " + "AND `order`.`STATUS` = '4' "
+					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
+					+ "AND `order`.withdrawMoneyStatus = '0'" + ") * 0.5 ,2) AS registerGoodsManFee "
+					+ "FROM site,`user` " + "WHERE site.SITETYPE = '2' AND site.SUPERSITEID = '" + siteId + "' "
+					+ "AND `user`.BELONGSITEID = site.SITEID AND `user`.TYPE = '3' AND site.siteName like '%"
+					+ filterSiteName + "%' AND `user`.nickname like '%" + filterLowsManName + "%') midTabel "
+					+ "ORDER BY " + typeStr + " DESC " + "LIMIT " + page + "," + rows;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(WithdrawalListModel.class);
+
+			withdrawalList = query.list();
+
+			tx.commit();
+			return withdrawalList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return withdrawalList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	// 查询子站点待提现列表条数
+	public Long getChildSiteWithdrawalListCount(String dataStr, String siteId, String filterSiteName,
+			String filterLowsManName) {
+		Transaction tx = null;
+		Long withdrawalCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "SELECT  count(*)" + "FROM site,`user` " + "WHERE site.SITETYPE = '2' AND site.SUPERSITEID = '"
+					+ siteId + "' AND `user`.BELONGSITEID = site.SITEID AND `user`.TYPE = '3' AND site.siteName like '%"
+					+ filterSiteName + "%' AND `user`.nickname like '%" + filterLowsManName + "%' ";
+			SQLQuery query = session.createSQLQuery(sql);
+			withdrawalCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return withdrawalCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return withdrawalCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 获取父站点司机总提成订单对应的订单记录列表
+	@SuppressWarnings("unchecked")
+	public List<WithdrawalOrderListModel> getTotalDriverItemOrderListBySiteId(String dataStr, String siteId,
+			String page, String rows) {
+		List<WithdrawalOrderListModel> withdrawalOrderList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			String beginStr = dataStr + "-01 00:00:00";
+			String endStr = dataStr + "-31 23:59:59";
+			sql = "SELECT orderId,carType,distance,price,servicePrice,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName,"
+					+ "finishTime " + "FROM `order` "
+					+ "WHERE `order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"
+					+ siteId + "' AND `user`.TYPE = '6') " + "AND `order`.`STATUS` = '4' "
+					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
+					+ "AND `order`.withdrawMoneyStatus = '0' " + "ORDER BY finishTime desc " + "LIMIT " + page + ","
+					+ rows;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(WithdrawalOrderListModel.class);
+
+			withdrawalOrderList = query.list();
+
+			tx.commit();
+			return withdrawalOrderList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return withdrawalOrderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+
+	}
+
+	// 查询父站点司机总提成订单对应的订单记录列表条数
+	public Long getTotalDriverItemOrderListCount(String dataStr, String siteId) {
+		Transaction tx = null;
+		Long withdrawalCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			String beginStr = dataStr + "-01 00:00:00";
+			String endStr = dataStr + "-31 23:59:59";
+			sql = "SELECT  count(*)" + "FROM `order` "
+					+ "WHERE `order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"
+					+ siteId + "' AND `user`.TYPE = '6') " + "AND `order`.`STATUS` = '4' "
+					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
+					+ "AND `order`.withdrawMoneyStatus = '0'";
+			SQLQuery query = session.createSQLQuery(sql);
+			withdrawalCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return withdrawalCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return withdrawalCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+
+	}
+
+	// 获取父站点货主总提成订单对应的订单记录列表
+	@SuppressWarnings("unchecked")
+	public List<WithdrawalOrderListModel> getTotalMasterItemOrderListBySiteId(String dataStr, String siteId,
+			String page, String rows) {
+		List<WithdrawalOrderListModel> withdrawalOrderList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			String beginStr = dataStr + "-01 00:00:00";
+			String endStr = dataStr + "-31 23:59:59";
+			sql = "SELECT orderId,carType,distance,price,servicePrice,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName,"
+					+ "finishTime " + "FROM `order` "
+					+ "WHERE `order`.createManId in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"
+					+ siteId + "' AND `user`.TYPE = '5') " + "AND `order`.`STATUS` = '4' "
+					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
+					+ "AND `order`.withdrawMoneyStatus = '0' " + "ORDER BY finishTime desc " + "LIMIT " + page + ","
+					+ rows;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(WithdrawalOrderListModel.class);
+
+			withdrawalOrderList = query.list();
+
+			tx.commit();
+			return withdrawalOrderList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return withdrawalOrderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	// 查询父站点货主总提成订单对应的订单记录列表条数
+	public Long getTotalMasterItemOrderListCount(String dataStr, String siteId) {
+		Transaction tx = null;
+		Long withdrawalCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			String beginStr = dataStr + "-01 00:00:00";
+			String endStr = dataStr + "-31 23:59:59";
+			sql = "SELECT  count(*)" + "FROM `order` "
+					+ "WHERE `order`.createManId in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"
+					+ siteId + "' AND `user`.TYPE = '5') " + "AND `order`.`STATUS` = '4' "
+					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
+					+ "AND `order`.withdrawMoneyStatus = '0'";
+			SQLQuery query = session.createSQLQuery(sql);
+			withdrawalCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return withdrawalCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return withdrawalCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 新建提现记录
+	public JSONObject addWithdrawal(Withdrawal withdrawal) {
 		Transaction tx = null;
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.save(withdrawal);
 			tx.commit();
-			return withdrawal;
+			return JSONUtils.responseToJsonString("1", "", "操作成功！", withdrawal.getWithdrawalId());
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			return null;
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
 		} finally {
 			if (tx != null) {
 				tx = null;
@@ -69,14 +404,13 @@ public class WithdrawalImpl implements WithdrawalDao {
 		Withdrawal withdrawal = null;
 		String hql = "";
 		try {
-			Session session = MyHibernateSessionFactory.getSessionFactory()
-					.getCurrentSession();
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			hql = "from Withdrawal where withdrawalId = ?";
 			Query query = session.createQuery(hql);
 			query.setParameter(0, withdrawalId);
 			withdrawal = (Withdrawal) query.uniqueResult();
-			
+
 			tx.commit();
 			return withdrawal;
 
@@ -91,11 +425,9 @@ public class WithdrawalImpl implements WithdrawalDao {
 		}
 	}
 
-	// 提现本月9号之前的订单 （九号之前创建，并且已经完成的订单）
-	@Override
-	public JSONObject withdrawalBeforeOrder(String dataStr, String withdrawalId) {
-		// TODO Auto-generated method stub
-		return null;
+	// 提现指定时间的订单 （九号之前创建，并且已经完成的订单）
+	public JSONObject withdrawalBeforeOrder(String dataStr, String siteId, String withdrawalId) {
+		
 	}
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-8-14 23:46:08 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-8-20 17:59:25 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.OrderListModel" table="ORDERLISTMODEL">
         <id name="orderId" type="java.lang.String">
@@ -124,6 +124,9 @@
         </property>
         <property name="appointTime" type="java.util.Date">
             <column name="APPOINTTIME" />
+        </property>
+        <property name="finishTime" type="java.util.Date">
+            <column name="FINISHTIME" />
         </property>
         <property name="timeOut" type="java.util.Date">
             <column name="TIMEOUT" />

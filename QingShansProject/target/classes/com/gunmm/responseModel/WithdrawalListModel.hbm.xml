@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-8-19 21:06:19 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.responseModel.WithdrawalListModel" table="WITHDRAWALLISTMODEL">
+        <id name="siteId" type="java.lang.String">
+            <column name="SITEID" />
+            <generator class="assigned" />
+        </id>
+        <property name="siteName" type="java.lang.String">
+            <column name="SITENAME" />
+        </property>
+        <property name="bankCardNumber" type="java.lang.String">
+            <column name="BANKCARDNUMBER" />
+        </property>
+        <property name="userId" type="java.lang.String">
+            <column name="USERID" />
+        </property>
+        <property name="nickname" type="java.lang.String">
+            <column name="NICKNAME" />
+        </property>
+        <property name="registerDriverFee" type="java.lang.Double">
+            <column name="REGISTERDRIVERFEE" />
+        </property>
+        <property name="registerGoodsManFee" type="java.lang.Double">
+            <column name="REGISTERGOODSMANFEE" />
+        </property>
+        <property name="childDriverFee" type="java.lang.Double">
+            <column name="CHILDDRIVERFEE" />
+        </property>
+        <property name="childGoodsManFee" type="java.lang.Double">
+            <column name="CHILDGOODSMANFEE" />
+        </property>
+        <property name="totalFee" type="java.lang.Double">
+            <column name="TOTALFEE" />
+        </property>
+    </class>
+</hibernate-mapping>

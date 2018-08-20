@@ -34,8 +34,8 @@
 	    <mapping resource="com/gunmm/model/City.hbm.xml" />
 	    
 	    
-	    
-				
+	    <mapping resource="com/gunmm/responseModel/WithdrawalOrderListModel.hbm.xml" />	
+		<mapping resource="com/gunmm/responseModel/WithdrawalListModel.hbm.xml" />		
 		<mapping resource="com/gunmm/responseModel/OrderListModel.hbm.xml" />
 		<mapping resource="com/gunmm/responseModel/SiteListModel.hbm.xml" />
 		<mapping resource="com/gunmm/responseModel/DriverListModel.hbm.xml" />

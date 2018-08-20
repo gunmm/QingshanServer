@@ -33,6 +33,8 @@ public class SiteListModel {
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;              // 更新时间
+	private String childCount;              //  子站点个数
+	
 	
 	public SiteListModel() {
 
@@ -221,6 +223,16 @@ public class SiteListModel {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+
+	public String getChildCount() {
+		return childCount;
+	}
+
+	public void setChildCount(String childCount) {
+		this.childCount = childCount;
+	}
+	
+	
 	
 	
 	

@@ -162,7 +162,8 @@ public class SiteImpl implements SiteDao {
 			tx = session.beginTransaction();
 			String sql1 = "SELECT site.*," 
 					 +"(select name from City where id = site.siteProvince and deep = 1) AS siteProvinceName,"
-					 +"(select name from City where id = site.siteCity and parent_id = site.siteProvince and deep = 2) AS siteCityName "
+					 +"(select name from City where id = site.siteCity and parent_id = site.siteProvince and deep = 2) AS siteCityName,"
+					 +"(select count(*) from site childSite where childSite.superSiteId = site.siteId) AS childCount "
 				     + "FROM site "
 				     + "where site.siteName like '%"+filterSiteName+"%' and site.lawsManName like '%"+filterLawsManName+"%' ";
 			String sql2 = "";
