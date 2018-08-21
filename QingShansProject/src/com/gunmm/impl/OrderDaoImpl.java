@@ -555,56 +555,58 @@ public class OrderDaoImpl implements OrderDao {
 		}
 	}
 
-	// 查询指定时间段的可提现金额
-	public Double getWithdrawalCount(String dataStr, String toUserId) {
-		return (double) 0;
-	}
-
-	// 查询指定时间段内的可提现订单列表
-	public List<OrderListModel> getWithdrawalList(String dataStr, String toUserId) {
-		List<OrderListModel> orderList = null;
+	// 设置指定时间段内订单提现状态
+	public JSONObject setWithdrawal(String dataStr, String withdrawalId, String siteId) {
 		Transaction tx = null;
 		String sql = "";
-		// try {
-		// Session session =
-		// MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
-		// tx = session.beginTransaction();
-		//
-		// sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," +
-		// "user.personImageUrl," + "user.score,"
-		// + "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
-		// + "(select valueText from DictionaryModel where name = '车辆类型' and keyText =
-		// `order`.carType) AS carTypeName "
-		// + "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId,vehicle
-		// "
-		// + "where `order`.driverId = '" + driverId + "' and user.vehicleId =
-		// vehicle.vehicleId " + condition
-		// + "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
-		//
-		// SQLQuery query = session.createSQLQuery(sql);
-		// query.addEntity(OrderListModel.class);
-		//
-		// orderList = query.list();
-		//
-		// tx.commit();
-		// return orderList;
-		//
-		// } catch (Exception e) {
-		// // TODO: handle exception
-		// e.printStackTrace();
-		// return orderList;
-		// } finally {
-		// if (tx != null) {
-		// tx = null;
-		// }
-		// }
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			String beginStr = dataStr + "-01 00:00:00";
+			String endStr = dataStr + "-31 23:59:59";
+			sql = "UPDATE `order` " + 
+				  "SET `order`.WITHDRAWMONEYSTATUS='1',`order`.withdrawalId='"+ withdrawalId +"' " + 
+				  "WHERE `order`.CREATETIME < '"+ endStr +"' AND `order`.CREATETIME > '"+ beginStr +"' AND `order`.withdrawMoneyStatus = '0' " + 
+					     "AND (" + 
+					     "(`order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"+ siteId +"' AND `user`.TYPE = '6')) OR " + 
+					     "(`order`.CREATEMANID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"+ siteId +"' AND `user`.TYPE = '5')) OR " + 
+					     "(`order`.DRIVERID in (SELECT `user`.USERID " + 
+					                           "FROM `user` " + 
+					                           "WHERE `user`.TYPE = '6' " + 
+					                           "AND `user`.BELONGSITEID in" + 
+					                                                     "(SELECT site.SITEID " + 
+					                                                       "FROM site " + 
+					                                                       "WHERE site.superSiteId = '"+ siteId +"' " + 
+					                                                     ") " + 
+					                           ") " + 
+					    ") OR " + 
+					    "(`order`.CREATEMANID in (SELECT `user`.USERID " + 
+					                             "FROM `user` " + 
+					                             "WHERE `user`.TYPE = '5' " + 
+					                             "AND `user`.BELONGSITEID in " + 
+					                                                         "(SELECT site.SITEID " + 
+					                                                         "FROM site " + 
+					                                                         "WHERE site.superSiteId = '"+ siteId +"' " + 
+					                                                         ") " + 
+					                             ") " + 
+					    " ) " + 
+					 " )";
+			SQLQuery query = session.createSQLQuery(sql);
+			query.executeUpdate();
 
-		return orderList;
-	}
+			tx.commit();
+			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
 
-	// 编辑指定时间段内提现订单
-	public JSONObject setWithdrawal(String dataStr, String toUserId) {
-		return JSONUtils.responseToJsonString("0", "", "超时订单操作失败！", "");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
 	}
 
 }

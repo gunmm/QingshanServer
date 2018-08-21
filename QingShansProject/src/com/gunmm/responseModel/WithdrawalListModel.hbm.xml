@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-8-19 21:06:19 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-8-22 1:06:57 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.WithdrawalListModel" table="WITHDRAWALLISTMODEL">
         <id name="siteId" type="java.lang.String">
@@ -10,6 +10,9 @@
         </id>
         <property name="siteName" type="java.lang.String">
             <column name="SITENAME" />
+        </property>
+        <property name="childToSuperRate" type="java.lang.Double">
+            <column name="CHILDTOSUPERRATE" />
         </property>
         <property name="bankCardNumber" type="java.lang.String">
             <column name="BANKCARDNUMBER" />

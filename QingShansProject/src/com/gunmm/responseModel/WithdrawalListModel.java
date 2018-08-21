@@ -4,6 +4,7 @@ public class WithdrawalListModel {
 
 	private String siteId;   //站点ID
 	private String siteName;   //站点名称
+	private Double childToSuperRate;   // 子站点给父站点的分成率 
 	private String bankCardNumber;   //站点银行卡号
 	private String userId;   //站点法人id
 	private String nickname;   //站点法人姓名
@@ -66,6 +67,18 @@ public class WithdrawalListModel {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+	
+	
+
+
+	public Double getChildToSuperRate() {
+		return childToSuperRate;
+	}
+
+
+	public void setChildToSuperRate(Double childToSuperRate) {
+		this.childToSuperRate = childToSuperRate;
 	}
 
 

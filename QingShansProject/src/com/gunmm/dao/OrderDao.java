@@ -57,13 +57,7 @@ public interface OrderDao {
 	// 查询所有未被接单的订单
 	public List<Order> getUnReceiveOrderList();
 
-	// 查询指定时间段的可提现金额
-	public Double getWithdrawalCount(String dataStr, String toUserId);
-
-	// 查询指定时间段内的可提现订单列表
-	public List<OrderListModel> getWithdrawalList(String dataStr, String toUserId);
-
-	// 编辑指定时间段内提现订单
-	public JSONObject setWithdrawal(String dataStr, String toUserId);
+	// 设置指定时间段内订单提现状态
+	public JSONObject setWithdrawal(String dataStr, String withdrawalId, String siteId);
 
 }

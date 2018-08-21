@@ -16,26 +16,35 @@ public interface WithdrawalDao {
 	// 查询父站点待提现列表条数
 	public Long getSiteWithdrawalListCount(String dataStr, String filterSiteName, String filterLowsManName);
 
-	// 获取子站点待提现列表
-	public List<WithdrawalListModel> getChildSiteWithdrawalList(String dataStr, String siteId, String type, String page, String rows,
-			String filterSiteName, String filterLowsManName);
+	// 获取子站点待提现列表 平台视角
+	public List<WithdrawalListModel> getChildSiteWithdrawalList(String dataStr, String siteId, String type, String page,
+			String rows, String filterSiteName, String filterLowsManName);
 
-	// 查询子站点待提现列表条数
-	public Long getChildSiteWithdrawalListCount(String dataStr, String siteId, String filterSiteName, String filterLowsManName);
+	// 查询子站点待提现列表条数 平台视角
+	public Long getChildSiteWithdrawalListCount(String dataStr, String siteId, String filterSiteName,
+			String filterLowsManName);
+
+	// 获取子站点待提现列表 站点视角
+	public List<WithdrawalListModel> getChildSiteWithdrawalListForSite(String dataStr, String siteId, String type,
+			String page, String rows, String filterSiteName, String filterLowsManName);
+
+	// 查询子站点待提现列表条数 平台视角
+	public Long getChildSiteWithdrawalListCountForSite(String dataStr, String siteId, String filterSiteName,
+			String filterLowsManName);
 
 	// 获取父站点司机总提成订单对应的订单记录列表
 	public List<WithdrawalOrderListModel> getTotalDriverItemOrderListBySiteId(String dataStr, String siteId,
-			String page, String rows);
+			String page, String rows, String isChildSiteList);
 
 	// 查询父站点司机总提成订单对应的订单记录列表条数
-	public Long getTotalDriverItemOrderListCount(String dataStr, String siteId);
+	public Long getTotalDriverItemOrderListCount(String dataStr, String siteId, String isChildSiteList);
 
 	// 获取父站点货主总提成订单对应的订单记录列表
 	public List<WithdrawalOrderListModel> getTotalMasterItemOrderListBySiteId(String dataStr, String siteId,
-			String page, String rows);
+			String page, String rows, String isChildSiteList);
 
 	// 查询父站点货主总提成订单对应的订单记录列表条数
-	public Long getTotalMasterItemOrderListCount(String dataStr, String siteId);
+	public Long getTotalMasterItemOrderListCount(String dataStr, String siteId, String isChildSiteList);
 
 	// 新建提现记录
 	public JSONObject addWithdrawal(Withdrawal withdrawal);
@@ -45,6 +54,9 @@ public interface WithdrawalDao {
 
 	// 获取提现记录by id
 	public Withdrawal getWithdrawalById(String withdrawalId);
+
+	// 删除提现记录
+	public JSONObject deleteWithdrawal(String withdrawalId);
 
 	// 提现指定时间的订单 （九号之前创建，并且已经完成的订单）
 	public JSONObject withdrawalBeforeOrder(String dataStr, String siteId, String withdrawalId);

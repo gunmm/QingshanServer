@@ -59,8 +59,8 @@ public class OrderController {
 			}
 		}
 
-		Order addOrder = new Order();
-		addOrder = JSONObject.parseObject(orderObject.toJSONString(), Order.class);
+		Order addOrder = JSONObject.parseObject(orderObject.toJSONString(), Order.class);
+		addOrder.setWithdrawMoneyStatus("0");
 		addOrder.setInvoiceId(invoiceId);
 
 		OrderDao orderDao = new OrderDaoImpl();
