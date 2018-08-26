@@ -34,6 +34,7 @@ public class DictionaryImpl implements DictionaryDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return dictionaryList;
 		} finally {
 			if (tx != null) {
@@ -63,6 +64,7 @@ public class DictionaryImpl implements DictionaryDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return valueText;
 		} finally {
 			if (tx != null) {

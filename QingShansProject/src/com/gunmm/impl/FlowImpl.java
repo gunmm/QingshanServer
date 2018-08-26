@@ -24,6 +24,7 @@ public class FlowImpl implements FlowDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 		} finally {
 			if (tx != null) {
 				tx = null;
@@ -43,6 +44,7 @@ public class FlowImpl implements FlowDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 		} finally {
 			if (tx != null) {
 				tx = null;
@@ -75,6 +77,7 @@ public class FlowImpl implements FlowDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return flowList;
 		} finally {
 			if (tx != null) {
@@ -101,6 +104,7 @@ public class FlowImpl implements FlowDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 		} finally {
 			if (tx != null) {
 				tx = null;
@@ -129,6 +133,7 @@ public class FlowImpl implements FlowDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {

@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.gunmm.model.Order;
 import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
+import com.gunmm.responseModel.WithdrawalFinishedOrderListModel;
 
 public interface OrderDao {
 	// 新建订单
@@ -59,5 +60,38 @@ public interface OrderDao {
 
 	// 设置指定时间段内订单提现状态
 	public JSONObject setWithdrawal(String dataStr, String withdrawalId, String siteId);
+
+	// 查询已提现记录对应订单列表
+	public List<WithdrawalFinishedOrderListModel> getWithDrawalFinishedOrderList(String siteId, String withdrawalId,
+			String page, String rows);
+
+	// 查询已提现记录对应订单列表总条数
+	public Long getWithDrawalFinishedOrderListCount(String siteId, String withdrawalId);
+
+	// 查询指定站点及子站点的已完成订单列表
+	public List<WithdrawalFinishedOrderListModel> getFinishedOrderList(String siteId, String queryTime, String page,
+			String rows);
+
+	// 查询指定站点及子站点的已完成订单列表条数
+	public Long getFinishedOrderListCount(String siteId, String queryTime);
+
+	// 更新线上支付订单的 司机 提现状态
+	public JSONObject setOnlineOrderDriverWithdrawalStatus(String driverWithdrawalStatus, String driverWithdrawalId,
+			String driverId);
+
+	// 根据司机id查询司机可提现的订单总额
+	public Double getDriverWithdrawalAmount(String driverId);
+
+	// 根据司机id查询司机可提现的订单
+	public List<OrderListModel> getDriverWithDrawalOrderList(String driverId);
+
+	// 获取司机提现订单列表
+	public List<OrderListModel> getDriverWithdrawaledOrderList(String driverWithdrawalId, String page, String rows);
+
+	// 获取司机提现订单列表列表条数
+	public Long getDriverWithdrawaledOrderListCount(String driverWithdrawalId);
+
+	// 获取Mobile司机提现订单列表
+	public List<OrderListModel> getMobileDriverWithdrawaledOrderList(String driverWithdrawalId);
 
 }

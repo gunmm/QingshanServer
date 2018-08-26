@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-8-26 12:48:44 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.responseModel.DriverWithdrawalListModel" table="DRIVERWITHDRAWALLISTMODEL">
+        <id name="driverWithdrawalId" type="java.lang.String">
+            <column name="DRIVERWITHDRAWALID" />
+            <generator class="assigned" />
+        </id>
+        <property name="toUserId" type="java.lang.String">
+            <column name="TOUSERID" />
+        </property>
+        <property name="driverWithdrawalAmount" type="java.lang.String">
+            <column name="DRIVERWITHDRAWALAMOUNT" />
+        </property>
+        <property name="toBankNumber" type="java.lang.String">
+            <column name="TOBANKNUMBER" />
+        </property>
+        <property name="toUserName" type="java.lang.String">
+            <column name="TOUSERNAME" />
+        </property>
+        <property name="oprationUserId" type="java.lang.String">
+            <column name="OPRATIONUSERID" />
+        </property>
+        <property name="oprationUserName" type="java.lang.String">
+            <column name="OPRATIONUSERNAME" />
+        </property>
+        <property name="driverWithdrawalStatus" type="java.lang.String">
+            <column name="DRIVERWITHDRAWALSTATUS" />
+        </property>
+        <property name="driverWithdrawalTime" type="java.util.Date">
+            <column name="DRIVERWITHDRAWALTIME" />
+        </property>
+    </class>
+</hibernate-mapping>

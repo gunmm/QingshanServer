@@ -31,6 +31,7 @@ public class InvoiceImpl implements InvoiceDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "添加失败！", "");
 		} finally {
 			if (tx != null) {
@@ -60,6 +61,7 @@ public class InvoiceImpl implements InvoiceDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {
@@ -82,6 +84,7 @@ public class InvoiceImpl implements InvoiceDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", invoice);
 		} finally {
 			if (tx != null) {
@@ -110,6 +113,7 @@ public class InvoiceImpl implements InvoiceDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
 			if (tx != null) {

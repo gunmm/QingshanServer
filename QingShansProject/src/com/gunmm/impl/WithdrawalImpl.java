@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.WithdrawalDao;
 import com.gunmm.db.MyHibernateSessionFactory;
 import com.gunmm.model.Withdrawal;
+import com.gunmm.responseModel.WithDrawalFinishedListModel;
 import com.gunmm.responseModel.WithdrawalListModel;
 import com.gunmm.responseModel.WithdrawalOrderListModel;
 import com.gunmm.utils.JSONUtils;
@@ -33,8 +34,9 @@ public class WithdrawalImpl implements WithdrawalDao {
 			String endStr = dataStr + "-31 23:59:59";
 			sql = "SELECT *,"
 					+ "convert((ifnull(registerDriverFee,0) + ifnull(registerGoodsManFee,0) + ifnull(childDriverFee,0) + ifnull(childGoodsManFee,0)),decimal(12,2)) AS totalFee "
-					+ "FROM " + "(SELECT  superSite.siteId, " + "superSite.siteName,superSite.childToSuperRate," + "`user`.bankCardNumber,"
-					+ "`user`.userId," + "`user`.nickname," + "convert((SELECT SUM(servicePrice) " + "FROM `order` "
+					+ "FROM " + "(SELECT  superSite.siteId, " + "superSite.siteName,superSite.childToSuperRate,"
+					+ "`user`.bankCardNumber," + "`user`.userId," + "`user`.nickname,"
+					+ "convert((SELECT SUM(servicePrice) " + "FROM `order` "
 					+ "WHERE `order`.driverId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = superSite.siteId AND `user`.type = '6') "
 					+ "AND `order`.`status` = '4' " + "AND `order`.finishTime > '" + beginStr + "' "
 					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.withdrawMoneyStatus = '0'"
@@ -79,6 +81,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return withdrawalList;
 		} finally {
 			if (tx != null) {
@@ -109,6 +112,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return withdrawalCount;
 		} finally {
 			if (tx != null) {
@@ -167,6 +171,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return withdrawalList;
 		} finally {
 			if (tx != null) {
@@ -198,6 +203,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return withdrawalCount;
 		} finally {
 			if (tx != null) {
@@ -217,7 +223,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			String typeStr = "totalFee";
-			
+
 			String beginStr = dataStr + "-01 00:00:00";
 			String endStr = dataStr + "-31 23:59:59";
 
@@ -228,13 +234,12 @@ public class WithdrawalImpl implements WithdrawalDao {
 					+ "WHERE `order`.DRIVERID in (SELECT `user`.USERID " + "FROM `user` "
 					+ "WHERE `user`.BELONGSITEID = site.SITEID AND `user`.TYPE = '6') " + "AND `order`.`STATUS` = '4' "
 					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
-					+ ") * 0.3 ,decimal(12,2)) AS registerDriverFee,"
-					+ "convert((SELECT SUM(servicePrice) " + "FROM `order` "
-					+ "WHERE `order`.createManId in (SELECT `user`.USERID " + "FROM `user` "
+					+ ") * 0.3 ,decimal(12,2)) AS registerDriverFee," + "convert((SELECT SUM(servicePrice) "
+					+ "FROM `order` " + "WHERE `order`.createManId in (SELECT `user`.USERID " + "FROM `user` "
 					+ "WHERE `user`.BELONGSITEID = site.SITEID AND `user`.TYPE = '5') " + "AND `order`.`STATUS` = '4' "
 					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
-					+ ") * 0.5 ,decimal(12,2)) AS registerGoodsManFee "
-					+ "FROM site,`user` " + "WHERE site.SITETYPE = '2' AND site.SUPERSITEID = '" + siteId + "' "
+					+ ") * 0.5 ,decimal(12,2)) AS registerGoodsManFee " + "FROM site,`user` "
+					+ "WHERE site.SITETYPE = '2' AND site.SUPERSITEID = '" + siteId + "' "
 					+ "AND `user`.BELONGSITEID = site.SITEID AND `user`.TYPE = '3' AND site.siteName like '%"
 					+ filterSiteName + "%' AND `user`.nickname like '%" + filterLowsManName + "%') midTabel "
 					+ "ORDER BY " + typeStr + " DESC " + "LIMIT " + page + "," + rows;
@@ -249,6 +254,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return withdrawalList;
 		} finally {
 			if (tx != null) {
@@ -280,6 +286,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return withdrawalCount;
 		} finally {
 			if (tx != null) {
@@ -311,8 +318,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 					+ "WHERE `order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"
 					+ siteId + "' AND `user`.TYPE = '6') " + "AND `order`.`STATUS` = '4' "
 					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
-					+ statusSqlStr + "ORDER BY finishTime desc " + "LIMIT " + page + ","
-					+ rows;
+					+ statusSqlStr + "ORDER BY finishTime desc " + "LIMIT " + page + "," + rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(WithdrawalOrderListModel.class);
@@ -325,6 +331,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return withdrawalOrderList;
 		} finally {
 			if (tx != null) {
@@ -363,6 +370,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return withdrawalCount;
 		} finally {
 			if (tx != null) {
@@ -394,8 +402,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 					+ "WHERE `order`.createManId in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"
 					+ siteId + "' AND `user`.TYPE = '5') " + "AND `order`.`STATUS` = '4' "
 					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
-					+ statusSqlStr + "ORDER BY finishTime desc " + "LIMIT " + page + ","
-					+ rows;
+					+ statusSqlStr + "ORDER BY finishTime desc " + "LIMIT " + page + "," + rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(WithdrawalOrderListModel.class);
@@ -408,6 +415,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return withdrawalOrderList;
 		} finally {
 			if (tx != null) {
@@ -446,6 +454,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return withdrawalCount;
 		} finally {
 			if (tx != null) {
@@ -466,6 +475,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
 		} finally {
 			if (tx != null) {
@@ -487,6 +497,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", "");
 		} finally {
 			if (tx != null) {
@@ -514,6 +525,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {
@@ -541,6 +553,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
 			if (tx != null) {
@@ -549,9 +562,72 @@ public class WithdrawalImpl implements WithdrawalDao {
 		}
 	}
 
-	// 提现指定时间的订单 （九号之前创建，并且已经完成的订单）
-	public JSONObject withdrawalBeforeOrder(String dataStr, String siteId, String withdrawalId) {
-		return JSONUtils.responseToJsonString("0", "", "更新信息失败！", "");
+	// 查询已提现列表
+	@SuppressWarnings("unchecked")
+	public List<WithDrawalFinishedListModel> getFinishedWithDrawalList(String bankcardNumber, String page, String rows)	 {
+		List<WithDrawalFinishedListModel> withdrawalFinishedList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			
+			sql = "SELECT *," + 
+					      "(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = withdrawal.TOUSERID) as toUserName," + 
+					      "(SELECT site.SITENAME FROM site WHERE site.SITEID = withdrawal.toSiteId) AS siteName," + 
+					      "(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = withdrawal.OPRATIONUSERID) as oprationUserName " + 
+				  "FROM withdrawal " + 
+				  "WHERE withdrawal.TOBANKNUMBER like '%" + bankcardNumber + "%' " + "ORDER BY withdrawalTime desc " + "LIMIT " + page + "," + rows;
+					
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(WithDrawalFinishedListModel.class);
+
+			withdrawalFinishedList = query.list();
+
+			tx.commit();
+			return withdrawalFinishedList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return withdrawalFinishedList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	// 查询已提现列表条数
+	public Long getFinishedWithDrawalListCount(String bankcardNumber) {
+		Transaction tx = null;
+		Long withdrawalCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "SELECT  count(*)" + "FROM withdrawal "
+					+ "WHERE withdrawal.TOBANKNUMBER like '%" + bankcardNumber + "%' " ;
+					
+			SQLQuery query = session.createSQLQuery(sql);
+			withdrawalCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return withdrawalCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return withdrawalCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
 	}
 
 }

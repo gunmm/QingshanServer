@@ -43,6 +43,9 @@ public class Order {
 	private Double servicePrice = 0.0; //服务费
 	private Double distance = 0.0; //距离
 	
+	private String driverWithdrawalStatus; //司机提现状态 0：未提现  1：司机提交提现申请 2：管理员已打款
+	private String driverWithdrawalId;
+	
 	private String withdrawMoneyStatus; //提现状态 0：未提现  1：已提现
 	private String withdrawalId; //提现记录Id
 	
@@ -373,6 +376,31 @@ public class Order {
 
 	public void setDistance(Double distance) {
 		this.distance = distance;
+	}
+
+
+	
+
+	public String getDriverWithdrawalStatus() {
+		return driverWithdrawalStatus;
+	}
+
+
+
+	public void setDriverWithdrawalStatus(String driverWithdrawalStatus) {
+		this.driverWithdrawalStatus = driverWithdrawalStatus;
+	}
+
+
+
+	public String getDriverWithdrawalId() {
+		return driverWithdrawalId;
+	}
+
+
+
+	public void setDriverWithdrawalId(String driverWithdrawalId) {
+		this.driverWithdrawalId = driverWithdrawalId;
 	}
 
 

@@ -44,6 +44,7 @@ public class MessageImpl implements MessageDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return messageList;
 		} finally {
 			if (tx != null) {
@@ -69,6 +70,7 @@ public class MessageImpl implements MessageDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "添加失败！", "");
 		} finally {
 			if (tx != null) {
@@ -91,6 +93,7 @@ public class MessageImpl implements MessageDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", "");
 		} finally {
 			if (tx != null) {
@@ -120,6 +123,7 @@ public class MessageImpl implements MessageDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {
@@ -149,6 +153,7 @@ public class MessageImpl implements MessageDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "未读消息数查询失败！", "");
 		} finally {
 			if (tx != null) {

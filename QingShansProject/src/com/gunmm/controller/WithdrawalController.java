@@ -18,6 +18,8 @@ import com.gunmm.dao.WithdrawalDao;
 import com.gunmm.impl.OrderDaoImpl;
 import com.gunmm.impl.WithdrawalImpl;
 import com.gunmm.model.Withdrawal;
+import com.gunmm.responseModel.WithDrawalFinishedListModel;
+import com.gunmm.responseModel.WithdrawalFinishedOrderListModel;
 import com.gunmm.responseModel.WithdrawalListModel;
 import com.gunmm.responseModel.WithdrawalOrderListModel;
 import com.gunmm.utils.JSONUtils;
@@ -126,8 +128,8 @@ public class WithdrawalController {
 		String rows = object.getString("rows");
 		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
 		WithdrawalDao withdrawalDao = new WithdrawalImpl();
-		List<WithdrawalListModel> withdrawalList = withdrawalDao.getChildSiteWithdrawalListForSite(queryTime, siteId, type,
-				page, rows, filterSiteName, filterLowsManName);
+		List<WithdrawalListModel> withdrawalList = withdrawalDao.getChildSiteWithdrawalListForSite(queryTime, siteId,
+				type, page, rows, filterSiteName, filterLowsManName);
 		Long withdrawalCount = withdrawalDao.getChildSiteWithdrawalListCountForSite(queryTime, siteId, filterSiteName,
 				filterLowsManName);
 
@@ -231,6 +233,7 @@ public class WithdrawalController {
 		withdrawal.setWithdrawalAmount(withdrawalAmount);
 		withdrawal.setToBankNumber(toBankNumber);
 		withdrawal.setToUserId(toUserId);
+		withdrawal.setToSiteId(siteId);
 		withdrawal.setOprationUserId(oprationUserId);
 		withdrawal.setPeriodOfTime(periodOfTime);
 		withdrawal.setWithdrawalTime(new Date());
@@ -252,5 +255,79 @@ public class WithdrawalController {
 		} else {
 			return jsonObj1;
 		}
+	}
+
+	// 获取打款记录列表
+	@RequestMapping("/getWithdrawalList")
+	@ResponseBody
+	private JSONObject getWithdrawalList(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		String bankcardNumber = object.getString("bankcardNumber");
+		String rows = object.getString("rows");
+
+		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+		WithdrawalDao withdrawalDao = new WithdrawalImpl();
+
+		List<WithDrawalFinishedListModel> withdrawalFinishedList = withdrawalDao
+				.getFinishedWithDrawalList(bankcardNumber, page, rows);
+		Long withdrawalCount = withdrawalDao.getFinishedWithDrawalListCount(bankcardNumber);
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("withdrawalCount", withdrawalCount);
+		jsonObject.put("withdrawalFinishedList", withdrawalFinishedList);
+
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
+
+	}
+
+	// 根据站点id和打款id查询这次打款所对应的订单列表
+	@RequestMapping("/getFinishedWithdrawalOrderList")
+	@ResponseBody
+	private JSONObject getFinishedWithdrawalOrderList(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		String withdrawalId = object.getString("withdrawalId");
+		String rows = object.getString("rows");
+
+		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+		WithdrawalDao withdrawalDao = new WithdrawalImpl();
+		String siteId = withdrawalDao.getWithdrawalById(withdrawalId).getToSiteId();
+
+		OrderDao orderDao = new OrderDaoImpl();
+		List<WithdrawalFinishedOrderListModel> withdrawalFinishedOrderList = orderDao
+				.getWithDrawalFinishedOrderList(siteId, withdrawalId, page, rows);
+		Long withdrawalFinishedOrderListCount = orderDao.getWithDrawalFinishedOrderListCount(siteId, withdrawalId);
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("withdrawalFinishedOrderListCount", withdrawalFinishedOrderListCount);
+		jsonObject.put("withdrawalFinishedOrderList", withdrawalFinishedOrderList);
+
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
+
+	}
+
+	// 根据站点id查询对应站点和子站点已完成订单列表
+	@RequestMapping("/getFinishedOrderListOnMonth")
+	@ResponseBody
+	private JSONObject getFinishedOrderListOnMonth(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		String siteId = object.getString("siteId");
+		String rows = object.getString("rows");
+		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+		String queryTime = object.getString("queryTime");
+		
+
+		OrderDao orderDao = new OrderDaoImpl();
+		List<WithdrawalFinishedOrderListModel> finishedOrderList = orderDao.getFinishedOrderList(siteId, queryTime, page, rows);
+		Long finishedOrderListCount = orderDao.getFinishedOrderListCount(siteId, queryTime);
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("finishedOrderListCount", finishedOrderListCount);
+		jsonObject.put("finishedOrderList", finishedOrderList);
+
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", jsonObject);
+
 	}
 }

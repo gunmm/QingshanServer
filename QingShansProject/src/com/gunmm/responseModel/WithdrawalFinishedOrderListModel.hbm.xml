@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-8-25 19:55:16 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.responseModel.WithdrawalFinishedOrderListModel" table="WITHDRAWALFINISHEDORDERLISTMODEL">
+        <id name="orderId" type="java.lang.String">
+            <column name="ORDERID" />
+            <generator class="assigned" />
+        </id>
+        <property name="distance" type="java.lang.Double">
+            <column name="DISTANCE" />
+        </property>
+        <property name="price" type="java.lang.Double">
+            <column name="PRICE" />
+        </property>
+        <property name="servicePrice" type="java.lang.Double">
+            <column name="SERVICEPRICE" />
+        </property>
+        <property name="carTypeName" type="java.lang.String">
+            <column name="CARTYPENAME" />
+        </property>
+        <property name="driverSiteName" type="java.lang.String">
+            <column name="DRIVERSITENAME" />
+        </property>
+        <property name="driverSiteId" type="java.lang.String">
+            <column name="DRIVERSITEID" />
+        </property>
+        <property name="masterSiteName" type="java.lang.String">
+            <column name="MASTERSITENAME" />
+        </property>
+        <property name="masterSiteId" type="java.lang.String">
+            <column name="MASTERSITEID" />
+        </property>
+        <property name="driverBelongSiteType" type="java.lang.String">
+            <column name="DRIVERBELONGSITETYPE" />
+        </property>
+        <property name="masterBelongSiteType" type="java.lang.String">
+            <column name="MASTERBELONGSITETYPE" />
+        </property>
+        <property name="withdrawMoneyStatus" type="java.lang.String">
+            <column name="WITHDRAWMONEYSTATUS" />
+        </property>
+        <property name="finishTime" type="java.util.Date">
+            <column name="FINISHTIME" />
+        </property>
+    </class>
+</hibernate-mapping>

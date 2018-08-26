@@ -42,13 +42,13 @@ public class SiteImpl implements SiteDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.save(site);
-			tx.commit();
 			return JSONUtils.responseToJsonString("1", "", "添加成功！", site.getSiteId());
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "添加失败！", "");
 		} finally {
+			tx.commit();
 			if (tx != null) {
 				tx = null;
 			}
@@ -70,7 +70,6 @@ public class SiteImpl implements SiteDao {
 			query.setParameter(0, zhiZhaoNumber);
 			backZhiZhaoNumber = (String) query.uniqueResult();
 			
-			tx.commit();
 			if (backZhiZhaoNumber == null || "".equals(backZhiZhaoNumber)) {
 				return false;
 			}else {
@@ -82,6 +81,7 @@ public class SiteImpl implements SiteDao {
 			e.printStackTrace();
 			return true;
 		} finally {
+			tx.commit();
 			if (tx != null) {
 				tx = null;
 			}
@@ -102,7 +102,6 @@ public class SiteImpl implements SiteDao {
 			query.setParameter(0, idCardNumber);
 			backIdCardNumber = (String) query.uniqueResult();
 			
-			tx.commit();
 			if (backIdCardNumber == null || "".equals(backIdCardNumber)) {
 				return false;
 			}else {
@@ -114,6 +113,7 @@ public class SiteImpl implements SiteDao {
 			e.printStackTrace();
 			return true;
 		} finally {
+			tx.commit();
 			if (tx != null) {
 				tx = null;
 			}
@@ -141,6 +141,7 @@ public class SiteImpl implements SiteDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
 			if (tx != null) {
@@ -188,14 +189,16 @@ public class SiteImpl implements SiteDao {
 
 			siteList = query.list();
 
-			tx.commit();
+			
 			return siteList;
 
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			
 			return siteList;
 		} finally {
+			tx.commit();
 			if (tx != null) {
 				tx = null;
 			}
@@ -219,7 +222,7 @@ public class SiteImpl implements SiteDao {
 			query.setParameter(0, siteId);
 			site = (Site) query.uniqueResult();
 			
-			tx.commit();
+			
 			return site;
 
 		} catch (Exception e) {
@@ -227,6 +230,7 @@ public class SiteImpl implements SiteDao {
 			e.printStackTrace();
 			return null;
 		} finally {
+			tx.commit();
 			if (tx != null) {
 				tx = null;
 			}
@@ -243,7 +247,7 @@ public class SiteImpl implements SiteDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.update(site);
-			tx.commit();
+			
 
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", site);
 		} catch (Exception e) {
@@ -251,6 +255,7 @@ public class SiteImpl implements SiteDao {
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", site);
 		} finally {
+			tx.commit();
 			if (tx != null) {
 				tx = null;
 			}
@@ -290,7 +295,6 @@ public class SiteImpl implements SiteDao {
 			siteCount = ((BigInteger)query.uniqueResult()).longValue();
 
 
-			tx.commit();
 			return siteCount;
 
 		} catch (Exception e) {
@@ -298,6 +302,7 @@ public class SiteImpl implements SiteDao {
 			e.printStackTrace();
 			return siteCount;
 		} finally {
+			tx.commit();
 			if (tx != null) {
 				tx = null;
 			}

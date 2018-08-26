@@ -29,6 +29,7 @@ public class CityImpl implements CityDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return provinceName;
 		} finally {
 			if (tx != null) {
@@ -59,6 +60,7 @@ public class CityImpl implements CityDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return cityName;
 		} finally {
 			if (tx != null) {

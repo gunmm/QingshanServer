@@ -22,6 +22,7 @@ import com.gunmm.model.Order;
 import com.gunmm.model.User;
 import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
+import com.gunmm.responseModel.WithdrawalFinishedOrderListModel;
 import com.gunmm.utils.JSONUtils;
 
 public class OrderDaoImpl implements OrderDao {
@@ -43,6 +44,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "下单失败！", "");
 		} finally {
 			if (tx != null) {
@@ -89,6 +91,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return driverList;
 		} finally {
 			if (tx != null) {
@@ -169,6 +172,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {
@@ -240,6 +244,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -269,6 +274,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return orderCount;
 		} finally {
 			if (tx != null) {
@@ -307,6 +313,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -335,6 +342,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return orderCount;
 		} finally {
 			if (tx != null) {
@@ -373,6 +381,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -406,6 +415,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return orderCount;
 		} finally {
 			if (tx != null) {
@@ -454,6 +464,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", order);
 		} finally {
 			if (tx != null) {
@@ -488,6 +499,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return orderListModel;
 		} finally {
 			if (tx != null) {
@@ -516,6 +528,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "超时订单操作失败！", "");
 		} finally {
 			if (tx != null) {
@@ -547,6 +560,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -564,33 +578,18 @@ public class OrderDaoImpl implements OrderDao {
 			tx = session.beginTransaction();
 			String beginStr = dataStr + "-01 00:00:00";
 			String endStr = dataStr + "-31 23:59:59";
-			sql = "UPDATE `order` " + 
-				  "SET `order`.WITHDRAWMONEYSTATUS='1',`order`.withdrawalId='"+ withdrawalId +"' " + 
-				  "WHERE `order`.CREATETIME < '"+ endStr +"' AND `order`.CREATETIME > '"+ beginStr +"' AND `order`.withdrawMoneyStatus = '0' " + 
-					     "AND (" + 
-					     "(`order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"+ siteId +"' AND `user`.TYPE = '6')) OR " + 
-					     "(`order`.CREATEMANID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"+ siteId +"' AND `user`.TYPE = '5')) OR " + 
-					     "(`order`.DRIVERID in (SELECT `user`.USERID " + 
-					                           "FROM `user` " + 
-					                           "WHERE `user`.TYPE = '6' " + 
-					                           "AND `user`.BELONGSITEID in" + 
-					                                                     "(SELECT site.SITEID " + 
-					                                                       "FROM site " + 
-					                                                       "WHERE site.superSiteId = '"+ siteId +"' " + 
-					                                                     ") " + 
-					                           ") " + 
-					    ") OR " + 
-					    "(`order`.CREATEMANID in (SELECT `user`.USERID " + 
-					                             "FROM `user` " + 
-					                             "WHERE `user`.TYPE = '5' " + 
-					                             "AND `user`.BELONGSITEID in " + 
-					                                                         "(SELECT site.SITEID " + 
-					                                                         "FROM site " + 
-					                                                         "WHERE site.superSiteId = '"+ siteId +"' " + 
-					                                                         ") " + 
-					                             ") " + 
-					    " ) " + 
-					 " )";
+			sql = "UPDATE `order` " + "SET `order`.WITHDRAWMONEYSTATUS='1',`order`.withdrawalId='" + withdrawalId + "' "
+					+ "WHERE `order`.CREATETIME < '" + endStr + "' AND `order`.CREATETIME > '" + beginStr
+					+ "' AND `order`.withdrawMoneyStatus = '0' AND `order`.status = '4' " + "AND ("
+					+ "(`order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '" + siteId
+					+ "' AND `user`.TYPE = '6')) OR "
+					+ "(`order`.CREATEMANID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '" + siteId
+					+ "' AND `user`.TYPE = '5')) OR " + "(`order`.DRIVERID in (SELECT `user`.USERID " + "FROM `user` "
+					+ "WHERE `user`.TYPE = '6' " + "AND `user`.BELONGSITEID in" + "(SELECT site.SITEID " + "FROM site "
+					+ "WHERE site.superSiteId = '" + siteId + "' " + ") " + ") " + ") OR "
+					+ "(`order`.CREATEMANID in (SELECT `user`.USERID " + "FROM `user` " + "WHERE `user`.TYPE = '5' "
+					+ "AND `user`.BELONGSITEID in " + "(SELECT site.SITEID " + "FROM site "
+					+ "WHERE site.superSiteId = '" + siteId + "' " + ") " + ") " + " ) " + " )";
 			SQLQuery query = session.createSQLQuery(sql);
 			query.executeUpdate();
 
@@ -600,6 +599,7 @@ public class OrderDaoImpl implements OrderDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
 		} finally {
 			if (tx != null) {
@@ -608,5 +608,384 @@ public class OrderDaoImpl implements OrderDao {
 
 		}
 	}
+
+	// 查询已提现记录对应订单列表
+	@SuppressWarnings("unchecked")
+	public List<WithdrawalFinishedOrderListModel> getWithDrawalFinishedOrderList(String siteId, String withdrawalId,
+			String page, String rows) {
+		List<WithdrawalFinishedOrderListModel> orderList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "SELECT `order`.ORDERID,`order`.DISTANCE,`order`.PRICE,convert(`order`.servicePrice,decimal(12,2)) AS SERVICEPRICE,`order`.withdrawMoneyStatus,`order`.finishTime,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName,"
+					+ "(SELECT site.SITENAME FROM site WHERE site.SITEID = (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID)) AS driverSiteName,"
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) AS driverSiteId,"
+					+ "(SELECT site.SITENAME FROM site WHERE site.SITEID = (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID)) AS masterSiteName,"
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID) AS masterSiteId,"
+					+ "(" + "CASE "
+					+ "WHEN (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) = '"
+					+ siteId + "' THEN '本站点' "
+					+ "WHEN (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) IN (SELECT site.SITEID FROM site WHERE site.SUPERSITEID = '"
+					+ siteId + "') THEN '子站点' " + "ELSE '其他站点' END " + ") AS driverBelongSiteType," + "(" + "CASE "
+					+ "WHEN (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID) = '"
+					+ siteId + "' THEN '本站点' "
+					+ "WHEN (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID) IN (SELECT site.SITEID FROM site WHERE site.SUPERSITEID = '"
+					+ siteId + "') THEN '子站点' " + "ELSE '其他站点' END " + ") AS masterBelongSiteType " +
+
+					"FROM `order` " + "WHERE `order`.WITHDRAWMONEYSTATUS = '1' AND `order`.withdrawalId = '"
+					+ withdrawalId + "' " + "ORDER BY `order`.finishTime desc " + "LIMIT " + page + "," + rows;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(WithdrawalFinishedOrderListModel.class);
+
+			orderList = query.list();
+
+			tx.commit();
+			return orderList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return orderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 查询已提现记录对应订单列表总条数
+	public Long getWithDrawalFinishedOrderListCount(String siteId, String withdrawalId) {
+		Transaction tx = null;
+		Long orderCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "select count(*) " + "FROM `order` "
+					+ "WHERE `order`.WITHDRAWMONEYSTATUS = '1' AND `order`.withdrawalId = '" + withdrawalId + "' ";
+
+			SQLQuery query = session.createSQLQuery(sql);
+			orderCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return orderCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return orderCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 查询指定站点及子站点的已完成订单列表
+	@SuppressWarnings("unchecked")
+	public List<WithdrawalFinishedOrderListModel> getFinishedOrderList(String siteId, String queryTime, String page,
+			String rows) {
+		List<WithdrawalFinishedOrderListModel> orderList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			String beginStr = queryTime + "-01 00:00:00";
+			String endStr = queryTime + "-31 23:59:59";
+
+			sql = "SELECT `order`.ORDERID,`order`.DISTANCE,`order`.PRICE,convert(`order`.servicePrice,decimal(12,2)) AS SERVICEPRICE,`order`.WITHDRAWMONEYSTATUS,`order`.FINISHTIME,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName,"
+					+ "(SELECT site.SITENAME FROM site WHERE site.SITEID = (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID)) AS driverSiteName,"
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) AS driverSiteId,"
+					+ "(SELECT site.SITENAME FROM site WHERE site.SITEID = (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID)) AS masterSiteName,"
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID) AS masterSiteId,"
+					+ "(" + "CASE "
+					+ "WHEN (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) = '"
+					+ siteId + "' THEN '本站点' "
+					+ "WHEN (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) IN (SELECT site.SITEID FROM site WHERE site.SUPERSITEID = '"
+					+ siteId + "') THEN '子站点'  " + "ELSE '其他站点' END " + ") AS driverBelongSiteType, " + "(" + "CASE "
+					+ "WHEN (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID) = '"
+					+ siteId + "' THEN '本站点' "
+					+ "WHEN (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID) IN (SELECT site.SITEID FROM site WHERE site.SUPERSITEID = '"
+					+ siteId + "') THEN '子站点'  " + "ELSE '其他站点' END " + ") AS masterBelongSiteType " + "FROM `order` "
+					+ "WHERE `order`.`STATUS` = '4' AND  " + "("
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) = '" + siteId
+					+ "' OR  "
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID) = '" + siteId
+					+ "' OR  "
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) IN (SELECT site.SITEID FROM site WHERE site.SUPERSITEID = '"
+					+ siteId + "') OR "
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID) IN (SELECT site.SITEID FROM site WHERE site.SUPERSITEID = '"
+					+ siteId + "') " + ")" + "AND `order`.finishTime > '" + beginStr + "' "
+					+ "AND `order`.finishTime < '" + endStr + "' " + "ORDER BY `order`.finishTime desc " + "LIMIT "
+					+ page + "," + rows;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(WithdrawalFinishedOrderListModel.class);
+
+			orderList = query.list();
+
+			tx.commit();
+			return orderList;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return orderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 查询指定站点及子站点的已完成订单列表条数
+	public Long getFinishedOrderListCount(String siteId, String queryTime) {
+		Transaction tx = null;
+		Long orderCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			String beginStr = queryTime + "-01 00:00:00";
+			String endStr = queryTime + "-31 23:59:59";
+			sql = "select count(*) " + "FROM `order` " + "WHERE `order`.`STATUS` = '4' AND  " + "("
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) = '" + siteId
+					+ "' OR  "
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID) = '" + siteId
+					+ "' OR  "
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) IN (SELECT site.SITEID FROM site WHERE site.SUPERSITEID = '"
+					+ siteId + "') OR "
+					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID) IN (SELECT site.SITEID FROM site WHERE site.SUPERSITEID = '"
+					+ siteId + "') " + ")" + "AND `order`.finishTime > '" + beginStr + "' "
+					+ "AND `order`.finishTime < '" + endStr + "' ";
+
+			SQLQuery query = session.createSQLQuery(sql);
+			orderCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return orderCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return orderCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 更新线上支付订单的 司机 提现状态
+	public JSONObject setOnlineOrderDriverWithdrawalStatus(String driverWithdrawalStatus, String driverWithdrawalId,
+			String driverId) {
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			sql = "UPDATE `order` " + "SET `order`.driverWithdrawalStatus='" + driverWithdrawalStatus
+					+ "',`order`.driverWithdrawalId='" + driverWithdrawalId + "' "
+					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND `order`.DRIVERID = '"
+					+ driverId + "'";
+			SQLQuery query = session.createSQLQuery(sql);
+			query.executeUpdate();
+
+			tx.commit();
+			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	// 根据司机id查询司机可提现的订单总额
+	public Double getDriverWithdrawalAmount(String driverId) {
+		Transaction tx = null;
+		Double orderCount =  (double) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			
+			sql = "SELECT SUM(price) from `order` "
+				+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND `order`.DRIVERID = '" + driverId + "'";
+
+			SQLQuery query = session.createSQLQuery(sql);
+			orderCount =  (Double) query.uniqueResult();
+
+			tx.commit();
+			return orderCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return orderCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	// 根据司机id查询司机可提现的订单
+	@SuppressWarnings("unchecked")
+	public List<OrderListModel> getDriverWithDrawalOrderList(String driverId) {
+		List<OrderListModel> orderList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
+					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
+					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND `order`.DRIVERID = '" + driverId + "' " + "ORDER BY `order`.finishTime desc "; 
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(OrderListModel.class);
+
+			orderList = query.list();
+
+			tx.commit();
+			return orderList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return orderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+	
+	
+	// 获取司机提现订单列表
+		@SuppressWarnings("unchecked")
+		public List<OrderListModel> getDriverWithdrawaledOrderList(String driverWithdrawalId, String page,
+				String rows) {
+			List<OrderListModel> orderList = null;
+			Transaction tx = null;
+			String sql = "";
+			try {
+				Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+				tx = session.beginTransaction();
+
+				sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
+						+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
+						+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+						+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
+						+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalId = '" + driverWithdrawalId + "' " + 
+						"ORDER BY `order`.finishTime desc " + "LIMIT " + page + "," + rows;
+				SQLQuery query = session.createSQLQuery(sql);
+				query.addEntity(OrderListModel.class);
+
+				orderList = query.list();
+
+				tx.commit();
+				return orderList;
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				tx.commit();
+				return orderList;
+			} finally {
+				if (tx != null) {
+					tx = null;
+				}
+			}
+		}
+
+		// 获取司机提现订单列表列表条数
+		public Long getDriverWithdrawaledOrderListCount(String driverWithdrawalId) {
+			Transaction tx = null;
+			Long orderCount = (long) 0;
+			String sql = "";
+			try {
+				Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+				tx = session.beginTransaction();
+
+				sql = "select count(*) " + "FROM `order` "
+						+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalId = '" + driverWithdrawalId + "' ";
+
+				SQLQuery query = session.createSQLQuery(sql);
+				orderCount = ((BigInteger) query.uniqueResult()).longValue();
+
+				tx.commit();
+				return orderCount;
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				tx.commit();
+				return orderCount;
+			} finally {
+				if (tx != null) {
+					tx = null;
+				}
+			}
+		}
+		
+		// 获取Mobile司机提现订单列表
+		@SuppressWarnings("unchecked")
+		public List<OrderListModel> getMobileDriverWithdrawaledOrderList(String driverWithdrawalId) {
+			List<OrderListModel> orderList = null;
+			Transaction tx = null;
+			String sql = "";
+			try {
+				Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+				tx = session.beginTransaction();
+
+				sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
+						+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
+						+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+						+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
+						+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalId = '" + driverWithdrawalId + "' " + 
+						"ORDER BY `order`.finishTime desc ";
+				SQLQuery query = session.createSQLQuery(sql);
+				query.addEntity(OrderListModel.class);
+
+				orderList = query.list();
+
+				tx.commit();
+				return orderList;
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				tx.commit();
+				return orderList;
+			} finally {
+				if (tx != null) {
+					tx = null;
+				}
+			}
+		}
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gunmm.model.Withdrawal;
+import com.gunmm.responseModel.WithDrawalFinishedListModel;
 import com.gunmm.responseModel.WithdrawalListModel;
 import com.gunmm.responseModel.WithdrawalOrderListModel;
 
@@ -58,7 +59,10 @@ public interface WithdrawalDao {
 	// 删除提现记录
 	public JSONObject deleteWithdrawal(String withdrawalId);
 
-	// 提现指定时间的订单 （九号之前创建，并且已经完成的订单）
-	public JSONObject withdrawalBeforeOrder(String dataStr, String siteId, String withdrawalId);
+	// 查询已提现列表
+	public List<WithDrawalFinishedListModel> getFinishedWithDrawalList(String bankcardNumber, String page, String rows);
+
+	// 查询已提现列表条数 
+	public Long getFinishedWithDrawalListCount(String bankcardNumber);
 
 }

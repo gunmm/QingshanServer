@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-8-25 13:08:58 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-8-25 13:26:47 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
-    <class name="com.gunmm.model.Withdrawal" table="WITHDRAWAL">
+    <class name="com.gunmm.responseModel.WithDrawalFinishedListModel" table="WITHDRAWALFINISHEDLISTMODEL">
         <id name="withdrawalId" type="java.lang.String">
             <column name="WITHDRAWALID" />
             <generator class="assigned" />
         </id>
+        <property name="toSiteId" type="java.lang.String">
+            <column name="TOSITEID" />
+        </property>
         <property name="withdrawalAmount" type="java.lang.String">
             <column name="WITHDRAWALAMOUNT" />
         </property>
@@ -17,11 +20,17 @@
         <property name="toUserId" type="java.lang.String">
             <column name="TOUSERID" />
         </property>
-        <property name="toSiteId" type="java.lang.String">
-            <column name="TOSITEID" />
+        <property name="toUserName" type="java.lang.String">
+            <column name="TOUSERNAME" />
+        </property>
+        <property name="siteName" type="java.lang.String">
+            <column name="SITENAME" />
         </property>
         <property name="oprationUserId" type="java.lang.String">
             <column name="OPRATIONUSERID" />
+        </property>
+        <property name="oprationUserName" type="java.lang.String">
+            <column name="OPRATIONUSERNAME" />
         </property>
         <property name="periodOfTime" type="java.lang.String">
             <column name="PERIODOFTIME" />
