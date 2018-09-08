@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -11,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.InvoiceDao;
 import com.gunmm.db.MyHibernateSessionFactory;
 import com.gunmm.model.Invoice;
+import com.gunmm.responseModel.InvoiceResModel;
 import com.gunmm.utils.JSONUtils;
 
 public class InvoiceImpl implements InvoiceDao {
@@ -79,7 +81,7 @@ public class InvoiceImpl implements InvoiceDao {
 			tx = session.beginTransaction();
 			session.update(invoice);
 			tx.commit();
-			
+
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", invoice);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -119,6 +121,38 @@ public class InvoiceImpl implements InvoiceDao {
 			if (tx != null) {
 				tx = null;
 			}
+		}
+	}
+
+	// 根据invoiceid查询invoice信息和部分订单信息
+	public JSONObject getInvoiceDetailById(String invoiceId) {
+		InvoiceResModel invoiceResModel = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			sql = "SELECT invoice.*,`order`.finishTime,`order`.orderId,`order`.status as orderStatus "
+					+ "FROM invoice,`order`  "
+					+ "where invoice.invoiceId = '" + invoiceId + "' and `order`.invoiceId = '" + invoiceId + "'";
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(InvoiceResModel.class);
+			invoiceResModel = (InvoiceResModel) query.uniqueResult();
+
+			tx.commit();
+			return JSONUtils.responseToJsonString("1", "", "查询成功！", invoiceResModel);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
 		}
 	}
 

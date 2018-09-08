@@ -9,7 +9,7 @@ public class Order {
 
 	
 	private String orderId;
-	private String status; //订单状态 0：刚新建未被接单 1:已被抢单  2：已被接单  3：已发货  4：发货完成  9：订单取消
+	private String status; //订单状态 0：刚新建未被接单 1:已被抢单  2：已被接单  3：已发货  4：发货完成  9：订单取消  8：司机投诉 
 	private String type; //订单类型   0：全部   1：实时  2：预约
 	private String appointStatus; //预约订单司机方的执行状态   0：未开始   1：已开始
 	private String invoiceId; //发票id   
@@ -28,7 +28,7 @@ public class Order {
 	private String note; //备注
 
 
-	
+	private String sendCity; //发货城市
 	private String sendAddress; //发货地址
 	private String sendDetailAddress;
 	private Double sendLatitude = 0.0; 
@@ -58,8 +58,11 @@ public class Order {
 	private String serviceFeePayId; //服务费 支付号 
 	
 
-	private String commentContent;  //评价内容
-	private Double commentStar;  //评价星级
+	private String commentContent;  //货主评价内容
+	private Double commentStar;  //货主评价星级
+	
+	private String driverCommentContent;  //货主评价内容
+	private Double driverCommentStar;  //货主评价星级
 
 
 	
@@ -242,6 +245,19 @@ public class Order {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+
+	
+
+	public String getSendCity() {
+		return sendCity;
+	}
+
+
+
+	public void setSendCity(String sendCity) {
+		this.sendCity = sendCity;
 	}
 
 
@@ -524,6 +540,30 @@ public class Order {
 
 	public void setCommentStar(Double commentStar) {
 		this.commentStar = commentStar;
+	}
+
+
+
+	public String getDriverCommentContent() {
+		return driverCommentContent;
+	}
+
+
+
+	public void setDriverCommentContent(String driverCommentContent) {
+		this.driverCommentContent = driverCommentContent;
+	}
+
+
+
+	public Double getDriverCommentStar() {
+		return driverCommentStar;
+	}
+
+
+
+	public void setDriverCommentStar(Double driverCommentStar) {
+		this.driverCommentStar = driverCommentStar;
 	}
 
 

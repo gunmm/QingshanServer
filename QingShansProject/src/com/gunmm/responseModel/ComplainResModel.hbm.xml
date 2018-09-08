@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-9-8 15:52:35 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.responseModel.ComplainResModel" table="COMPLAINRESMODEL">
+        <id name="recordId" type="java.lang.String">
+            <column name="RECORDID" />
+            <generator class="assigned" />
+        </id>
+        <property name="orderId" type="java.lang.String">
+            <column name="ORDERID" />
+        </property>
+       <!--  <id name="recordId" type="java.lang.String">
+            <column name="RECORDID" />
+            <generator class="assigned" />
+        </id>
+        <property name="orderId" type="java.lang.String">
+            <column name="ORDERID" />
+        </property> -->
+        <property name="createManId" type="java.lang.String">
+            <column name="CREATEMANID" />
+        </property>
+        <property name="createManName" type="java.lang.String">
+            <column name="CREATEMANNAME" />
+        </property>
+        <property name="complainedManId" type="java.lang.String">
+            <column name="COMPLAINEDMANID" />
+        </property>
+        <property name="complainedManName" type="java.lang.String">
+            <column name="COMPLAINEDMANNAME" />
+        </property>
+        <property name="orderStatus" type="java.lang.String">
+            <column name="ORDERSTATUS" />
+        </property>
+        <property name="price" type="java.lang.Double">
+            <column name="PRICE" />
+        </property>
+        <property name="servicePrice" type="java.lang.Double">
+            <column name="SERVICEPRICE" />
+        </property>
+        <property name="distance" type="java.lang.Double">
+            <column name="DISTANCE" />
+        </property>
+        <property name="type" type="java.lang.String">
+            <column name="TYPE" />
+        </property>
+        <property name="note" type="java.lang.String">
+            <column name="NOTE" />
+        </property>
+        <property name="manageMan" type="java.lang.String">
+            <column name="MANAGEMAN" />
+        </property>
+        <property name="manageManName" type="java.lang.String">
+            <column name="MANAGEMANNAME" />
+        </property>
+        <property name="manageStatus" type="java.lang.String">
+            <column name="MANAGESTATUS" />
+        </property>
+        <property name="manageDetail" type="java.lang.String">
+            <column name="MANAGEDETAIL" />
+        </property>
+        <property name="createTime" type="java.util.Date">
+            <column name="CREATETIME" />
+        </property>
+        <property name="updateTime" type="java.util.Date">
+            <column name="UPDATETIME" />
+        </property>
+    </class>
+</hibernate-mapping>

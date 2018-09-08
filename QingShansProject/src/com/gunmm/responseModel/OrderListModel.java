@@ -28,7 +28,7 @@ public class OrderListModel {
 	private String note; //备注
 
 
-	
+	private String sendCity; //发货城市
 	private String sendAddress; //发货地址
 	private String sendDetailAddress;
 	private Double sendLatitude = 0.0; 
@@ -59,6 +59,8 @@ public class OrderListModel {
 	private Double commentStar;  //评价星级
 
 
+	private String driverCommentContent;  //货主评价内容
+	private Double driverCommentStar;  //货主评价星级
 	
 	private String siteComplaintId;  //站点投诉ID
 	private String driverComplaintId; //司机投诉ID
@@ -205,6 +207,18 @@ public class OrderListModel {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+	
+	
+	
+	
+
+	public String getSendCity() {
+		return sendCity;
+	}
+
+	public void setSendCity(String sendCity) {
+		this.sendCity = sendCity;
 	}
 
 	public String getSendAddress() {
@@ -377,6 +391,23 @@ public class OrderListModel {
 
 	public void setCommentStar(Double commentStar) {
 		this.commentStar = commentStar;
+	}
+
+	
+	public String getDriverCommentContent() {
+		return driverCommentContent;
+	}
+
+	public void setDriverCommentContent(String driverCommentContent) {
+		this.driverCommentContent = driverCommentContent;
+	}
+
+	public Double getDriverCommentStar() {
+		return driverCommentStar;
+	}
+
+	public void setDriverCommentStar(Double driverCommentStar) {
+		this.driverCommentStar = driverCommentStar;
 	}
 
 	public String getSiteComplaintId() {

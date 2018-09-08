@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-9-8 11:23:33 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-9-8 13:23:38 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
-    <class name="com.gunmm.model.Invoice" table="INVOICE">
+    <class name="com.gunmm.responseModel.InvoiceResModel" table="INVOICERESMODEL">
         <id name="invoiceId" type="java.lang.String">
             <column name="INVOICEID" />
             <generator class="assigned" />
         </id>
+        <property name="orderId" type="java.lang.String">
+            <column name="ORDERID" />
+        </property>
         <property name="status" type="java.lang.String">
             <column name="STATUS" />
         </property>
@@ -40,6 +43,12 @@
         </property>
         <property name="updateTime" type="java.util.Date">
             <column name="UPDATETIME" />
+        </property>
+        <property name="finishTime" type="java.util.Date">
+            <column name="FINISHTIME" />
+        </property>
+        <property name="orderStatus" type="java.lang.String">
+            <column name="ORDERSTATUS" />
         </property>
     </class>
 </hibernate-mapping>

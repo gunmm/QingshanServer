@@ -7,6 +7,7 @@ public class DictionaryModel {
 	private String keyText;
 	private String valueText;
 	private String description;
+	private String cityName;
 	
 	private Double startPrice; //起步价
 	private Double unitPrice;  //单价
@@ -64,6 +65,16 @@ public class DictionaryModel {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
 	}
 
 	public Double getStartPrice() {

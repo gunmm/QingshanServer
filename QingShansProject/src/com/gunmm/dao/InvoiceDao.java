@@ -16,5 +16,8 @@ public interface InvoiceDao {
 	
 	// 删除invoice
 	public JSONObject deleteInvoice(String invoiceId);
+	
+	//根据invoiceid查询invoice信息和部分订单信息
+	public JSONObject getInvoiceDetailById(String invoiceId);
 
 }

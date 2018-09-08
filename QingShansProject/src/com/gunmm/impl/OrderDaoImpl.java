@@ -228,7 +228,7 @@ public class OrderDaoImpl implements OrderDao {
 			tx = session.beginTransaction();
 			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
 					+ "vehicle.nowLatitude," + "vehicle.nowLongitude," + "vehicle.plateNumber,"
-					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 					+ "where `order`.createManId = '" + userId + "' " + "ORDER BY updateTime desc " + "LIMIT " + page
 					+ "," + rows;
@@ -297,7 +297,7 @@ public class OrderDaoImpl implements OrderDao {
 
 			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
 					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
-					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId,vehicle "
 					+ "where `order`.driverId = '" + driverId + "' and user.vehicleId = vehicle.vehicleId " + condition
 					+ "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
@@ -363,7 +363,7 @@ public class OrderDaoImpl implements OrderDao {
 
 			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
 					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
-					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 					+ "where `order`.driverId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '"
 					+ siteId + "' AND `user`.type = '6') OR "
@@ -484,7 +484,7 @@ public class OrderDaoImpl implements OrderDao {
 			tx = session.beginTransaction();
 			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
 					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
-					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 					+ "FROM "
 					+ "`order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 					+ "where `order`.orderId = '" + orderId + "'";
@@ -621,7 +621,7 @@ public class OrderDaoImpl implements OrderDao {
 			tx = session.beginTransaction();
 
 			sql = "SELECT `order`.ORDERID,`order`.DISTANCE,`order`.PRICE,convert(`order`.servicePrice,decimal(12,2)) AS SERVICEPRICE,`order`.withdrawMoneyStatus,`order`.finishTime,"
-					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName,"
 					+ "(SELECT site.SITENAME FROM site WHERE site.SITEID = (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID)) AS driverSiteName,"
 					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) AS driverSiteId,"
 					+ "(SELECT site.SITENAME FROM site WHERE site.SITEID = (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID)) AS masterSiteName,"
@@ -703,7 +703,7 @@ public class OrderDaoImpl implements OrderDao {
 			String endStr = queryTime + "-31 23:59:59";
 
 			sql = "SELECT `order`.ORDERID,`order`.DISTANCE,`order`.PRICE,convert(`order`.servicePrice,decimal(12,2)) AS SERVICEPRICE,`order`.WITHDRAWMONEYSTATUS,`order`.FINISHTIME,"
-					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName,"
 					+ "(SELECT site.SITENAME FROM site WHERE site.SITEID = (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID)) AS driverSiteName,"
 					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) AS driverSiteId,"
 					+ "(SELECT site.SITENAME FROM site WHERE site.SITEID = (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID)) AS masterSiteName,"
@@ -862,7 +862,7 @@ public class OrderDaoImpl implements OrderDao {
 
 			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
 					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
-					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND `order`.DRIVERID = '" + driverId + "' " + "ORDER BY `order`.finishTime desc "; 
 
@@ -900,7 +900,7 @@ public class OrderDaoImpl implements OrderDao {
 
 				sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
 						+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
-						+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+						+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 						+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 						+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalId = '" + driverWithdrawalId + "' " + 
 						"ORDER BY `order`.finishTime desc " + "LIMIT " + page + "," + rows;
@@ -965,7 +965,7 @@ public class OrderDaoImpl implements OrderDao {
 
 				sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
 						+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
-						+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName "
+						+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 						+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 						+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalId = '" + driverWithdrawalId + "' " + 
 						"ORDER BY `order`.finishTime desc ";

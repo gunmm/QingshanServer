@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-8-25 15:34:08 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-9-6 22:17:41 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.SiteListModel" table="SITELISTMODEL">
         <id name="siteId" type="java.lang.String">
@@ -11,7 +11,7 @@
         <property name="superSiteId" type="java.lang.String">
             <column name="SUPERSITEID" />
         </property>
-        
+  
         <property name="childToSuperRate" type="java.lang.Double">
             <column name="CHILDTOSUPERRATE" />
         </property>

@@ -23,10 +23,25 @@ public class DictionaryController {
 	private JSONObject getOrderCarList(HttpServletRequest request) {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 		String name = object.getString("name");
-
+		String cityName = object.getString("cityName");
+		
 		DictionaryDao dictionaryDao = new DictionaryImpl();
-		List<DictionaryModel> dictionaryList = dictionaryDao.getDictionaryListByName(name);
+		List<DictionaryModel> dictionaryList = dictionaryDao.getDictionaryListByName(name, cityName);
 		
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", dictionaryList);
+	}
+	
+	//根据订单的车辆类型和发货城市查询对应的价格model
+	@RequestMapping("/getPriceDicByTypeAndCity")
+	@ResponseBody
+	private JSONObject getPriceDicByTypeAndCity(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String vehicleType = object.getString("vehicleType");
+		String cityName = object.getString("cityName");
+		
+		DictionaryDao dictionaryDao = new DictionaryImpl();
+		DictionaryModel dictionaryModel = dictionaryDao.getPriceDicByNameAndVehicleType(vehicleType, cityName);
+		
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", dictionaryModel);
 	}
 }

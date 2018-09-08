@@ -313,7 +313,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 			String beginStr = dataStr + "-01 00:00:00";
 			String endStr = dataStr + "-31 23:59:59";
 			sql = "SELECT orderId,carType,distance,price,servicePrice,"
-					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName,"
 					+ "finishTime " + "FROM `order` "
 					+ "WHERE `order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"
 					+ siteId + "' AND `user`.TYPE = '6') " + "AND `order`.`STATUS` = '4' "
@@ -397,7 +397,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 			String beginStr = dataStr + "-01 00:00:00";
 			String endStr = dataStr + "-31 23:59:59";
 			sql = "SELECT orderId,carType,distance,price,servicePrice,"
-					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType) AS carTypeName,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName,"
 					+ "finishTime " + "FROM `order` "
 					+ "WHERE `order`.createManId in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '"
 					+ siteId + "' AND `user`.TYPE = '5') " + "AND `order`.`STATUS` = '4' "

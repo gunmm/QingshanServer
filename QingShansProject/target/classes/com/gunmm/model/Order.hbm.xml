@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-8-25 23:28:08 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-9-6 22:19:22 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.model.Order" table="`ORDER`">
         <id name="orderId" type="java.lang.String">
@@ -43,6 +43,9 @@
         </property>
         <property name="note" type="java.lang.String">
             <column name="NOTE" />
+        </property>
+        <property name="sendCity" type="java.lang.String">
+            <column name="SENDCITY" />
         </property>
         <property name="sendAddress" type="java.lang.String">
             <column name="SENDADDRESS" />
@@ -112,6 +115,12 @@
         </property>
         <property name="commentStar" type="java.lang.Double">
             <column name="COMMENTSTAR" />
+        </property>
+        <property name="driverCommentContent" type="java.lang.String">
+            <column name="DRIVERCOMMENTCONTENT" />
+        </property>
+        <property name="driverCommentStar" type="java.lang.Double">
+            <column name="DRIVERCOMMENTSTAR" />
         </property>
         <property name="siteComplaintId" type="java.lang.String">
             <column name="SITECOMPLAINTID" />

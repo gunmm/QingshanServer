@@ -304,7 +304,7 @@ public class OrderController {
 			return JSONUtils.responseToJsonString("0", "未找到对应订单！", "操作失败！", "");
 		}
 		order.setStatus(status);
-		if ("3".equals(status)) {
+		if ("4".equals(status)) {
 			UserDao userDao = new UserDaoImpl();
 			User driver = userDao.getUserById(order.getDriverId());
 			driver.setStatus("0");
@@ -356,6 +356,53 @@ public class OrderController {
 
 		String result_code = jsonObj.getString("result_code");
 		String reason = jsonObj.getString("reason");
+		
+		UserDao userDao = new UserDaoImpl();
+		User driver = userDao.getUserById(order.getDriverId());
+		Double score = driver.getScore() - 0.5 + commentStar/10;
+		driver.setScore(score);
+		userDao.updateUserInfo(driver);
+
+		if ("1".equals(result_code)) {
+			return JSONUtils.responseToJsonString("1", "", "评价成功！", "");
+		} else {
+			return JSONUtils.responseToJsonString("0", reason, "评价失败！", "");
+		}
+
+	}
+
+	// 司机评价订单
+	@RequestMapping("/driverCommentOrder")
+	@ResponseBody
+	private JSONObject driverCommentOrder(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String orderId = object.getString("orderId");
+		String driverCommentContent = object.getString("driverCommentContent");
+		Double driverCommentStar = object.getDouble("driverCommentStar");
+
+		if (orderId == null) {
+			return JSONUtils.responseToJsonString("0", "参数错误！", "评价失败！", "");
+		}
+
+		OrderDao orderDao = new OrderDaoImpl();
+
+		Order order = orderDao.getOrderById(orderId);
+		if (order == null) {
+			return JSONUtils.responseToJsonString("0", "未找到对应订单！", "评价失败！", "");
+		}
+		order.setDriverCommentContent(driverCommentContent);
+		order.setDriverCommentStar(driverCommentStar);
+		
+		JSONObject jsonObj = orderDao.updateOrderInfo(order);
+
+		String result_code = jsonObj.getString("result_code");
+		String reason = jsonObj.getString("reason");
+		
+		UserDao userDao = new UserDaoImpl();
+		User master = userDao.getUserById(order.getDriverId());
+		Double score = master.getScore() - 0.5 + driverCommentStar/10;
+		master.setScore(score);
+		userDao.updateUserInfo(master);
 
 		if ("1".equals(result_code)) {
 			return JSONUtils.responseToJsonString("1", "", "评价成功！", "");

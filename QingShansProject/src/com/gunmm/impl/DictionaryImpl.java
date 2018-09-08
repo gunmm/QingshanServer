@@ -14,23 +14,22 @@ public class DictionaryImpl implements DictionaryDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DictionaryModel> getDictionaryListByName(String name) {
+	public List<DictionaryModel> getDictionaryListByName(String name, String cityName) {
 		// TODO Auto-generated method stub
 		List<DictionaryModel> dictionaryList = null;
 		Transaction tx = null;
 		String hql = "";
 		try {
-			Session session = MyHibernateSessionFactory.getSessionFactory()
-					.getCurrentSession();
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			hql = "from DictionaryModel where name = '"+name+"'";
-					
+			hql = "from DictionaryModel where name = '" + name + "' and cityName = '" + cityName + "'";
+
 			Query query = session.createQuery(hql);
 			dictionaryList = query.list();
 
 			tx.commit();
 			return dictionaryList;
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -40,7 +39,7 @@ public class DictionaryImpl implements DictionaryDao {
 			if (tx != null) {
 				tx = null;
 			}
-			
+
 		}
 	}
 
@@ -51,13 +50,12 @@ public class DictionaryImpl implements DictionaryDao {
 		String valueText = null;
 		String hql = "";
 		try {
-			Session session = MyHibernateSessionFactory.getSessionFactory()
-					.getCurrentSession();
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			hql = "select valueText from DictionaryModel where name = '"+name+"' and keyText = '"+keyText+"'";
+			hql = "select valueText from DictionaryModel where name = '" + name + "' and keyText = '" + keyText + "'";
 			Query query = session.createQuery(hql);
 			valueText = (String) query.uniqueResult();
-			
+
 			tx.commit();
 			return valueText;
 
@@ -70,6 +68,35 @@ public class DictionaryImpl implements DictionaryDao {
 			if (tx != null) {
 				tx = null;
 			}
+		}
+	}
+
+	// 据订单的车辆类型和发货城市查询对应的价格model
+	public DictionaryModel getPriceDicByNameAndVehicleType(String vehicleType, String cityName) {
+		DictionaryModel dictionaryModel = null;
+		Transaction tx = null;
+		String hql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			hql = "from DictionaryModel where keyText = '" + vehicleType + "' and cityName = '" + cityName + "'";
+
+			Query query = session.createQuery(hql);
+			dictionaryModel = (DictionaryModel) query.uniqueResult();
+
+			tx.commit();
+			return dictionaryModel;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return dictionaryModel;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
 		}
 	}
 

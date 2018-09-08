@@ -52,14 +52,14 @@ public class UserDaoImpl implements UserDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.save(user);
-			
+			tx.commit();
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
-			tx.commit();
 			if (tx != null) {
 				tx = null;
 			}
@@ -156,15 +156,16 @@ public class UserDaoImpl implements UserDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.update(user);
-			
+			tx.commit();
 			return JSONUtils.responseToJsonString("1", "", "修改密码成功！", "");
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "登陆失败！", "");
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -184,16 +185,17 @@ public class UserDaoImpl implements UserDao {
 			Query query = session.createQuery(hql);
 			query.setParameter(0, userId);
 			user = (User) query.uniqueResult();
-
+			tx.commit();
 			
 			return user;
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return null;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -226,7 +228,7 @@ public class UserDaoImpl implements UserDao {
 			        + "vehicle.vehicleMakeDate," 
 			        + "(select siteName from site where user.belongSiteId = siteId) as belongSiteName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) AS gpsTypeName,"
-					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType) AS vehicleTypeName "
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType limit 1) AS vehicleTypeName "
 					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 					+ "where user.userId = '" + userId + "'" ;
 
@@ -235,15 +237,16 @@ public class UserDaoImpl implements UserDao {
 
 			user = (DriverListModel)query.uniqueResult();
 
-			
+			tx.commit();
 			return user;
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return user;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -265,15 +268,16 @@ public class UserDaoImpl implements UserDao {
 			query.setParameter(0, phoneNumber);
 			user = (User) query.uniqueResult();
 
-			
+			tx.commit();
 			return user;
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return null;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -289,15 +293,17 @@ public class UserDaoImpl implements UserDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.update(user);
+			tx.commit();
 			
 
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", user);
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", user);
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -323,7 +329,7 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
 					+ "vehicle.vehicleMakeDate,"
 
-					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType) as vehicleTypeName,"
+					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
 					+ "FROM user,vehicle " + "where user.vehicleId = vehicle.vehicleId and user.type = '6' "
@@ -345,16 +351,17 @@ public class UserDaoImpl implements UserDao {
 			query.addEntity(DriverListModel.class);
 
 			driverList = query.list();
-
+			tx.commit();
 			
 			return driverList;
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return driverList;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -376,7 +383,7 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.vehicleBrand," + "vehicle.vehicleModel," + "vehicle.vehiclePhoto,"
 					+ "vehicle.loadWeight," + "vehicle.plateNumber," + "vehicle.vehicleMakeDate,"
 
-					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType) as vehicleTypeName,"
+					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
 					+ "FROM user,vehicle " + "where user.vehicleId = vehicle.vehicleId and user.userId = '" + driverId
@@ -386,16 +393,17 @@ public class UserDaoImpl implements UserDao {
 			query.addEntity(DriverListModel.class);
 
 			driverListModel = (DriverListModel) query.uniqueResult();
-
+			tx.commit();
 			
 			return JSONUtils.responseToJsonString("1", "", "查询成功！", driverListModel);
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -428,15 +436,17 @@ public class UserDaoImpl implements UserDao {
 			SQLQuery query = session.createSQLQuery(sql);
 			driverCount = ((BigInteger) query.uniqueResult()).longValue();
 
+			tx.commit();
 			
 			return driverCount;
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return driverCount;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -461,14 +471,15 @@ public class UserDaoImpl implements UserDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.save(user);
-			
+			tx.commit();
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -486,7 +497,7 @@ public class UserDaoImpl implements UserDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.delete(driver);
-			
+			tx.commit();
 
 			if (driver != null) {
 				return JSONUtils.responseToJsonString("1", "", "删除成功！", "");
@@ -495,10 +506,11 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -535,15 +547,16 @@ public class UserDaoImpl implements UserDao {
 
 			masterList = query.list();
 
-			
+			tx.commit();
 			return masterList;
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return masterList;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -573,15 +586,16 @@ public class UserDaoImpl implements UserDao {
 			SQLQuery query = session.createSQLQuery(sql);
 			driverCount = ((BigInteger) query.uniqueResult()).longValue();
 
-			
+			tx.commit();
 			return driverCount;
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return driverCount;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -604,15 +618,16 @@ public class UserDaoImpl implements UserDao {
 
 			masterListModel = (MasterListModel) query.uniqueResult();
 
-			
+			tx.commit();
 			return JSONUtils.responseToJsonString("1", "", "查询成功！", masterListModel);
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -636,14 +651,15 @@ public class UserDaoImpl implements UserDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.save(user);
-			
+			tx.commit();
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -660,7 +676,7 @@ public class UserDaoImpl implements UserDao {
 			tx = session.beginTransaction();
 			session.delete(master);
 			
-
+			tx.commit();
 			if (master != null) {
 				return JSONUtils.responseToJsonString("1", "", "删除成功！", "");
 			}
@@ -668,10 +684,11 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -711,17 +728,17 @@ public class UserDaoImpl implements UserDao {
 			query.addEntity(ManageListModel.class);
 
 			manageList = query.list();
-
+			tx.commit();
 			
 			return manageList;
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
-			
 			return manageList;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -755,15 +772,16 @@ public class UserDaoImpl implements UserDao {
 			SQLQuery query = session.createSQLQuery(sql);
 			manageCount = ((BigInteger) query.uniqueResult()).longValue();
 
-			
+			tx.commit();
 			return manageCount;
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return manageCount;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -793,14 +811,15 @@ public class UserDaoImpl implements UserDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.save(user);
-			
+			tx.commit();
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -821,7 +840,7 @@ public class UserDaoImpl implements UserDao {
 			query.setParameter(0, phoneNumber);
 			backPhoneNumber = (String) query.uniqueResult();
 
-			
+			tx.commit();
 			if (backPhoneNumber == null || "".equals(backPhoneNumber)) {
 				return false;
 			} else {
@@ -830,10 +849,11 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return true;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -854,7 +874,7 @@ public class UserDaoImpl implements UserDao {
 			query.setParameter(0, userIdCardNumber);
 			backIdCardNumber = (String) query.uniqueResult();
 
-			
+			tx.commit();
 			if (backIdCardNumber == null || "".equals(backIdCardNumber)) {
 				return false;
 			} else {
@@ -863,10 +883,11 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return true;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
@@ -887,7 +908,7 @@ public class UserDaoImpl implements UserDao {
 			query.setParameter(0, driverLicenseNumber);
 			backDriverLicenseNumber = (String) query.uniqueResult();
 
-			
+			tx.commit();
 			if (backDriverLicenseNumber == null || "".equals(backDriverLicenseNumber)) {
 				return false;
 			} else {
@@ -896,10 +917,11 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			tx.commit();
 			e.printStackTrace();
 			return true;
 		} finally {
-			tx.commit();
+			
 			if (tx != null) {
 				tx = null;
 			}
