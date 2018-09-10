@@ -23,6 +23,7 @@ import com.gunmm.model.Order;
 import com.gunmm.model.User;
 import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
+import com.gunmm.responseModel.OrderListModelForSite;
 import com.gunmm.utils.JSONUtils;
 
 @Controller
@@ -247,7 +248,7 @@ public class OrderController {
 		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
 
 		OrderDao orderDao = new OrderDaoImpl();
-		List<OrderListModel> orderList = orderDao.getSiteOrderList(siteId, page, rows);
+		List<OrderListModelForSite> orderList = orderDao.getSiteOrderList(siteId, page, rows);
 
 		Long orderCount = orderDao.getSiteOrderCount(siteId);
 		JSONObject jsonObject = new JSONObject();

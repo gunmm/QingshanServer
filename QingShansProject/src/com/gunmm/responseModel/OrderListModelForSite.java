@@ -4,8 +4,7 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class OrderListModel {
-
+public class OrderListModelForSite {
 	private String orderId;
 	private String status; //订单状态 0：刚新建未被接单 1:已被抢单  2：已被接单  3：已发货  4：发货完成  9：订单取消
 	private String type; //订单类型   0：全部   1：实时  2：预约
@@ -89,9 +88,11 @@ public class OrderListModel {
 	private Double nowLatitude = 0.0; //司机目前纬度 
 	private Double nowLongitude = 0.0; //司机目前经度
 	private String plateNumber; //车牌号
-	private Float score;  //分值。默认5：   
+	private Float score;  //分值。默认5： 
 	
-	public OrderListModel() {
+	private String orderRoleBelong; //订单对应人员    1：货主是本站点   2：司机是本站点   3：货主司机都是本站点
+	
+	public OrderListModelForSite() {
 
 	}
 
@@ -166,8 +167,6 @@ public class OrderListModel {
 	public void setLinkPhone(String linkPhone) {
 		this.linkPhone = linkPhone;
 	}
-	
-	
 
 	public String getReceiveMan() {
 		return receiveMan;
@@ -208,10 +207,6 @@ public class OrderListModel {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	
-	
-	
-	
 
 	public String getSendCity() {
 		return sendCity;
@@ -292,8 +287,6 @@ public class OrderListModel {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-	
-	
 
 	public Double getServicePrice() {
 		return servicePrice;
@@ -318,8 +311,6 @@ public class OrderListModel {
 	public void setWithdrawMoneyStatus(String withdrawMoneyStatus) {
 		this.withdrawMoneyStatus = withdrawMoneyStatus;
 	}
-	
-	
 
 	public String getWithdrawalId() {
 		return withdrawalId;
@@ -393,7 +384,6 @@ public class OrderListModel {
 		this.commentStar = commentStar;
 	}
 
-	
 	public String getDriverCommentContent() {
 		return driverCommentContent;
 	}
@@ -449,7 +439,7 @@ public class OrderListModel {
 	public void setAppointTime(Date appointTime) {
 		this.appointTime = appointTime;
 	}
-	
+
 	public Date getFinishTime() {
 		return finishTime;
 	}
@@ -522,7 +512,13 @@ public class OrderListModel {
 		this.score = score;
 	}
 
-	
+	public String getOrderRoleBelong() {
+		return orderRoleBelong;
+	}
 
+	public void setOrderRoleBelong(String orderRoleBelong) {
+		this.orderRoleBelong = orderRoleBelong;
+	}
+	
 	
 }
