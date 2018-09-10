@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.gunmm.model.Order;
 import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
+import com.gunmm.responseModel.OrderListModelForSite;
 import com.gunmm.responseModel.WithdrawalFinishedOrderListModel;
 
 public interface OrderDao {
@@ -38,7 +39,7 @@ public interface OrderDao {
 	public Long getDriverOrderCount(String driverId);
 
 	// 查询站点订单列表
-	public List<OrderListModel> getSiteOrderList(String siteId, String page, String rows);
+	public List<OrderListModelForSite> getSiteOrderList(String siteId, String page, String rows);
 
 	// 查询站点订单总条数
 	public Long getSiteOrderCount(String siteId);

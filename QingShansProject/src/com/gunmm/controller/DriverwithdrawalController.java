@@ -1,5 +1,6 @@
 package com.gunmm.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +36,8 @@ public class DriverwithdrawalController {
 		DriverWithdrawal driverWithdrawal = JSONObject.parseObject(driverWithdrawalObject.toJSONString(),
 				DriverWithdrawal.class);
 		driverWithdrawal.setDriverWithdrawalId(UUID.randomUUID().toString());
-
+		driverWithdrawal.setDriverWithdrawalStatus("0");
+		driverWithdrawal.setDriverWithdrawalTime(new Date());
 		DriverWithdrawalDao driverWithdrawalDao = new DriverWithdrawalImpl();
 
 		JSONObject jsonObj = driverWithdrawalDao.addDriverWithdrawal(driverWithdrawal);

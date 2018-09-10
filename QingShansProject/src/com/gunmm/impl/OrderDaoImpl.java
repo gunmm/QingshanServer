@@ -22,6 +22,7 @@ import com.gunmm.model.Order;
 import com.gunmm.model.User;
 import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
+import com.gunmm.responseModel.OrderListModelForSite;
 import com.gunmm.responseModel.WithdrawalFinishedOrderListModel;
 import com.gunmm.utils.JSONUtils;
 
@@ -353,8 +354,8 @@ public class OrderDaoImpl implements OrderDao {
 
 	// 查询站点订单列表
 	@SuppressWarnings("unchecked")
-	public List<OrderListModel> getSiteOrderList(String siteId, String page, String rows) {
-		List<OrderListModel> orderList = null;
+	public List<OrderListModelForSite> getSiteOrderList(String siteId, String page, String rows) {
+		List<OrderListModelForSite> orderList = null;
 		Transaction tx = null;
 		String sql = "";
 		try {
@@ -363,6 +364,17 @@ public class OrderDaoImpl implements OrderDao {
 
 			sql = "SELECT `order`.*," + "user.nickname," + "user.phoneNumber," + "user.personImageUrl," + "user.score,"
 					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
+					
+					+ "(" + "CASE "
+					+ "WHEN ((SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) = '"
+					+ siteId + "' AND (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.createManId) = '" + 
+							 siteId + "') THEN '3' "
+					+ "WHEN (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) = '" 
+					+ siteId + "' THEN '2' " 
+					+ "ELSE '1' END " 
+					+ ") AS orderRoleBelong,"
+					
+					
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 					+ "where `order`.driverId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = '"
@@ -371,7 +383,7 @@ public class OrderDaoImpl implements OrderDao {
 					+ "' AND `user`.type = '5') " + "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
-			query.addEntity(OrderListModel.class);
+			query.addEntity(OrderListModelForSite.class);
 
 			orderList = query.list();
 
