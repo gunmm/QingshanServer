@@ -116,6 +116,10 @@ public class UserDaoImpl implements UserDao {
 
 					user.setSiteType(site.getSiteType());
 				}
+				
+				if (user.getBlackStatus() != null) {
+					return JSONUtils.responseToJsonString("0", "", "账户被拉黑！请联系客服", "");
+				}
 
 				// 设置
 				user.setLoginPlate(plateform);

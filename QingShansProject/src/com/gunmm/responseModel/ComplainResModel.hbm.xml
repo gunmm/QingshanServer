@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-9-8 15:52:35 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-9-12 16:43:12 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.ComplainResModel" table="COMPLAINRESMODEL">
         <id name="recordId" type="java.lang.String">
@@ -11,13 +11,6 @@
         <property name="orderId" type="java.lang.String">
             <column name="ORDERID" />
         </property>
-       <!--  <id name="recordId" type="java.lang.String">
-            <column name="RECORDID" />
-            <generator class="assigned" />
-        </id>
-        <property name="orderId" type="java.lang.String">
-            <column name="ORDERID" />
-        </property> -->
         <property name="createManId" type="java.lang.String">
             <column name="CREATEMANID" />
         </property>
@@ -59,6 +52,15 @@
         </property>
         <property name="manageDetail" type="java.lang.String">
             <column name="MANAGEDETAIL" />
+        </property>
+        <property name="manageDriver" type="java.lang.String">
+            <column name="MANAGEDRIVER" />
+        </property>
+        <property name="manageMaster" type="java.lang.String">
+            <column name="MANAGEMASTER" />
+        </property>
+        <property name="manageOrder" type="java.lang.String">
+            <column name="MANAGEORDER" />
         </property>
         <property name="createTime" type="java.util.Date">
             <column name="CREATETIME" />

@@ -21,8 +21,11 @@ public class ComplainResModel {
 	private String note;               //投诉详情
 	private String manageMan;               //操作员
 	private String manageManName;               //操作员姓名
-	private String manageStatus;               //处理状态   0:待处理  1：司机减分  2：货主减分   3：拉黑司机   4.拉黑货主
+	private String manageStatus;               //处理状态   0:待处理  1：已处理
 	private String manageDetail;               //处理详情 (文字描述)
+	private String manageDriver;               //处理司机 0：不处理  1：评分减一  2：拉黑
+	private String manageMaster;               //处理货主 0：不处理  1：评分减一  2：拉黑
+	private String manageOrder;               //处理订单 0：不处理  1：变为取消状态  2：变为异常状态
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date createTime;              // 创建时间
@@ -292,6 +295,54 @@ public class ComplainResModel {
 
 	public void setManageDetail(String manageDetail) {
 		this.manageDetail = manageDetail;
+	}
+
+
+	
+
+
+	public String getManageDriver() {
+		return manageDriver;
+	}
+
+
+
+
+
+	public void setManageDriver(String manageDriver) {
+		this.manageDriver = manageDriver;
+	}
+
+
+
+
+
+	public String getManageMaster() {
+		return manageMaster;
+	}
+
+
+
+
+
+	public void setManageMaster(String manageMaster) {
+		this.manageMaster = manageMaster;
+	}
+
+
+
+
+
+	public String getManageOrder() {
+		return manageOrder;
+	}
+
+
+
+
+
+	public void setManageOrder(String manageOrder) {
+		this.manageOrder = manageOrder;
 	}
 
 

@@ -1,6 +1,8 @@
 package com.gunmm.impl;
 
+import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.Query;
@@ -106,20 +108,20 @@ public class ComplainImpl implements ComplainDao {
 			tx = session.beginTransaction();
 			String complainType = "";
 			String complainedMan = "";
-			if ("1".equals(type)) { //货主投诉
+			if ("1".equals(type)) { // 货主投诉
 				complainType = "siteComplaintId";
 				complainedMan = "driverId";
-			}else {
+			} else {
 				complainType = "driverComplaintId";
 				complainedMan = "createManId";
 			}
 			sql = "SELECT complain.*,`order`.status as orderStatus,`order`.price,`order`.servicePrice,`order`.distance,"
-					+"(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = complain.createManId) as createManName,"
-					+"(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = complain.manageMan) as manageManName,"
-					+"(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = `order`."+complainedMan+") as complainedManName,"
-					+"`order`."+complainedMan+" as complainedManId "
-					+ "FROM complain,`order`  "
-					+ "where complain.recordId = '" + complainId + "' and `order`."+complainType+" = '" + complainId + "'";
+					+ "(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = complain.createManId) as createManName,"
+					+ "(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = complain.manageMan) as manageManName,"
+					+ "(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = `order`." + complainedMan
+					+ ") as complainedManName," + "`order`." + complainedMan + " as complainedManId "
+					+ "FROM complain,`order`  " + "where complain.recordId = '" + complainId + "' and `order`."
+					+ complainType + " = '" + complainId + "'";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(ComplainResModel.class);
@@ -138,6 +140,82 @@ public class ComplainImpl implements ComplainDao {
 				tx = null;
 			}
 
+		}
+	}
+
+	// 查询投诉列表
+	@SuppressWarnings("unchecked")
+	public List<ComplainResModel> getComplainList(String type,String manageStatus, String page, String rows) {
+		List<ComplainResModel> complainResModelList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "SELECT complain.*,`order`.status as orderStatus,`order`.price,`order`.servicePrice,`order`.distance,"
+					+ "(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = complain.createManId) as createManName,"
+					+ "(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = complain.manageMan) as manageManName,"
+
+					+ "(" + "CASE "
+					+ "WHEN (complain.type = '1') THEN (SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = `order`.driverId) "
+					+ "ELSE (SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = `order`.createManId) END ) AS complainedManName,"
+
+					+ "(" + "CASE " + "WHEN (complain.type = '1') THEN `order`.driverId "
+					+ "ELSE `order`.createManId END ) AS complainedManId "
+
+					+ "FROM complain,`order`  where (CASE WHEN (complain.type = '1') THEN `order`.siteComplaintId = complain.recordId ELSE `order`.driverComplaintId = complain.recordId END)"
+					+ "AND complain.type like '%" + type + "%' AND complain.manageStatus like '%" + manageStatus + "%' " + "ORDER BY updateTime desc " + "LIMIT " + page + ","
+					+ rows;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(ComplainResModel.class);
+
+			complainResModelList = query.list();
+
+			tx.commit();
+			return complainResModelList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return complainResModelList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	// 查询投诉列表条数
+	public Long getComplainListCount(String type, String manageStatus) {
+		Transaction tx = null;
+		Long complainCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "SELECT  count(*)" + "FROM complain,`order`  where (CASE WHEN (complain.type = '1') THEN `order`.siteComplaintId = complain.recordId ELSE `order`.driverComplaintId = complain.recordId END)"
+					+ "AND complain.type like '%" + type + "%' AND complain.manageStatus like '%" + manageStatus + "%'";
+
+			SQLQuery query = session.createSQLQuery(sql);
+			complainCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return complainCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return complainCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
 		}
 	}
 }

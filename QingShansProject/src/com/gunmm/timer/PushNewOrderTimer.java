@@ -1,6 +1,8 @@
 package com.gunmm.timer;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -24,7 +26,9 @@ public class PushNewOrderTimer extends TimerTask {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		System.out.println("===============定时任务方法开始执行=================================");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateString = formatter.format(new Date());
+		System.out.println(dateString + "===============定时任务方法开始执行=================================");
 		Thread t = new Thread(new Runnable() {
 			public void run() {
 				//清理支付超时的订单
@@ -69,8 +73,8 @@ public class PushNewOrderTimer extends TimerTask {
 		});
 		t.start();
 		
-		
-		System.out.println("===============结束执行=================================");
+		String dateString2 = formatter.format(new Date());
+		System.out.println(dateString2 + "===============结束执行=================================");
 		
 		
 		
