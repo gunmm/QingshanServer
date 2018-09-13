@@ -39,7 +39,6 @@ public class Invoice {
 	}
 	
 	
-
 	public String getStatus() {
 		return status;
 	}

@@ -71,7 +71,7 @@ public class OrderDaoImpl implements OrderDao {
 					+ order.getSendLongitude()
 					+ "* 3.1415) / 180 - (vehicle.nowLongitude * 3.1415) / 180 ) ) * 6380 AS distance "
 					+ "FROM user,vehicle "
-					+ "where user.vehicleId = vehicle.vehicleId and user.type = '6' and user.status = '0' and vehicle.vehicleType = '"
+					+ "where user.vehicleId = vehicle.vehicleId and user.type = '6' and user.status = '0' and user.blackStatus is NULL and user.score>0 and vehicle.vehicleType = '"
 					+ order.getCarType() + "' " + "and (ACOS(SIN((" + order.getSendLatitude()
 					+ " * 3.1415) / 180 ) *SIN((vehicle.nowLatitude * 3.1415) / 180 ) +COS((" + order.getSendLatitude()
 					+ " * 3.1415) / 180 ) * COS((vehicle.nowLatitude * 3.1415) / 180 ) *COS(("

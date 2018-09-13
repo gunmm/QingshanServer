@@ -1,6 +1,8 @@
 package com.gunmm.impl;
 
+import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.Query;
@@ -133,8 +135,8 @@ public class InvoiceImpl implements InvoiceDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			sql = "SELECT invoice.*,`order`.finishTime,`order`.orderId,`order`.status as orderStatus "
-					+ "FROM invoice,`order`  "
-					+ "where invoice.invoiceId = '" + invoiceId + "' and `order`.invoiceId = '" + invoiceId + "'";
+					+ "FROM invoice,`order`  " + "where invoice.invoiceId = '" + invoiceId
+					+ "' and `order`.invoiceId = '" + invoiceId + "'";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(InvoiceResModel.class);
@@ -153,6 +155,76 @@ public class InvoiceImpl implements InvoiceDao {
 				tx = null;
 			}
 
+		}
+	}
+
+	// 查询发票列表
+	@SuppressWarnings("unchecked")
+	public List<InvoiceResModel> getInvoiceList(String status, String invoiceType, String receiverName, String page,
+			String rows) {
+		List<InvoiceResModel> invoiceResModelList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			sql = "SELECT invoice.*,`order`.finishTime,`order`.orderId,`order`.status as orderStatus "
+					+ "FROM invoice,`order`  " + "where `order`.invoiceId = invoice.invoiceId AND `order`.status = '4' "
+					+ "AND invoice.status like '%" + status + "%' AND invoice.invoiceType like '%" + invoiceType
+					+ "%'  AND invoice.receiverName like '%" + receiverName + "%' " + "ORDER BY finishTime desc "
+					+ "LIMIT " + page + "," + rows;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(InvoiceResModel.class);
+
+			invoiceResModelList = query.list();
+
+			tx.commit();
+			return invoiceResModelList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return invoiceResModelList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	// 查询发票列表条数
+	public Long getInvoiceListCount(String status, String invoiceType, String receiverName) {
+		Transaction tx = null;
+		Long invoiceCount = (long) 0;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "SELECT  count(*)"
+					+ "FROM invoice,`order`  " 
+					+ "where `order`.invoiceId = invoice.invoiceId "
+					+ "AND invoice.status like '%" + status + "%' AND invoice.invoiceType like '%" + invoiceType + "%'  AND invoice.receiverName like '%" + receiverName + "%' ";
+					
+
+			SQLQuery query = session.createSQLQuery(sql);
+			invoiceCount = ((BigInteger) query.uniqueResult()).longValue();
+
+			tx.commit();
+			return invoiceCount;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return invoiceCount;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
 		}
 	}
 

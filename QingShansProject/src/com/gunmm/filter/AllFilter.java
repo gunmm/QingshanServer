@@ -1,6 +1,9 @@
 package com.gunmm.filter;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -43,7 +46,9 @@ public class AllFilter implements Filter {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		
 		if (httpServletRequest.getServletPath().indexOf("/static/image/") == -1) {
-			System.out.println(httpServletRequest.getServletPath());
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String dateString = formatter.format(new Date());
+			System.out.println(dateString + httpServletRequest.getServletPath());
 		}		
 		httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
 		httpServletResponse.setContentType("text/html;charset=utf-8");
