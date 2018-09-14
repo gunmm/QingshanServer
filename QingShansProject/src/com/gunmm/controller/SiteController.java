@@ -110,6 +110,8 @@ public class SiteController {
 		String lawsManPhone = object.getString("lawsManPhone");
 		String businessLicensePhoto = object.getString("businessLicensePhoto");
 		String leaseContractPhoto = object.getString("leaseContractPhoto");
+		Double childToSuperRate = object.getDouble("childToSuperRate");
+		
 
 		SiteDao siteDao = new SiteImpl();
 		Site site = siteDao.getSiteById(siteId);
@@ -123,6 +125,11 @@ public class SiteController {
 		site.setLawsManPhone(lawsManPhone);
 		site.setBusinessLicensePhoto(businessLicensePhoto);
 		site.setLeaseContractPhoto(leaseContractPhoto);
+		site.setChildToSuperRate(childToSuperRate);
+		
+		if ("2".equals(site.getSiteType())) {
+			site.setSiteCheckStatus("0");
+		}
 		
 		return siteDao.updateSiteInfo(site);
 	}

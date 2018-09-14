@@ -400,7 +400,7 @@ public class OrderController {
 		String reason = jsonObj.getString("reason");
 		
 		UserDao userDao = new UserDaoImpl();
-		User master = userDao.getUserById(order.getDriverId());
+		User master = userDao.getUserById(order.getCreateManId());
 		Double score = master.getScore() - 0.5 + driverCommentStar/10;
 		master.setScore(score);
 		userDao.updateUserInfo(master);

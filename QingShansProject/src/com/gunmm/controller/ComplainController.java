@@ -166,7 +166,8 @@ public class ComplainController {
 				}
 				
 
-			} else {
+			} 
+			if (!"0".equals(manageMaster)) {
 				User master = userDao.getUserById(order.getCreateManId());
 				if ("1".equals(manageMaster)) {//评分减一
 					if (master.getScore() >= 1) {

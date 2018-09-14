@@ -326,6 +326,8 @@ public class PushDaoImpl implements PushDao {
 		messageModel.setMessageType("ComplainHasBeManage");
 		messageModel.setReceiveUserId(createManId);
 		messageModel.setAlias(user.getAccessToken());
+		messageModel.setOrderId(complainId);
+		messageModel.setOrderType(complainType);
 		
 		MessageDao messageDao = new MessageImpl();
 		messageDao.addMessage(messageModel);
