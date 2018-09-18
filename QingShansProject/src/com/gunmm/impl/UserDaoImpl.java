@@ -291,7 +291,7 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public JSONObject updateUserInfo(User user) {
 		// TODO Auto-generated method stub
-		user.setUpdateTime(new Date());
+		
 		Transaction tx = null;
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();

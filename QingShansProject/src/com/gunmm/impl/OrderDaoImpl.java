@@ -591,7 +591,7 @@ public class OrderDaoImpl implements OrderDao {
 			String beginStr = dataStr + "-01 00:00:00";
 			String endStr = dataStr + "-31 23:59:59";
 			sql = "UPDATE `order` " + "SET `order`.WITHDRAWMONEYSTATUS='1',`order`.withdrawalId='" + withdrawalId + "' "
-					+ "WHERE `order`.CREATETIME < '" + endStr + "' AND `order`.CREATETIME > '" + beginStr
+					+ "WHERE `order`.finishTime < '" + endStr + "' AND `order`.finishTime > '" + beginStr
 					+ "' AND `order`.withdrawMoneyStatus = '0' AND `order`.status = '4' " + "AND ("
 					+ "(`order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '" + siteId
 					+ "' AND `user`.TYPE = '6')) OR "

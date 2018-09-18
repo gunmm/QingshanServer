@@ -1,5 +1,6 @@
 package com.gunmm.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,8 +72,7 @@ public class UserInfoController {
 			}
 		}
 		
-		
-
+		user.setUpdateTime(new Date());
 		return userDao.updateUserInfo(user);
 	}
 	
@@ -277,6 +277,7 @@ public class UserInfoController {
 		newUser.setDriverQualificationNumber(user.getDriverQualificationNumber());
 		newUser.setVehicleType(user.getVehicleType());
 
+		newUser.setUpdateTime(new Date());
 		return userDao.updateUserInfo(newUser);
 
 	}
@@ -372,6 +373,7 @@ public class UserInfoController {
 		newUser.setPhoneNumber(user.getPhoneNumber());
 		newUser.setUserIdCardNumber(user.getUserIdCardNumber());
 		newUser.setMainGoodsName(user.getMainGoodsName());
+		newUser.setUpdateTime(new Date());
 		return userDao.updateUserInfo(newUser);
 	}
 
@@ -451,6 +453,7 @@ public class UserInfoController {
 		newUser.setNickname(user.getNickname());
 		newUser.setPhoneNumber(user.getPhoneNumber());
 		newUser.setUserIdCardNumber(user.getUserIdCardNumber());
+		newUser.setUpdateTime(new Date());
 		return userDao.updateUserInfo(newUser);
 	}
 

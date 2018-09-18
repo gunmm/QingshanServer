@@ -159,6 +159,7 @@ public class ComplainController {
 				} else { //拉黑
 					driver.setBlackStatus("1");
 				}
+				driver.setUpdateTime(new Date());
 				JSONObject jsonObj = userDao.updateUserInfo(driver);
 				String result_code = jsonObj.getString("result_code");
 				if (!"1".equals(result_code)) {
@@ -178,6 +179,7 @@ public class ComplainController {
 				} else {//拉黑
 					master.setBlackStatus("1");
 				}
+				master.setUpdateTime(new Date());
 				JSONObject jsonObj = userDao.updateUserInfo(master);
 				String result_code = jsonObj.getString("result_code");
 				if (!"1".equals(result_code)) {
