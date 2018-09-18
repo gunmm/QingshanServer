@@ -16,7 +16,8 @@ public class WithdrawalFinishedOrderListModel {
 	private String masterSiteId;   //货主站点id
 	private String driverBelongSiteType;   //司机所属类型
 	private String masterBelongSiteType;   //货主所属类型
-	private String withdrawMoneyStatus; //提现状态 0：未提现  1：已提现
+	private String masterSiteWithdrawStatus; //货主所属站点提现状态 0：未提现  1：已提现	
+	private String driverSiteWithdrawStatus; //司机所属站点提现状态 0：未提现  1：已提现
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date finishTime; //完成时间  
 	
@@ -158,17 +159,31 @@ public class WithdrawalFinishedOrderListModel {
 	public void setMasterBelongSiteType(String masterBelongSiteType) {
 		this.masterBelongSiteType = masterBelongSiteType;
 	}
+	
+	
 
 
 
-	public String getWithdrawMoneyStatus() {
-		return withdrawMoneyStatus;
+	public String getMasterSiteWithdrawStatus() {
+		return masterSiteWithdrawStatus;
 	}
 
 
 
-	public void setWithdrawMoneyStatus(String withdrawMoneyStatus) {
-		this.withdrawMoneyStatus = withdrawMoneyStatus;
+	public void setMasterSiteWithdrawStatus(String masterSiteWithdrawStatus) {
+		this.masterSiteWithdrawStatus = masterSiteWithdrawStatus;
+	}
+
+
+
+	public String getDriverSiteWithdrawStatus() {
+		return driverSiteWithdrawStatus;
+	}
+
+
+
+	public void setDriverSiteWithdrawStatus(String driverSiteWithdrawStatus) {
+		this.driverSiteWithdrawStatus = driverSiteWithdrawStatus;
 	}
 
 

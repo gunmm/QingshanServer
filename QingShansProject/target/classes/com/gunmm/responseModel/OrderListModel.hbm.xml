@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-9-6 22:17:41 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-9-18 10:31:44 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.OrderListModel" table="ORDERLISTMODEL">
         <id name="orderId" type="java.lang.String">
@@ -83,11 +83,17 @@
         <property name="distance" type="java.lang.Double">
             <column name="DISTANCE" />
         </property>
-        <property name="withdrawMoneyStatus" type="java.lang.String">
-            <column name="WITHDRAWMONEYSTATUS" />
+        <property name="masterSiteWithdrawStatus" type="java.lang.String">
+            <column name="MASTERSITEWITHDRAWSTATUS" />
         </property>
-        <property name="withdrawalId" type="java.lang.String">
-            <column name="WITHDRAWALID" />
+        <property name="masterSiteWithdrawId" type="java.lang.String">
+            <column name="MASTERSITEWITHDRAWID" />
+        </property>
+        <property name="driverSiteWithdrawStatus" type="java.lang.String">
+            <column name="DRIVERSITEWITHDRAWSTATUS" />
+        </property>
+        <property name="driverSiteWithdrawId" type="java.lang.String">
+            <column name="DRIVERSITEWITHDRAWID" />
         </property>
         <property name="freightFeePayType" type="java.lang.String">
             <column name="FREIGHTFEEPAYTYPE" />

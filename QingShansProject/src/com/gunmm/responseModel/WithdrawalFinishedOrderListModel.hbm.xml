@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-8-25 19:55:16 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-9-18 16:35:57 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.WithdrawalFinishedOrderListModel" table="WITHDRAWALFINISHEDORDERLISTMODEL">
         <id name="orderId" type="java.lang.String">
@@ -38,8 +38,11 @@
         <property name="masterBelongSiteType" type="java.lang.String">
             <column name="MASTERBELONGSITETYPE" />
         </property>
-        <property name="withdrawMoneyStatus" type="java.lang.String">
-            <column name="WITHDRAWMONEYSTATUS" />
+        <property name="masterSiteWithdrawStatus" type="java.lang.String">
+            <column name="MASTERSITEWITHDRAWSTATUS" />
+        </property>
+        <property name="driverSiteWithdrawStatus" type="java.lang.String">
+            <column name="DRIVERSITEWITHDRAWSTATUS" />
         </property>
         <property name="finishTime" type="java.util.Date">
             <column name="FINISHTIME" />

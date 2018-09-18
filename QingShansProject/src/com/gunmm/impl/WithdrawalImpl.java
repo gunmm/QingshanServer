@@ -39,19 +39,19 @@ public class WithdrawalImpl implements WithdrawalDao {
 					+ "convert((SELECT SUM(servicePrice) " + "FROM `order` "
 					+ "WHERE `order`.driverId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = superSite.siteId AND `user`.type = '6') "
 					+ "AND `order`.`status` = '4' " + "AND `order`.finishTime > '" + beginStr + "' "
-					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.withdrawMoneyStatus = '0'"
+					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.driverSiteWithdrawStatus = '0'"
 					+ ") * 0.3,decimal(12,2)) AS registerDriverFee," + "convert((SELECT SUM(servicePrice) "
 					+ "FROM `order` "
 					+ "WHERE `order`.createManId in (SELECT `user`.userId FROM `user` WHERE `user`.belongSiteId = superSite.siteId AND `user`.type = '5') "
 					+ "AND `order`.`STATUS` = '4' " + "AND `order`.finishTime > '" + beginStr + "' "
-					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.withdrawMoneyStatus = '0'"
+					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.masterSiteWithdrawStatus = '0'"
 					+ ") * 0.5,decimal(12,2)) AS registerGoodsManFee," +
 
 					"(SELECT SUM(registerDriverFeeChile) " + "FROM (" + "SELECT " + "childSite.SUPERSITEID,"
 					+ "convert((SELECT SUM(servicePrice) " + "FROM `order` "
 					+ "WHERE `order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = childSite.SITEID AND `user`.TYPE = '6') "
 					+ "AND `order`.`STATUS` = '4' " + "AND `order`.finishTime > '" + beginStr + "' "
-					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.withdrawMoneyStatus = '0'"
+					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.driverSiteWithdrawStatus = '0'"
 					+ ") * 0.3, decimal(12,2)) AS registerDriverFeeChile " + "FROM site childSite "
 					+ "WHERE childSite.SITETYPE = '2'" + ") temp " + "WHERE temp.SUPERSITEID = superSite.SITEID "
 					+ ") AS childDriverFee," +
@@ -60,7 +60,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 					+ "convert((SELECT SUM(servicePrice) " + "FROM `order` "
 					+ "WHERE `order`.CREATEMANID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = childSite.SITEID AND `user`.TYPE = '5') "
 					+ "AND `order`.`STATUS` = '4' " + "AND `order`.finishTime > '" + beginStr + "' "
-					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.withdrawMoneyStatus = '0'"
+					+ "AND `order`.finishTime < '" + endStr + "' " + "AND `order`.masterSiteWithdrawStatus = '0'"
 					+ ")* 0.5 ,decimal(12,2)) AS registerGoodsManFeeChild " + "FROM site childSite "
 					+ "WHERE childSite.SITETYPE = '2'" + ") temp " + "WHERE temp.SUPERSITEID = superSite.SITEID"
 					+ ") AS childGoodsManFee " +
@@ -149,12 +149,12 @@ public class WithdrawalImpl implements WithdrawalDao {
 					+ "WHERE `order`.DRIVERID in (SELECT `user`.USERID " + "FROM `user` "
 					+ "WHERE `user`.BELONGSITEID = site.SITEID AND `user`.TYPE = '6') " + "AND `order`.`STATUS` = '4' "
 					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
-					+ "AND `order`.withdrawMoneyStatus = '0'" + ") * 0.3 ,decimal(12,2)) AS registerDriverFee,"
+					+ "AND `order`.driverSiteWithdrawStatus = '0'" + ") * 0.3 ,decimal(12,2)) AS registerDriverFee,"
 					+ "convert((SELECT SUM(servicePrice) " + "FROM `order` "
 					+ "WHERE `order`.createManId in (SELECT `user`.USERID " + "FROM `user` "
 					+ "WHERE `user`.BELONGSITEID = site.SITEID AND `user`.TYPE = '5') " + "AND `order`.`STATUS` = '4' "
 					+ "AND `order`.finishTime > '" + beginStr + "' " + "AND `order`.finishTime < '" + endStr + "' "
-					+ "AND `order`.withdrawMoneyStatus = '0'" + ") * 0.5 ,decimal(12,2)) AS registerGoodsManFee "
+					+ "AND `order`.masterSiteWithdrawStatus = '0'" + ") * 0.5 ,decimal(12,2)) AS registerGoodsManFee "
 					+ "FROM site,`user` " + "WHERE site.SITETYPE = '2' AND site.SUPERSITEID = '" + siteId + "' "
 					+ "AND `user`.BELONGSITEID = site.SITEID AND `user`.TYPE = '3' AND site.siteName like '%"
 					+ filterSiteName + "%' AND `user`.nickname like '%" + filterLowsManName + "%') midTabel "
@@ -306,7 +306,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 
-			String statusSqlStr = "AND `order`.withdrawMoneyStatus = '0' ";
+			String statusSqlStr = "AND `order`.driverSiteWithdrawStatus = '0' ";
 			if ("1".equals(isChildSiteList)) {
 				statusSqlStr = "";
 			}
@@ -350,7 +350,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			String statusSqlStr = "AND `order`.withdrawMoneyStatus = '0' ";
+			String statusSqlStr = "AND `order`.driverSiteWithdrawStatus = '0' ";
 			if ("1".equals(isChildSiteList)) {
 				statusSqlStr = "";
 			}
@@ -390,7 +390,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			String statusSqlStr = "AND `order`.withdrawMoneyStatus = '0' ";
+			String statusSqlStr = "AND `order`.masterSiteWithdrawStatus = '0' ";
 			if ("1".equals(isChildSiteList)) {
 				statusSqlStr = "";
 			}
@@ -434,7 +434,7 @@ public class WithdrawalImpl implements WithdrawalDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 
-			String statusSqlStr = "AND `order`.withdrawMoneyStatus = '0' ";
+			String statusSqlStr = "AND `order`.masterSiteWithdrawStatus = '0' ";
 			if ("1".equals(isChildSiteList)) {
 				statusSqlStr = "";
 			}

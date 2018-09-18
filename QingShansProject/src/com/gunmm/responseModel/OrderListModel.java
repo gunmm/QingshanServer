@@ -43,8 +43,11 @@ public class OrderListModel {
 	private Double servicePrice = 0.0; //服务费
 	private Double distance = 0.0; //距离
 	
-	private String withdrawMoneyStatus; //提现状态 0：未提现  1：已提现
-	private String withdrawalId; //提现记录Id
+	private String masterSiteWithdrawStatus; //货主所属站点提现状态 0：未提现  1：已提现
+	private String masterSiteWithdrawId; //货主所属站点提现记录Id
+	
+	private String driverSiteWithdrawStatus; //司机所属站点提现状态 0：未提现  1：已提现
+	private String driverSiteWithdrawId; //司机所属站点提现记录Id
 	
 	private String freightFeePayType; //运费  支付方式   1:支付宝支付    2:微信支付   3:现金支付
 	private String freightFeePayStatus; //运费 支付状态   0:未支付   1:已支付
@@ -311,22 +314,38 @@ public class OrderListModel {
 		this.distance = distance;
 	}
 
-	public String getWithdrawMoneyStatus() {
-		return withdrawMoneyStatus;
-	}
-
-	public void setWithdrawMoneyStatus(String withdrawMoneyStatus) {
-		this.withdrawMoneyStatus = withdrawMoneyStatus;
-	}
-	
 	
 
-	public String getWithdrawalId() {
-		return withdrawalId;
+	public String getMasterSiteWithdrawStatus() {
+		return masterSiteWithdrawStatus;
 	}
 
-	public void setWithdrawalId(String withdrawalId) {
-		this.withdrawalId = withdrawalId;
+	public void setMasterSiteWithdrawStatus(String masterSiteWithdrawStatus) {
+		this.masterSiteWithdrawStatus = masterSiteWithdrawStatus;
+	}
+
+	public String getMasterSiteWithdrawId() {
+		return masterSiteWithdrawId;
+	}
+
+	public void setMasterSiteWithdrawId(String masterSiteWithdrawId) {
+		this.masterSiteWithdrawId = masterSiteWithdrawId;
+	}
+
+	public String getDriverSiteWithdrawStatus() {
+		return driverSiteWithdrawStatus;
+	}
+
+	public void setDriverSiteWithdrawStatus(String driverSiteWithdrawStatus) {
+		this.driverSiteWithdrawStatus = driverSiteWithdrawStatus;
+	}
+
+	public String getDriverSiteWithdrawId() {
+		return driverSiteWithdrawId;
+	}
+
+	public void setDriverSiteWithdrawId(String driverSiteWithdrawId) {
+		this.driverSiteWithdrawId = driverSiteWithdrawId;
 	}
 
 	public String getFreightFeePayType() {

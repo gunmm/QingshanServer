@@ -61,7 +61,8 @@ public class OrderController {
 		}
 
 		Order addOrder = JSONObject.parseObject(orderObject.toJSONString(), Order.class);
-		addOrder.setWithdrawMoneyStatus("0");
+		addOrder.setDriverSiteWithdrawStatus("0");
+		addOrder.setMasterSiteWithdrawStatus("0");
 		addOrder.setDriverWithdrawalStatus("0");
 		addOrder.setInvoiceId(invoiceId);
 

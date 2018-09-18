@@ -584,25 +584,33 @@ public class OrderDaoImpl implements OrderDao {
 	// 设置指定时间段内订单提现状态
 	public JSONObject setWithdrawal(String dataStr, String withdrawalId, String siteId) {
 		Transaction tx = null;
-		String sql = "";
+		String sql1 = "";
+		String sql2 = "";
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			String beginStr = dataStr + "-01 00:00:00";
 			String endStr = dataStr + "-31 23:59:59";
-			sql = "UPDATE `order` " + "SET `order`.WITHDRAWMONEYSTATUS='1',`order`.withdrawalId='" + withdrawalId + "' "
+			sql1 = "UPDATE `order` SET `order`.masterSiteWithdrawStatus='1',`order`.masterSiteWithdrawId='" + withdrawalId + "' "
 					+ "WHERE `order`.finishTime < '" + endStr + "' AND `order`.finishTime > '" + beginStr
-					+ "' AND `order`.withdrawMoneyStatus = '0' AND `order`.status = '4' " + "AND ("
-					+ "(`order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '" + siteId
-					+ "' AND `user`.TYPE = '6')) OR "
+					+ "' AND `order`.masterSiteWithdrawStatus = '0' AND `order`.status = '4' " + "AND ("
 					+ "(`order`.CREATEMANID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '" + siteId
-					+ "' AND `user`.TYPE = '5')) OR " + "(`order`.DRIVERID in (SELECT `user`.USERID " + "FROM `user` "
-					+ "WHERE `user`.TYPE = '6' " + "AND `user`.BELONGSITEID in" + "(SELECT site.SITEID " + "FROM site "
-					+ "WHERE site.superSiteId = '" + siteId + "' " + ") " + ") " + ") OR "
+					+ "' AND `user`.TYPE = '5')) OR "
 					+ "(`order`.CREATEMANID in (SELECT `user`.USERID " + "FROM `user` " + "WHERE `user`.TYPE = '5' "
 					+ "AND `user`.BELONGSITEID in " + "(SELECT site.SITEID " + "FROM site "
-					+ "WHERE site.superSiteId = '" + siteId + "' " + ") " + ") " + " ) " + " )";
-			SQLQuery query = session.createSQLQuery(sql);
+					+ "WHERE site.superSiteId = '" + siteId + "' " + ") " + ") " + " ) " + " ) ";
+			sql2 = "UPDATE `order` SET `order`.driverSiteWithdrawStatus='1',`order`.driverSiteWithdrawId='" + withdrawalId + "' "
+					+ "WHERE `order`.finishTime < '" + endStr + "' AND `order`.finishTime > '" + beginStr
+					+ "' AND `order`.driverSiteWithdrawStatus = '0' AND `order`.status = '4' " + "AND ("
+					+ "(`order`.DRIVERID in (SELECT `user`.USERID FROM `user` WHERE `user`.BELONGSITEID = '" + siteId
+					+ "' AND `user`.TYPE = '6')) OR " + "(`order`.DRIVERID in (SELECT `user`.USERID " + "FROM `user` "
+					+ "WHERE `user`.TYPE = '6' " + "AND `user`.BELONGSITEID in" + "(SELECT site.SITEID " + "FROM site "
+					+ "WHERE site.superSiteId = '" + siteId + "' " + ") " + ") " + ")  "
+					 + " )";
+			SQLQuery query = session.createSQLQuery(sql1);
+			query.executeUpdate();
+			
+			query = session.createSQLQuery(sql2);
 			query.executeUpdate();
 
 			tx.commit();
@@ -632,7 +640,7 @@ public class OrderDaoImpl implements OrderDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 
-			sql = "SELECT `order`.ORDERID,`order`.DISTANCE,`order`.PRICE,convert(`order`.servicePrice,decimal(12,2)) AS SERVICEPRICE,`order`.withdrawMoneyStatus,`order`.finishTime,"
+			sql = "SELECT `order`.ORDERID,`order`.DISTANCE,`order`.PRICE,convert(`order`.servicePrice,decimal(12,2)) AS SERVICEPRICE,`order`.masterSiteWithdrawStatus,`order`.driverSiteWithdrawStatus,`order`.finishTime,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName,"
 					+ "(SELECT site.SITENAME FROM site WHERE site.SITEID = (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID)) AS driverSiteName,"
 					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) AS driverSiteId,"
@@ -648,8 +656,8 @@ public class OrderDaoImpl implements OrderDao {
 					+ "WHEN (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.CREATEMANID) IN (SELECT site.SITEID FROM site WHERE site.SUPERSITEID = '"
 					+ siteId + "') THEN '子站点' " + "ELSE '其他站点' END " + ") AS masterBelongSiteType " +
 
-					"FROM `order` " + "WHERE `order`.WITHDRAWMONEYSTATUS = '1' AND `order`.withdrawalId = '"
-					+ withdrawalId + "' " + "ORDER BY `order`.finishTime desc " + "LIMIT " + page + "," + rows;
+					"FROM `order` " + "WHERE (`order`.driverSiteWithdrawId = '"+ withdrawalId + "' OR `order`.masterSiteWithdrawId = '"
+					+ withdrawalId + "') " + "ORDER BY `order`.finishTime desc " + "LIMIT " + page + "," + rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(WithdrawalFinishedOrderListModel.class);
@@ -681,7 +689,8 @@ public class OrderDaoImpl implements OrderDao {
 			tx = session.beginTransaction();
 
 			sql = "select count(*) " + "FROM `order` "
-					+ "WHERE `order`.WITHDRAWMONEYSTATUS = '1' AND `order`.withdrawalId = '" + withdrawalId + "' ";
+					+ "WHERE (`order`.driverSiteWithdrawStatus = '"+ withdrawalId + "' OR `order`.masterSiteWithdrawStatus = '"
+					+ withdrawalId + "') ";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			orderCount = ((BigInteger) query.uniqueResult()).longValue();
@@ -714,7 +723,7 @@ public class OrderDaoImpl implements OrderDao {
 			String beginStr = queryTime + "-01 00:00:00";
 			String endStr = queryTime + "-31 23:59:59";
 
-			sql = "SELECT `order`.ORDERID,`order`.DISTANCE,`order`.PRICE,convert(`order`.servicePrice,decimal(12,2)) AS SERVICEPRICE,`order`.WITHDRAWMONEYSTATUS,`order`.FINISHTIME,"
+			sql = "SELECT `order`.ORDERID,`order`.DISTANCE,`order`.PRICE,convert(`order`.servicePrice,decimal(12,2)) AS SERVICEPRICE,`order`.masterSiteWithdrawStatus,`order`.driverSiteWithdrawStatus,`order`.FINISHTIME,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName,"
 					+ "(SELECT site.SITENAME FROM site WHERE site.SITEID = (SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID)) AS driverSiteName,"
 					+ "(SELECT `user`.BELONGSITEID FROM `user` WHERE `user`.USERID = `order`.DRIVERID) AS driverSiteId,"
