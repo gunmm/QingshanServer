@@ -54,7 +54,7 @@ public class JPushUtils {
 					.setAudience(Audience.alias(receivers))
 					.setNotification(Notification.newBuilder()
 							.addPlatformNotification(IosNotification.newBuilder().setAlert(msg)
-									.addExtra("notifyType", notifyType).addExtras(param).setBadge(0)
+									.addExtra("notifyType", notifyType).addExtras(param).setBadge(0).setContentAvailable(true)
 									// .autoBadge()
 									.setSound("default").build())
 							.build())

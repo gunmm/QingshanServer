@@ -95,6 +95,9 @@ public class OrderListModelForSite {
 	
 	private String orderRoleBelong; //订单对应人员    1：货主是本站点   2：司机是本站点   3：货主司机都是本站点
 	
+	private String createManName; //发布人name
+	private Float createManScore; //发布人score
+	
 	public OrderListModelForSite() {
 
 	}
@@ -540,6 +543,24 @@ public class OrderListModelForSite {
 	public void setOrderRoleBelong(String orderRoleBelong) {
 		this.orderRoleBelong = orderRoleBelong;
 	}
+
+	public String getCreateManName() {
+		return createManName;
+	}
+
+	public void setCreateManName(String createManName) {
+		this.createManName = createManName;
+	}
+
+	public Float getCreateManScore() {
+		return createManScore;
+	}
+
+	public void setCreateManScore(Float createManScore) {
+		this.createManScore = createManScore;
+	}
+	
+	
 	
 	
 }

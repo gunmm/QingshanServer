@@ -150,7 +150,7 @@ public class OrderController {
 		}
 
 		OrderDao orderDao = new OrderDaoImpl();
-		OrderListModel orderListModel = orderDao.getBigOrderInfo(orderId);
+		OrderListModelForSite orderListModel = orderDao.getBigOrderInfo(orderId);
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderListModel);
 	}
 
@@ -363,7 +363,6 @@ public class OrderController {
 		User driver = userDao.getUserById(order.getDriverId());
 		Double score = driver.getScore() - 0.5 + commentStar/10;
 		driver.setScore(score);
-		driver.setUpdateTime(new Date());
 		userDao.updateUserInfo(driver);
 
 		if ("1".equals(result_code)) {
@@ -405,8 +404,6 @@ public class OrderController {
 		User master = userDao.getUserById(order.getCreateManId());
 		Double score = master.getScore() - 0.5 + driverCommentStar/10;
 		master.setScore(score);
-		master.setUpdateTime(new Date());
-		userDao.updateUserInfo(master);
 
 		if ("1".equals(result_code)) {
 			return JSONUtils.responseToJsonString("1", "", "评价成功！", "");
@@ -473,7 +470,6 @@ public class OrderController {
 		User user = userDao.getUserById(driverId);
 		user.setStatus("0");
 		user.setScore(user.getScore() - 0.1);
-		user.setUpdateTime(new Date());
 		userDao.updateUserInfo(user);
 
 		if ("1".equals(result_code)) {

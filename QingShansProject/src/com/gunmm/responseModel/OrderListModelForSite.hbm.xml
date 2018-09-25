@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-9-18 10:31:44 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-9-25 10:51:47 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.OrderListModelForSite" table="ORDERLISTMODELFORSITE">
         <id name="orderId" type="java.lang.String">
@@ -169,6 +169,12 @@
         </property>
         <property name="orderRoleBelong" type="java.lang.String">
             <column name="ORDERROLEBELONG" />
+        </property>
+        <property name="createManName" type="java.lang.String">
+            <column name="CREATEMANNAME" />
+        </property>
+        <property name="createManScore" type="java.lang.Float">
+            <column name="CREATEMANSCORE" />
         </property>
     </class>
 </hibernate-mapping>
