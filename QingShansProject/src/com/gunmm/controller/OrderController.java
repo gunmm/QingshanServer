@@ -404,6 +404,7 @@ public class OrderController {
 		User master = userDao.getUserById(order.getCreateManId());
 		Double score = master.getScore() - 0.5 + driverCommentStar/10;
 		master.setScore(score);
+		userDao.updateUserInfo(master);
 
 		if ("1".equals(result_code)) {
 			return JSONUtils.responseToJsonString("1", "", "评价成功！", "");
