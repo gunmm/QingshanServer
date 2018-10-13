@@ -461,8 +461,6 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public JSONObject addDriver(User user) {
 		// TODO Auto-generated method stub
-		user.setUserId(UUID.randomUUID().toString());
-
 		user.setCreateTime(new Date());
 		user.setUpdateTime(new Date());
 		user.setPassword("e10adc3949ba59abbe56e057f20f883e");

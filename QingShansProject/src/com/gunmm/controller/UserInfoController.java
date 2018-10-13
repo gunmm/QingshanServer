@@ -2,6 +2,7 @@ package com.gunmm.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -170,6 +171,7 @@ public class UserInfoController {
 
 		User user = new User();
 		user = JSONObject.parseObject(userObject.toJSONString(), User.class);
+		user.setDriverType("1");
 
 		UserDao userDao = new UserDaoImpl();
 		VehicleDao vehicleDao = new VehicleImpl();
@@ -218,6 +220,8 @@ public class UserInfoController {
 
 		user.setVehicleId(addVehicleId);
 
+		String userId = UUID.randomUUID().toString();
+		user.setUserId(userId);
 		JSONObject jsonObj2 = userDao.addDriver(user);
 		String result_code2 = jsonObj2.getString("result_code");
 
@@ -225,6 +229,8 @@ public class UserInfoController {
 			vehicleDao.deleteVehicle(addVehicleId);
 			return jsonObj2;
 		}
+		vehicle.setBindingDriverId(userId);
+		vehicleDao.updateVehicleInfo(vehicle);
 
 		return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 	}

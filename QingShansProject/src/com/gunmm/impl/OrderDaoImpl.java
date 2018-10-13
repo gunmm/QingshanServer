@@ -71,7 +71,7 @@ public class OrderDaoImpl implements OrderDao {
 					+ order.getSendLongitude()
 					+ "* 3.1415) / 180 - (vehicle.nowLongitude * 3.1415) / 180 ) ) * 6380 AS distance "
 					+ "FROM user,vehicle "
-					+ "where user.vehicleId = vehicle.vehicleId and user.type = '6' and user.status = '0' and user.blackStatus is NULL and user.score>0 and vehicle.vehicleType = '"
+					+ "where user.userId = vehicle.bindingDriverId and (user.status = '0' or user.status = '1') and user.blackStatus is NULL and user.score>0 and vehicle.vehicleType = '"
 					+ order.getCarType() + "' " + "and (ACOS(SIN((" + order.getSendLatitude()
 					+ " * 3.1415) / 180 ) *SIN((vehicle.nowLatitude * 3.1415) / 180 ) +COS((" + order.getSendLatitude()
 					+ " * 3.1415) / 180 ) * COS((vehicle.nowLatitude * 3.1415) / 180 ) *COS(("
@@ -115,9 +115,11 @@ public class OrderDaoImpl implements OrderDao {
 		} else {
 			UserDao userDao = new UserDaoImpl();
 			User user = userDao.getUserById(driverId);
-			if ("1".equals(user.getStatus()) && "1".equals(order.getType())) {
-				return JSONUtils.responseToJsonString("0", "", "不可重复接实时订单！", "");
-			}
+			
+			//注释掉之前只可接一个订单的代码
+//			if ("1".equals(user.getStatus()) && "1".equals(order.getType())) {
+//				return JSONUtils.responseToJsonString("0", "", "不可重复接实时订单！", "");
+//			}
 			order.setStatus("1");
 			order.setDriverId(driverId);
 			order.setUpdateTime(new Date());

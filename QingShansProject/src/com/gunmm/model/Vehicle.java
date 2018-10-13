@@ -10,6 +10,8 @@ public class Vehicle {
 	private String plateNumber;              // 车牌号
 	private String vehicleType;              // 车辆类型
 	
+	private String bindingDriverId;              // 车辆当前绑定司机ID
+	
 	private String gpsType;              // gps类型
 	private String gpsSerialNumber;              // gps序列号
 	
@@ -68,6 +70,19 @@ public class Vehicle {
 
 	public void setVehicleType(String vehicleType) {
 		this.vehicleType = vehicleType;
+	}
+	
+	
+	
+
+
+	public String getBindingDriverId() {
+		return bindingDriverId;
+	}
+
+
+	public void setBindingDriverId(String bindingDriverId) {
+		this.bindingDriverId = bindingDriverId;
 	}
 
 

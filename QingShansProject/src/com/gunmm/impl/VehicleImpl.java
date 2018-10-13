@@ -134,7 +134,7 @@ public class VehicleImpl implements VehicleDao {
 			tx = session.beginTransaction();
 			String sql1 = "SELECT vehicle.*,user.userId "
 					+ "FROM user,vehicle " 
-					+ "where user.vehicleId = vehicle.vehicleId ";
+					+ "where user.userId = vehicle.bindingDriverId ";
 
 			String sql2 = "";
 			if (siteId != null) {

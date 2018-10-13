@@ -22,8 +22,10 @@ public class User {
 	private String type;   // 0：超级管理员，1：平台管理员，2：平台投诉业务处理人员，3：站点管理员，4：站点业务员，5：货源方，6：司机
 	private String userIdCardNumber; //身份证
 	
+	private String driverType;//司机类型
+	private String superDriver;//父司机
 	
-	private String status; //状态       司机是否在拉货  1：在拉货 0：未拉货  2：下班
+	private String status; //状态       司机是否在拉货  1：在拉货 0：未拉货  2：下班  3：没车司机
 	private String vehicleId; //车辆id
 	private String vehicleType; //车辆类型
 	private String driverLicenseNumber; //司机驾驶证号
@@ -31,6 +33,8 @@ public class User {
 	private Double nowLatitude = 0.0; //司机目前纬度 
 	private Double nowLongitude = 0.0; //司机目前经度
 	private String bankCardNumber; //银行卡号
+	
+	
 	 
 	
 	private String mainGoodsName; //主要经营货物名称
@@ -50,11 +54,7 @@ public class User {
     
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date lastLoginTime;   //最后一次登录时间
-    
-    
-    
-    
-    
+        
     
 	public User() {
 
@@ -238,6 +238,43 @@ public class User {
 
 	public void setUserIdCardNumber(String userIdCardNumber) {
 		this.userIdCardNumber = userIdCardNumber;
+	}
+
+
+
+
+	
+
+
+	public String getDriverType() {
+		return driverType;
+	}
+
+
+
+
+
+
+	public void setDriverType(String driverType) {
+		this.driverType = driverType;
+	}
+
+
+
+
+
+
+	public String getSuperDriver() {
+		return superDriver;
+	}
+
+
+
+
+
+
+	public void setSuperDriver(String superDriver) {
+		this.superDriver = superDriver;
 	}
 
 
