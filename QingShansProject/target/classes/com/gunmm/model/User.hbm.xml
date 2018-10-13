@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-7-15 13:45:47 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-10-13 21:59:51 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.model.User" table="USER">
         <id name="userId" type="java.lang.String">
@@ -26,6 +26,7 @@
         <property name="belongSiteId" type="java.lang.String">
             <column name="BELONGSITEID" />
         </property>
+       
         <property name="loginPlate" type="java.lang.String">
             <column name="LOGINPLATE" />
         </property>
@@ -34,6 +35,12 @@
         </property>
         <property name="userIdCardNumber" type="java.lang.String">
             <column name="USERIDCARDNUMBER" />
+        </property>
+        <property name="driverType" type="java.lang.String">
+            <column name="DRIVERTYPE" />
+        </property>
+        <property name="superDriver" type="java.lang.String">
+            <column name="SUPERDRIVER" />
         </property>
         <property name="status" type="java.lang.String">
             <column name="STATUS" />
