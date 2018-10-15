@@ -54,35 +54,34 @@ public class UserInfoController {
 		String personImageUrl = object.getString("personImageUrl");
 		String nickname = object.getString("nickname");
 		String bankCardNumber = object.getString("bankCardNumber");
-		
+
 		if (personImageUrl != null) {
 			if (personImageUrl.length() > 0) {
 				user.setPersonImageUrl(personImageUrl);
 			}
 		}
-		
+
 		if (nickname != null) {
 			if (nickname.length() > 0) {
 				user.setNickname(nickname);
 			}
 		}
-		
+
 		if (bankCardNumber != null) {
 			if (bankCardNumber.length() > 0) {
 				user.setBankCardNumber(bankCardNumber);
 			}
 		}
-		
+
 		user.setUpdateTime(new Date());
 		return userDao.updateUserInfo(user);
 	}
-	
-	
-	//站点管理员修改银行卡获取验证码
+
+	// 站点管理员修改银行卡获取验证码
 	@RequestMapping("/getBankCode")
 	@ResponseBody
 	private JSONObject getBankCode(HttpServletRequest request) {
-		
+
 		JSONObject object = (JSONObject) request.getAttribute("body");
 		String userId = object.getString("userId");
 		UserDao userDao = new UserDaoImpl();
@@ -281,7 +280,6 @@ public class UserInfoController {
 		newUser.setUserIdCardNumber(user.getUserIdCardNumber());
 		newUser.setDriverLicenseNumber(user.getDriverLicenseNumber());
 		newUser.setDriverQualificationNumber(user.getDriverQualificationNumber());
-		newUser.setVehicleType(user.getVehicleType());
 
 		newUser.setUpdateTime(new Date());
 		return userDao.updateUserInfo(newUser);
@@ -297,9 +295,66 @@ public class UserInfoController {
 		String driverId = object.getString("driverId");
 
 		UserDao userDao = new UserDaoImpl();
-	
+
 		return userDao.deleteDriver(driverId);
 	}
+
+	// 车主绑定小司机
+	@RequestMapping("/binderSmallDriver")
+	@ResponseBody
+	private JSONObject binderSmallDriver(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+
+		String driverId = object.getString("driverId");
+		String smallDriverId = object.getString("smallDriverId");
+
+		UserDao userDao = new UserDaoImpl();
+		User driver = userDao.getUserById(driverId);
+		User smallDriver = userDao.getUserById(smallDriverId);
+		smallDriver.setVehicleId(driver.getVehicleId());
+		smallDriver.setBelongSiteId(driver.getBelongSiteId());
+		smallDriver.setSuperDriver(driverId);
+
+		VehicleDao vehicleDao = new VehicleImpl();
+		Vehicle vehicle = vehicleDao.getVehicleById(driver.getVehicleId());
+		vehicle.setBindingDriverId(smallDriverId);
+		JSONObject jsonObj = vehicleDao.updateVehicleInfo(vehicle);
+		String result_code = jsonObj.getString("result_code");
+		if (!"1".equals(result_code)) {
+			return jsonObj;
+		}
+		return userDao.updateUserInfo(smallDriver);
+	}
+
+	// 查询车主已绑定的小司机列表
+	@RequestMapping("/getDriverBindSmallDriverList")
+	@ResponseBody
+	private JSONObject getDriverBindSmallDriverList(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String driverId = object.getString("driverId");
+
+		UserDao userDao = new UserDaoImpl();
+		List<DriverListModel> driverList = userDao.getDriverBindSmallDriverList(driverId);
+
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", driverList);
+	}
+
+	// 查询未被绑定的小司机列表
+	@RequestMapping("/getUnBindSmallDriverList")
+	@ResponseBody
+	private JSONObject getUnBindSmallDriverList(HttpServletRequest request) {
+//		JSONObject object = (JSONObject) request.getAttribute("body");
+//		String rows = object.getString("rows");
+//		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+//		String filterDriverPhone = object.getString("filterDriverPhone");
+
+		UserDao userDao = new UserDaoImpl();
+		List<DriverListModel> driverList = userDao.getUnBindSmallDriverList();
+
+		return JSONUtils.responseToJsonString("1", "", "查询成功！", driverList);
+	}
+	
+	//删除绑定司机
 
 	// 查询货主列表
 	@RequestMapping("/getMasterList")

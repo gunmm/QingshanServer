@@ -21,7 +21,7 @@ public class JPushUtils {
 	
 	private static String  MASTER_SECRET = "98fe942caebcc6720890d684";
 	private static String  APP_KEY = "80be2f2358c278aa0f7def46";
-	private static boolean  IS_PRODUCTION = true;
+	private static boolean  IS_PRODUCTION = false;
 
 
 

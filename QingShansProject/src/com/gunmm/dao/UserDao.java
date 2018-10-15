@@ -52,6 +52,12 @@ public interface UserDao {
 	// 删除司机
 	public JSONObject deleteDriver(String driverId);
 
+	// 查询车主已绑定的小司机列表
+	public List<DriverListModel> getDriverBindSmallDriverList(String driverId);
+
+	// 查询未被绑定的小司机列表
+	public List<DriverListModel> getUnBindSmallDriverList();
+
 	// 查询的货主列表
 	public List<MasterListModel> getMasterListBySiteId(String page, String rows, String siteId, String filterMasterName,
 			String filterPhoneNumber);

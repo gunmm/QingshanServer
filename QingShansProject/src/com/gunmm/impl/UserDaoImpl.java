@@ -46,8 +46,12 @@ public class UserDaoImpl implements UserDao {
 		user.setCreateTime(new Date());
 		user.setUpdateTime(new Date());
 		user.setScore(5.0);
-		
-		// user.setDriverCertificationStatus("0");
+
+		if ("6".equals(user.getType())) {
+			user.setDriverType("2");
+			user.setStatus("3");
+		}
+
 		Transaction tx = null;
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
@@ -117,7 +121,7 @@ public class UserDaoImpl implements UserDao {
 
 					user.setSiteType(site.getSiteType());
 				}
-				
+
 				if (user.getBlackStatus() != null) {
 					return JSONUtils.responseToJsonString("0", "", "账户被拉黑！请联系客服", "");
 				}
@@ -130,7 +134,6 @@ public class UserDaoImpl implements UserDao {
 				user.setPassword(null);
 				return JSONUtils.responseToJsonString("1", "", "登陆成功！", user);
 			}
-			
 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -170,7 +173,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "登陆失败！", "");
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -191,7 +194,7 @@ public class UserDaoImpl implements UserDao {
 			query.setParameter(0, userId);
 			user = (User) query.uniqueResult();
 			tx.commit();
-			
+
 			return user;
 
 		} catch (Exception e) {
@@ -200,14 +203,13 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return null;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
 		}
 	}
-	
-	
+
 	// 根据id取user and driver
 	public DriverListModel getUserDriverById(String userId) {
 		DriverListModel user = null;
@@ -216,31 +218,22 @@ public class UserDaoImpl implements UserDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "SELECT user.*,"
-					+ "vehicle.plateNumber," 
-			        + "vehicle.gpsType," 
-			        + "vehicle.gpsSerialNumber," 
-			        + "vehicle.drivingCardNumber," 
-			        + "vehicle.vehicleRegistrationNumber," 
-			        + "vehicle.operationCertificateNumber," 
-			        + "vehicle.insuranceNumber," 
-			        + "vehicle.vehicleIdCardNumber," 
-			        + "vehicle.businessLicenseNumber," 
-			        + "vehicle.vehicleBrand," 
-			        + "vehicle.vehicleModel," 
-			        + "vehicle.vehiclePhoto," 
-			        + "vehicle.loadWeight," 
-			        + "vehicle.vehicleMakeDate," 
-			        + "(select siteName from site where user.belongSiteId = siteId) as belongSiteName,"
+			sql = "SELECT user.*," + "vehicle.vehicleType," + "vehicle.plateNumber," + "vehicle.gpsType,"
+					+ "vehicle.gpsSerialNumber," + "vehicle.drivingCardNumber," + "vehicle.vehicleRegistrationNumber,"
+					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
+					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
+					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight,"
+					+ "vehicle.vehicleMakeDate,"
+					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) AS gpsTypeName,"
-					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType limit 1) AS vehicleTypeName "
-					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
-					+ "where user.userId = '" + userId + "'" ;
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) AS vehicleTypeName "
+					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId " + "where user.userId = '"
+					+ userId + "'";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(DriverListModel.class);
 
-			user = (DriverListModel)query.uniqueResult();
+			user = (DriverListModel) query.uniqueResult();
 
 			tx.commit();
 			return user;
@@ -251,7 +244,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return user;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -282,7 +275,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return null;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -292,14 +285,13 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public JSONObject updateUserInfo(User user) {
 		// TODO Auto-generated method stub
-		
+
 		Transaction tx = null;
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.update(user);
 			tx.commit();
-			
 
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", user);
 		} catch (Exception e) {
@@ -308,7 +300,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", user);
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -327,14 +319,14 @@ public class UserDaoImpl implements UserDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			String sql1 = "SELECT user.*," + "vehicle.gpsType," + "vehicle.gpsSerialNumber,"
+			String sql1 = "SELECT user.*," + "vehicle.vehicleType," + "vehicle.gpsType," + "vehicle.gpsSerialNumber,"
 					+ "vehicle.drivingCardNumber," + "vehicle.vehicleRegistrationNumber,"
 					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
 					+ "vehicle.vehicleMakeDate,"
 
-					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType limit 1) as vehicleTypeName,"
+					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
 					+ "FROM user,vehicle " + "where user.vehicleId = vehicle.vehicleId and user.type = '6' "
@@ -357,7 +349,7 @@ public class UserDaoImpl implements UserDao {
 
 			driverList = query.list();
 			tx.commit();
-			
+
 			return driverList;
 
 		} catch (Exception e) {
@@ -366,7 +358,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return driverList;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -382,13 +374,14 @@ public class UserDaoImpl implements UserDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "SELECT user.*," + "vehicle.gpsType," + "vehicle.gpsSerialNumber," + "vehicle.drivingCardNumber,"
-					+ "vehicle.vehicleRegistrationNumber," + "vehicle.operationCertificateNumber,"
-					+ "vehicle.insuranceNumber," + "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber,"
-					+ "vehicle.vehicleBrand," + "vehicle.vehicleModel," + "vehicle.vehiclePhoto,"
-					+ "vehicle.loadWeight," + "vehicle.plateNumber," + "vehicle.vehicleMakeDate,"
+			sql = "SELECT user.*," + "vehicle.vehicleType," + "vehicle.gpsType," + "vehicle.gpsSerialNumber,"
+					+ "vehicle.drivingCardNumber," + "vehicle.vehicleRegistrationNumber,"
+					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
+					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
+					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
+					+ "vehicle.vehicleMakeDate,"
 
-					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = user.vehicleType limit 1) as vehicleTypeName,"
+					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
 					+ "FROM user,vehicle " + "where user.vehicleId = vehicle.vehicleId and user.userId = '" + driverId
@@ -399,7 +392,7 @@ public class UserDaoImpl implements UserDao {
 
 			driverListModel = (DriverListModel) query.uniqueResult();
 			tx.commit();
-			
+
 			return JSONUtils.responseToJsonString("1", "", "查询成功！", driverListModel);
 
 		} catch (Exception e) {
@@ -408,7 +401,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -442,7 +435,7 @@ public class UserDaoImpl implements UserDao {
 			driverCount = ((BigInteger) query.uniqueResult()).longValue();
 
 			tx.commit();
-			
+
 			return driverCount;
 
 		} catch (Exception e) {
@@ -451,7 +444,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return driverCount;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -482,7 +475,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -513,10 +506,99 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
+		}
+	}
+
+	// 查询车主已绑定的小司机列表
+	@SuppressWarnings("unchecked")
+	public List<DriverListModel> getDriverBindSmallDriverList(String driverId) {
+		List<DriverListModel> driverList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			sql = "SELECT user.*," + "vehicle.vehicleType," + "vehicle.gpsType," + "vehicle.gpsSerialNumber,"
+					+ "vehicle.drivingCardNumber," + "vehicle.vehicleRegistrationNumber,"
+					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
+					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
+					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
+					+ "vehicle.vehicleMakeDate,"
+
+					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
+					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
+					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
+					+ "FROM user,vehicle " + "where user.superDriver = '" + driverId + "' and user.vehicleId = vehicle.vehicleId ORDER BY updateTime desc ";
+			
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(DriverListModel.class);
+
+			driverList = query.list();
+			tx.commit();
+
+			return driverList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			tx.commit();
+			e.printStackTrace();
+			return driverList;
+		} finally {
+
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
+	// 查询未被绑定的小司机列表
+	@SuppressWarnings("unchecked")
+	public List<DriverListModel> getUnBindSmallDriverList() {
+		List<DriverListModel> driverList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			sql = "SELECT user.*," + "vehicle.vehicleType," + "vehicle.gpsType," + "vehicle.gpsSerialNumber,"
+					+ "vehicle.drivingCardNumber," + "vehicle.vehicleRegistrationNumber,"
+					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
+					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
+					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
+					+ "vehicle.vehicleMakeDate,"
+
+					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
+					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
+					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
+					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId " + "where user.type = '6' and user.driverType = '2' and user.superDriver IS NULL  "
+					+ "ORDER BY updateTime desc ";
+
+			
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(DriverListModel.class);
+
+			driverList = query.list();
+			tx.commit();
+
+			return driverList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			tx.commit();
+			e.printStackTrace();
+			return driverList;
+		} finally {
+
+			if (tx != null) {
+				tx = null;
+			}
+
 		}
 	}
 
@@ -559,7 +641,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return masterList;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -598,7 +680,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return driverCount;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -630,7 +712,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -662,7 +744,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -678,7 +760,7 @@ public class UserDaoImpl implements UserDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			session.delete(master);
-			
+
 			tx.commit();
 			if (master != null) {
 				return JSONUtils.responseToJsonString("1", "", "删除成功！", "");
@@ -691,7 +773,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -709,18 +791,17 @@ public class UserDaoImpl implements UserDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			String sql1 = "SELECT userId, phoneNumber, nickname, personImageUrl, belongSiteId, userIdCardNumber, createTime, updateTime "
-				    + "FROM user "
-					+ "where user.nickname like '%" + filterNickName
-					+ "%' and user.phoneNumber like '%" + filterPhoneNumber + "%' ";
+					+ "FROM user " + "where user.nickname like '%" + filterNickName + "%' and user.phoneNumber like '%"
+					+ filterPhoneNumber + "%' ";
 
 			String sql2 = "";
 			if (siteId != null) {
 				if (siteId.length() > 0) {
 					sql2 = "and user.belongSiteId = '" + siteId + "' and user.type = '4' ";
-				}else {
+				} else {
 					sql2 = "and user.type = '1' ";
 				}
-			}else {
+			} else {
 				sql2 = "and user.type = '1' ";
 			}
 
@@ -732,7 +813,7 @@ public class UserDaoImpl implements UserDao {
 
 			manageList = query.list();
 			tx.commit();
-			
+
 			return manageList;
 
 		} catch (Exception e) {
@@ -741,7 +822,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return manageList;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -757,17 +838,17 @@ public class UserDaoImpl implements UserDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			String sql1 = "select count(*) from user where user.nickname like '%"
-					+ filterNickName + "%' and user.phoneNumber like '%" + filterPhoneNumber + "%' ";
+			String sql1 = "select count(*) from user where user.nickname like '%" + filterNickName
+					+ "%' and user.phoneNumber like '%" + filterPhoneNumber + "%' ";
 
 			String sql2 = "";
 			if (siteId != null) {
 				if (siteId.length() > 0) {
 					sql2 = "and user.belongSiteId = '" + siteId + "' and user.type = '4' ";
-				}else {
+				} else {
 					sql2 = "and user.type = '1' ";
 				}
-			}else {
+			} else {
 				sql2 = "and user.type = '1' ";
 			}
 			sql = sql1 + sql2;
@@ -784,7 +865,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return manageCount;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -801,13 +882,12 @@ public class UserDaoImpl implements UserDao {
 		if (user.getBelongSiteId() != null) {
 			if (user.getBelongSiteId().length() > 0) {
 				user.setType("4");
-			}else {
+			} else {
 				user.setType("1");
 			}
-		}else {
+		} else {
 			user.setType("1");
 		}
-		
 
 		Transaction tx = null;
 		try {
@@ -822,13 +902,12 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
 		}
 	}
-
 
 	// 判断手机号是否已经注册
 	public boolean judgeUserByPhone(String phoneNumber) {
@@ -856,7 +935,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return true;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -890,7 +969,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return true;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -924,7 +1003,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			return true;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}

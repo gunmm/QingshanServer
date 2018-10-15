@@ -26,7 +26,6 @@ public class MasterListModel {
 	
 	private String status; //状态       司机是否在拉货  1：在拉货 0：未拉货  2：下班
 	private String vehicleId; //车辆id
-	private String vehicleType; //车辆类型
 	private String driverLicenseNumber; //司机驾驶证号
 	private String driverQualificationNumber; //司机资格证号
 	private Double nowLatitude = 0.0; //司机目前纬度 
@@ -155,15 +154,7 @@ public class MasterListModel {
 	public void setVehicleId(String vehicleId) {
 		this.vehicleId = vehicleId;
 	}
-
-	public String getVehicleType() {
-		return vehicleType;
-	}
-
-	public void setVehicleType(String vehicleType) {
-		this.vehicleType = vehicleType;
-	}
-
+	
 	public String getDriverLicenseNumber() {
 		return driverLicenseNumber;
 	}

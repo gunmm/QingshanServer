@@ -22,12 +22,11 @@ public class User {
 	private String type;   // 0：超级管理员，1：平台管理员，2：平台投诉业务处理人员，3：站点管理员，4：站点业务员，5：货源方，6：司机
 	private String userIdCardNumber; //身份证
 	
-	private String driverType;//司机类型
+	private String driverType;//司机类型 //1: 车主司机  2:小司机
 	private String superDriver;//父司机
 	
 	private String status; //状态       司机是否在拉货  1：在拉货 0：未拉货  2：下班  3：没车司机
 	private String vehicleId; //车辆id
-	private String vehicleType; //车辆类型
 	private String driverLicenseNumber; //司机驾驶证号
 	private String driverQualificationNumber; //司机资格证号
 	private Double nowLatitude = 0.0; //司机目前纬度 
@@ -312,25 +311,6 @@ public class User {
 	public void setVehicleId(String vehicleId) {
 		this.vehicleId = vehicleId;
 	}
-
-
-
-
-
-
-	public String getVehicleType() {
-		return vehicleType;
-	}
-
-
-
-
-
-
-	public void setVehicleType(String vehicleType) {
-		this.vehicleType = vehicleType;
-	}
-
 
 
 

@@ -44,9 +44,7 @@
         <property name="vehicleId" type="java.lang.String">
             <column name="VEHICLEID" />
         </property>
-        <property name="vehicleType" type="java.lang.String">
-            <column name="VEHICLETYPE" />
-        </property>
+       
         <property name="driverLicenseNumber" type="java.lang.String">
             <column name="DRIVERLICENSENUMBER" />
         </property>
