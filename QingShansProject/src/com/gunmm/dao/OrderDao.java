@@ -94,5 +94,9 @@ public interface OrderDao {
 
 	// 获取Mobile司机提现订单列表
 	public List<OrderListModel> getMobileDriverWithdrawaledOrderList(String driverWithdrawalId);
+	
+	
+	//查询要被车主去除的小司机有没有未提现的订单
+	public List<Order> getSmallDriverUnWithdrawedOrderList(String smallDriverId);
 
 }

@@ -1012,5 +1012,38 @@ public class OrderDaoImpl implements OrderDao {
 			}
 		}
 	}
+	
+	//查询要被车主去除的小司机有没有未提现的订单
+	@SuppressWarnings("unchecked")
+	public List<Order> getSmallDriverUnWithdrawedOrderList(String smallDriverId) {
+		List<Order> orderList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "SELECT * FROM `order` " +
+				  "WHERE `order`.driverId = '"+ smallDriverId +"' AND `order`.masterSiteWithdrawStatus = '0' AND `order`.driverSiteWithdrawStatus = '0'"; 
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(Order.class);
+
+			orderList = query.list();
+
+			tx.commit();
+			return orderList;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return orderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
 
 }

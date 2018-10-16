@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.gunmm.dao.OrderDao;
 import com.gunmm.dao.UserDao;
 import com.gunmm.dao.VehicleDao;
+import com.gunmm.impl.OrderDaoImpl;
 import com.gunmm.impl.UserDaoImpl;
 import com.gunmm.impl.VehicleImpl;
+import com.gunmm.model.Order;
 import com.gunmm.model.User;
 import com.gunmm.model.Vehicle;
 import com.gunmm.responseModel.DriverListModel;
@@ -343,18 +346,89 @@ public class UserInfoController {
 	@RequestMapping("/getUnBindSmallDriverList")
 	@ResponseBody
 	private JSONObject getUnBindSmallDriverList(HttpServletRequest request) {
-//		JSONObject object = (JSONObject) request.getAttribute("body");
-//		String rows = object.getString("rows");
-//		String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
-//		String filterDriverPhone = object.getString("filterDriverPhone");
+		// JSONObject object = (JSONObject) request.getAttribute("body");
+		// String rows = object.getString("rows");
+		// String page = Integer.toString((Integer.parseInt(object.getString("page")) *
+		// Integer.parseInt(rows)));
+		// String filterDriverPhone = object.getString("filterDriverPhone");
 
 		UserDao userDao = new UserDaoImpl();
 		List<DriverListModel> driverList = userDao.getUnBindSmallDriverList();
 
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", driverList);
 	}
-	
-	//删除绑定司机
+
+	// 车主绑定司机
+	@RequestMapping("/bigDriverBindSmallDriver")
+	@ResponseBody
+	private JSONObject bigDriverBindSmallDriver(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String bigDriverId = object.getString("bigDriverId");
+		String smallDriverId = object.getString("smallDriverId");
+
+		UserDao userDao = new UserDaoImpl();
+		User bigDriver = userDao.getUserById(bigDriverId);
+		User smallDriver = userDao.getUserById(smallDriverId);
+
+		smallDriver.setSuperDriver(bigDriverId);
+		smallDriver.setBelongSiteId(bigDriver.getBelongSiteId());
+		smallDriver.setVehicleId(bigDriver.getVehicleId());
+		smallDriver.setStatus("2");
+
+		return userDao.updateUserInfo(smallDriver);
+	}
+
+	// 车主指派司机
+	@RequestMapping("/bigDriverChangeVehicleDriver")
+	@ResponseBody
+	private JSONObject bigDriverChangeVehicleDriver(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String bigDriverId = object.getString("bigDriverId");
+		String smallDriverId = object.getString("smallDriverId");
+
+		UserDao userDao = new UserDaoImpl();
+		VehicleDao vehicleDao = new VehicleImpl();
+		
+		User bigDriver = userDao.getUserById(bigDriverId);
+		
+		Vehicle vehicle = vehicleDao.getVehicleById(bigDriver.getVehicleId());
+		vehicle.setBindingDriverId(smallDriverId);
+		return vehicleDao.updateVehicleInfo(vehicle);
+	}
+
+	// 删除绑定司机
+	@RequestMapping("/bigDriverDeleteSmallDriver")
+	@ResponseBody
+	private JSONObject bigDriverDeleteSmallDriver(HttpServletRequest request) {
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String bigDriverId = object.getString("bigDriverId");
+		String smallDriverId = object.getString("smallDriverId");
+		
+		//首先查订单列表有没有小司机对应的未提现的订单
+		OrderDao orderDao = new OrderDaoImpl();
+		List<Order> orderList = orderDao.getSmallDriverUnWithdrawedOrderList(smallDriverId);
+		if (orderList.size() > 0) {
+			return JSONUtils.responseToJsonString("0", "", "对应司机有未打款订单！", ""); 
+		}
+		
+		UserDao userDao = new UserDaoImpl();
+		VehicleDao vehicleDao = new VehicleImpl();
+		
+		User bigDriver = userDao.getUserById(bigDriverId);
+		User smallDriver = userDao.getUserById(smallDriverId);
+		Vehicle vehicle = vehicleDao.getVehicleById(bigDriver.getVehicleId());
+		
+		if (vehicle.getBindingDriverId().equals(smallDriverId)) {
+			vehicle.setBindingDriverId(bigDriverId);
+			vehicleDao.updateVehicleInfo(vehicle);
+		}
+		
+		smallDriver.setSuperDriver(null);
+		smallDriver.setBelongSiteId(null);
+		smallDriver.setStatus("3");
+		smallDriver.setVehicleId(null);
+		return userDao.updateUserInfo(smallDriver);
+	}
 
 	// 查询货主列表
 	@RequestMapping("/getMasterList")
