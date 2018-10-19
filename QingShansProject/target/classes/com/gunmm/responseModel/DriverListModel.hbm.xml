@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-7-19 21:50:37 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-10-17 22:18:46 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.responseModel.DriverListModel" table="DRIVERLISTMODEL">
         <id name="userId" type="java.lang.String">
@@ -124,6 +124,9 @@
         </property>
         <property name="vehicleMakeDate" type="java.lang.String">
             <column name="VEHICLEMAKEDATE" />
+        </property>
+        <property name="vehicleBindingDriverId" type="java.lang.String">
+            <column name="VEHICLEBINDINGDRIVERID" />
         </property>
         <property name="createTime" type="java.util.Date">
             <column name="CREATETIME" />

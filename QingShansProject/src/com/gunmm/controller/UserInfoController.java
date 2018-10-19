@@ -302,10 +302,10 @@ public class UserInfoController {
 		return userDao.deleteDriver(driverId);
 	}
 
-	// 车主绑定小司机
-	@RequestMapping("/binderSmallDriver")
+	// 车主给车辆指定司机
+	@RequestMapping("/pointDriverForVehicle")
 	@ResponseBody
-	private JSONObject binderSmallDriver(HttpServletRequest request) {
+	private JSONObject pointDriverForVehicle(HttpServletRequest request) {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 
 		String driverId = object.getString("driverId");
@@ -313,20 +313,13 @@ public class UserInfoController {
 
 		UserDao userDao = new UserDaoImpl();
 		User driver = userDao.getUserById(driverId);
-		User smallDriver = userDao.getUserById(smallDriverId);
-		smallDriver.setVehicleId(driver.getVehicleId());
-		smallDriver.setBelongSiteId(driver.getBelongSiteId());
-		smallDriver.setSuperDriver(driverId);
 
 		VehicleDao vehicleDao = new VehicleImpl();
 		Vehicle vehicle = vehicleDao.getVehicleById(driver.getVehicleId());
 		vehicle.setBindingDriverId(smallDriverId);
-		JSONObject jsonObj = vehicleDao.updateVehicleInfo(vehicle);
-		String result_code = jsonObj.getString("result_code");
-		if (!"1".equals(result_code)) {
-			return jsonObj;
-		}
-		return userDao.updateUserInfo(smallDriver);
+		
+		
+		return vehicleDao.updateVehicleInfo(vehicle);
 	}
 
 	// 查询车主已绑定的小司机列表

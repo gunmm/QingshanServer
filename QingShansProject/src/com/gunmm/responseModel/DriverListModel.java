@@ -62,6 +62,9 @@ public class DriverListModel {
 	private String loadWeight;              // 车辆载重
 	private String vehicleMakeDate;              // 车辆出厂日期
 	
+	private String vehicleBindingDriverId;              // 车辆当前绑定司机ID
+
+	
 	
 	
 	
@@ -453,6 +456,16 @@ public class DriverListModel {
 
 	public void setVehicleMakeDate(String vehicleMakeDate) {
 		this.vehicleMakeDate = vehicleMakeDate;
+	}
+
+
+	public String getVehicleBindingDriverId() {
+		return vehicleBindingDriverId;
+	}
+
+
+	public void setVehicleBindingDriverId(String vehicleBindingDriverId) {
+		this.vehicleBindingDriverId = vehicleBindingDriverId;
 	}
 	
 	

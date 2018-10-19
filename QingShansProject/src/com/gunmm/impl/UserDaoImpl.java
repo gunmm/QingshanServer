@@ -226,6 +226,7 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.vehicleMakeDate,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) AS gpsTypeName,"
+					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) AS vehicleTypeName "
 					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId " + "where user.userId = '"
 					+ userId + "'";
@@ -325,7 +326,7 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
 					+ "vehicle.vehicleMakeDate,"
-
+					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
@@ -380,7 +381,7 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
 					+ "vehicle.vehicleMakeDate,"
-
+					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
@@ -528,11 +529,11 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
 					+ "vehicle.vehicleMakeDate,"
-
+					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
-					+ "FROM user,vehicle " + "where user.superDriver = '" + driverId + "' and user.vehicleId = vehicle.vehicleId ORDER BY updateTime desc ";
+					+ "FROM user,vehicle " + "where (user.superDriver = '" + driverId + "' or user.userId = '" + driverId + "') and user.vehicleId = vehicle.vehicleId ORDER BY updateTime desc ";
 			
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(DriverListModel.class);
@@ -571,7 +572,7 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
 					+ "vehicle.vehicleMakeDate,"
-
+					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
