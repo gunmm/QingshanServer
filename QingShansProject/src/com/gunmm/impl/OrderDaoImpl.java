@@ -302,7 +302,7 @@ public class OrderDaoImpl implements OrderDao {
 					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId,vehicle "
-					+ "where `order`.driverId = '" + driverId + "' and user.vehicleId = vehicle.vehicleId " + condition
+					+ "where (`order`.driverId = '" + driverId + "' or `order`.driverId in (select userId from user where user.type = '6' and user.superDriver = '"+ driverId +"')) and user.vehicleId = vehicle.vehicleId " + condition
 					+ "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
@@ -823,8 +823,8 @@ public class OrderDaoImpl implements OrderDao {
 			tx = session.beginTransaction();
 			sql = "UPDATE `order` " + "SET `order`.driverWithdrawalStatus='" + driverWithdrawalStatus
 					+ "',`order`.driverWithdrawalId='" + driverWithdrawalId + "' "
-					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND `order`.DRIVERID = '"
-					+ driverId + "'";
+					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND (`order`.DRIVERID = '"
+					+ driverId + "' or `order`.driverId in (select userId from user where user.type = '6' and user.superDriver = '"+ driverId +"'))";
 			SQLQuery query = session.createSQLQuery(sql);
 			query.executeUpdate();
 
@@ -854,8 +854,8 @@ public class OrderDaoImpl implements OrderDao {
 			tx = session.beginTransaction();
 
 			sql = "SELECT SUM(price) from `order` "
-					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND `order`.DRIVERID = '"
-					+ driverId + "'";
+					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND (`order`.DRIVERID = '"
+					+ driverId + "' or `order`.DRIVERID in (select userId from user where user.type = '6' and user.superDriver = '"+ driverId +"'))";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			orderCount = (Double) query.uniqueResult();
@@ -889,8 +889,8 @@ public class OrderDaoImpl implements OrderDao {
 					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
-					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND `order`.DRIVERID = '"
-					+ driverId + "' " + "ORDER BY `order`.finishTime desc ";
+					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND (`order`.DRIVERID = '"
+					+ driverId + "' or `order`.DRIVERID in (select userId from user where user.type = '6' and user.superDriver = '"+ driverId +"')) " + "ORDER BY `order`.finishTime desc ";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(OrderListModel.class);

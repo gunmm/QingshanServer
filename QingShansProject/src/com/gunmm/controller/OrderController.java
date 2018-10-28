@@ -309,7 +309,10 @@ public class OrderController {
 		if ("4".equals(status)) {
 			UserDao userDao = new UserDaoImpl();
 			User driver = userDao.getUserById(order.getDriverId());
-			driver.setStatus("0");
+			if ("1".equals(driver.getStatus())) {
+				driver.setStatus("0");
+			}
+			
 			userDao.updateUserInfo(driver);
 			order.setFinishTime(new Date());
 		}

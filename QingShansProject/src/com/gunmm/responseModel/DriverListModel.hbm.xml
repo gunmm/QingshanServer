@@ -38,6 +38,13 @@
         <property name="userIdCardNumber" type="java.lang.String">
             <column name="USERIDCARDNUMBER" />
         </property>
+        
+         <property name="driverType" type="java.lang.String">
+            <column name="DRIVERTYPE" />
+        </property>
+        <property name="superDriver" type="java.lang.String">
+            <column name="SUPERDRIVER" />
+        </property>
         <property name="status" type="java.lang.String">
             <column name="STATUS" />
         </property>

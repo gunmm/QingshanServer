@@ -57,6 +57,10 @@ public class UserInfoController {
 		String personImageUrl = object.getString("personImageUrl");
 		String nickname = object.getString("nickname");
 		String bankCardNumber = object.getString("bankCardNumber");
+		String userIdCardNumber = object.getString("userIdCardNumber");
+		String driverLicenseNumber = object.getString("driverLicenseNumber");
+		String driverQualificationNumber = object.getString("driverQualificationNumber");
+
 
 		if (personImageUrl != null) {
 			if (personImageUrl.length() > 0) {
@@ -73,6 +77,24 @@ public class UserInfoController {
 		if (bankCardNumber != null) {
 			if (bankCardNumber.length() > 0) {
 				user.setBankCardNumber(bankCardNumber);
+			}
+		}
+		
+		if (userIdCardNumber != null) {
+			if (userIdCardNumber.length() > 0) {
+				user.setUserIdCardNumber(userIdCardNumber);
+			}
+		}
+		
+		if (driverLicenseNumber != null) {
+			if (driverLicenseNumber.length() > 0) {
+				user.setDriverLicenseNumber(driverLicenseNumber);
+			}
+		}
+		
+		if (driverQualificationNumber != null) {
+			if (driverQualificationNumber.length() > 0) {
+				user.setDriverQualificationNumber(driverQualificationNumber);
 			}
 		}
 

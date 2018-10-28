@@ -22,6 +22,9 @@ public class DriverListModel {
 	private String type;   // 0：超级管理员，1：平台管理员，2：平台投诉业务处理人员，3：站点管理员，4：站点业务员，5：货源方，6：司机
 	private String userIdCardNumber; //身份证
 	
+	private String driverType;//司机类型 //1: 车主司机  2:小司机
+	private String superDriver;//父司机
+	
 	
 	private String status; //状态       司机是否在拉货  1：在拉货 0：未拉货  2：下班
 	private String vehicleId; //车辆id
@@ -169,6 +172,28 @@ public class DriverListModel {
 	public void setUserIdCardNumber(String userIdCardNumber) {
 		this.userIdCardNumber = userIdCardNumber;
 	}
+	
+	
+
+	public String getDriverType() {
+		return driverType;
+	}
+
+
+	public void setDriverType(String driverType) {
+		this.driverType = driverType;
+	}
+
+
+	public String getSuperDriver() {
+		return superDriver;
+	}
+
+
+	public void setSuperDriver(String superDriver) {
+		this.superDriver = superDriver;
+	}
+
 
 	public String getStatus() {
 		return status;

@@ -224,6 +224,7 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight,"
 					+ "vehicle.vehicleMakeDate,"
+					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) AS gpsTypeName,"
 					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
@@ -385,7 +386,7 @@ public class UserDaoImpl implements UserDao {
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
-					+ "FROM user,vehicle " + "where user.vehicleId = vehicle.vehicleId and user.userId = '" + driverId
+					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId " + "where user.userId = '" + driverId
 					+ "'";
 
 			SQLQuery query = session.createSQLQuery(sql);
@@ -533,7 +534,7 @@ public class UserDaoImpl implements UserDao {
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
-					+ "FROM user,vehicle " + "where (user.superDriver = '" + driverId + "' or user.userId = '" + driverId + "') and user.vehicleId = vehicle.vehicleId ORDER BY updateTime desc ";
+					+ "FROM user,vehicle " + "where (user.superDriver = '" + driverId + "' or user.userId = '" + driverId + "') and user.vehicleId = vehicle.vehicleId ORDER BY nickname ";
 			
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(DriverListModel.class);
@@ -576,7 +577,8 @@ public class UserDaoImpl implements UserDao {
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
-					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId " + "where user.type = '6' and user.driverType = '2' and user.superDriver IS NULL  "
+					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId " 
+					+ "where user.type = '6' and user.driverType = '2' and user.superDriver IS NULL and user.NICKNAME IS NOT NULL and user.userIdCardNumber IS NOT NULL and user.driverLicenseNumber IS NOT NULL "
 					+ "ORDER BY updateTime desc ";
 
 			
