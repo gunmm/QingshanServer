@@ -48,7 +48,7 @@ public class UserController {
 			String type = body.getString("type");
 
 			UserDao userDao = new UserDaoImpl();
-			return userDao.getVerificationCode(phoneNumber, type);
+			return userDao.getVerificationCode(phoneNumber, type, "0");
 			
 		} catch (Exception e) {
 			// TODO: handle exception

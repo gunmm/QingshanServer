@@ -111,7 +111,7 @@ public class UserInfoController {
 		String userId = object.getString("userId");
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.getUserById(userId);
-		return userDao.getVerificationCode(user.getPhoneNumber(), "1");
+		return userDao.getVerificationCode(user.getPhoneNumber(), "1", "1");
 	}
 
 	// 司机上下班

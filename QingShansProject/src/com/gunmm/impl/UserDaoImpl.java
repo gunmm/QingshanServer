@@ -3,6 +3,7 @@ package com.gunmm.impl;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import org.hibernate.Query;
@@ -20,6 +21,7 @@ import com.gunmm.model.User;
 import com.gunmm.responseModel.DriverListModel;
 import com.gunmm.responseModel.ManageListModel;
 import com.gunmm.responseModel.MasterListModel;
+import com.gunmm.utils.ALMessageUtil;
 import com.gunmm.utils.JSONUtils;
 
 public class UserDaoImpl implements UserDao {
@@ -73,7 +75,7 @@ public class UserDaoImpl implements UserDao {
 
 	// 发送验证码
 	@Override
-	public JSONObject getVerificationCode(String phoneNumber, String type) {
+	public JSONObject getVerificationCode(String phoneNumber, String type, String msgModelType) {
 		// TODO Auto-generated method stub
 		if ("0".equals(type)) {
 			if (judgeUserByPhone(phoneNumber)) {
@@ -84,8 +86,22 @@ public class UserDaoImpl implements UserDao {
 				return JSONUtils.responseToJsonString("0", "", "电话号码未注册！", "");
 			}
 		}
-
-		return JSONUtils.responseToJsonString("1", "", "验证码发送成功！", "123456");
+		String verifyCode = String
+                .valueOf(new Random().nextInt(899999) + 100000);//生成短信验证码
+		ALMessageUtil util = new ALMessageUtil();
+		boolean sendResult = false;
+		if ("0".equals(msgModelType)) {
+			sendResult = util.sendRegisterOrGetPasswordMsg(phoneNumber, verifyCode);
+		}else if ("1".equals(msgModelType)) {
+			sendResult = util.sendChangeBankNumberMsg(phoneNumber, verifyCode);
+		}else if ("2".equals(msgModelType)) {
+			sendResult = util.sendOrderBeRobMsg(phoneNumber, verifyCode);
+		}
+		
+		if (sendResult) {
+			return JSONUtils.responseToJsonString("1", "", "验证码发送成功！", verifyCode);
+		}
+		return JSONUtils.responseToJsonString("0", "", "验证码发送失败！", "");
 	}
 
 	// 登陆
