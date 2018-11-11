@@ -61,7 +61,6 @@ public class UserInfoController {
 		String driverLicenseNumber = object.getString("driverLicenseNumber");
 		String driverQualificationNumber = object.getString("driverQualificationNumber");
 
-
 		if (personImageUrl != null) {
 			if (personImageUrl.length() > 0) {
 				user.setPersonImageUrl(personImageUrl);
@@ -79,19 +78,19 @@ public class UserInfoController {
 				user.setBankCardNumber(bankCardNumber);
 			}
 		}
-		
+
 		if (userIdCardNumber != null) {
 			if (userIdCardNumber.length() > 0) {
 				user.setUserIdCardNumber(userIdCardNumber);
 			}
 		}
-		
+
 		if (driverLicenseNumber != null) {
 			if (driverLicenseNumber.length() > 0) {
 				user.setDriverLicenseNumber(driverLicenseNumber);
 			}
 		}
-		
+
 		if (driverQualificationNumber != null) {
 			if (driverQualificationNumber.length() > 0) {
 				user.setDriverQualificationNumber(driverQualificationNumber);
@@ -112,6 +111,17 @@ public class UserInfoController {
 		UserDao userDao = new UserDaoImpl();
 		User user = userDao.getUserById(userId);
 		return userDao.getVerificationCode(user.getPhoneNumber(), "1", "1");
+	}
+
+	// 车主添加小司机  小司机获取验证码
+	@RequestMapping("/sendCodeToSmallDriver")
+	@ResponseBody
+	private JSONObject sendCodeToSmallDriver(HttpServletRequest request) {
+
+		JSONObject object = (JSONObject) request.getAttribute("body");
+		String phoneNumber = object.getString("phoneNumber");
+		UserDao userDao = new UserDaoImpl();
+		return userDao.getVerificationCode(phoneNumber, "1", "3");
 	}
 
 	// 司机上下班
@@ -339,8 +349,7 @@ public class UserInfoController {
 		VehicleDao vehicleDao = new VehicleImpl();
 		Vehicle vehicle = vehicleDao.getVehicleById(driver.getVehicleId());
 		vehicle.setBindingDriverId(smallDriverId);
-		
-		
+
 		return vehicleDao.updateVehicleInfo(vehicle);
 	}
 
@@ -403,9 +412,9 @@ public class UserInfoController {
 
 		UserDao userDao = new UserDaoImpl();
 		VehicleDao vehicleDao = new VehicleImpl();
-		
+
 		User bigDriver = userDao.getUserById(bigDriverId);
-		
+
 		Vehicle vehicle = vehicleDao.getVehicleById(bigDriver.getVehicleId());
 		vehicle.setBindingDriverId(smallDriverId);
 		return vehicleDao.updateVehicleInfo(vehicle);
@@ -418,26 +427,26 @@ public class UserInfoController {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 		String bigDriverId = object.getString("bigDriverId");
 		String smallDriverId = object.getString("smallDriverId");
-		
-		//首先查订单列表有没有小司机对应的未提现的订单
+
+		// 首先查订单列表有没有小司机对应的未提现的订单
 		OrderDao orderDao = new OrderDaoImpl();
 		List<Order> orderList = orderDao.getSmallDriverUnWithdrawedOrderList(smallDriverId);
 		if (orderList.size() > 0) {
-			return JSONUtils.responseToJsonString("0", "", "对应司机有未打款订单！", ""); 
+			return JSONUtils.responseToJsonString("0", "", "对应司机有未打款订单！", "");
 		}
-		
+
 		UserDao userDao = new UserDaoImpl();
 		VehicleDao vehicleDao = new VehicleImpl();
-		
+
 		User bigDriver = userDao.getUserById(bigDriverId);
 		User smallDriver = userDao.getUserById(smallDriverId);
 		Vehicle vehicle = vehicleDao.getVehicleById(bigDriver.getVehicleId());
-		
+
 		if (vehicle.getBindingDriverId().equals(smallDriverId)) {
 			vehicle.setBindingDriverId(bigDriverId);
 			vehicleDao.updateVehicleInfo(vehicle);
 		}
-		
+
 		smallDriver.setSuperDriver(null);
 		smallDriver.setBelongSiteId(null);
 		smallDriver.setStatus("3");

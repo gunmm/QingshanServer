@@ -12,7 +12,7 @@ public interface UserDao {
 	// 获取accesstoken
 	public String getaccessTokenById(String userId);
 
-	// 获取验证码  type: 0：注册  1：重置密码   msgModelType： 0：重置密码和注册模板  1：重置银行卡模板  2：订单被接单模板
+	// 获取验证码  type: 0：注册  1：重置密码   msgModelType： 0：重置密码和注册模板  1：重置银行卡模板  2：订单被接单模板 3:车主发验证码给小司机
 	public JSONObject getVerificationCode(String phoneNumber, String type, String msgModelType);
 
 	// 注册

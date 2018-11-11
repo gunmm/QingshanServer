@@ -96,6 +96,8 @@ public class UserDaoImpl implements UserDao {
 			sendResult = util.sendChangeBankNumberMsg(phoneNumber, verifyCode);
 		}else if ("2".equals(msgModelType)) {
 			sendResult = util.sendOrderBeRobMsg(phoneNumber, verifyCode);
+		}else if ("3".equals(msgModelType)) {
+			sendResult = util.sendBindSmallDriverMsg(phoneNumber, verifyCode);
 		}
 		
 		if (sendResult) {
