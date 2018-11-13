@@ -22,8 +22,7 @@ public class DictionaryImpl implements DictionaryDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			hql = "from DictionaryModel where name = '" + name + "' and cityName = '" + cityName + "'";
-
+			hql = "from DictionaryModel where name = '" + name + "' and cityName = '" + cityName + "' order by CAST(keyText as integer) asc";
 			Query query = session.createQuery(hql);
 			dictionaryList = query.list();
 

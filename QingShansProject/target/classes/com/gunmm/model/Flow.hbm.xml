@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-8-4 10:01:58 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-11-13 22:48:55 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.model.Flow" table="FLOW">
         <id name="flowId" type="java.lang.String">
@@ -16,6 +16,9 @@
         </property>
         <property name="driverId" type="java.lang.String">
             <column name="DRIVERID" />
+        </property>
+        <property name="createTime" type="java.util.Date" access="field">
+            <column name="CREATETIME" />
         </property>
     </class>
 </hibernate-mapping>

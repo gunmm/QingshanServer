@@ -125,7 +125,7 @@ public class VehicleImpl implements VehicleDao {
 
 	// 查询地图车辆列表
 	@SuppressWarnings("unchecked")
-	public List<VehicleListModel> getVehicleListBySiteId(String siteId) {
+	public List<VehicleListModel> getVehicleListBySiteId(String siteId, String phoneNumber, String plateNumber) {
 		List<VehicleListModel> vehicleList = null;
 		Transaction tx = null;
 		String sql = "";
@@ -143,9 +143,23 @@ public class VehicleImpl implements VehicleDao {
 				}
 
 			}
+			String sql3 = "";
+			if (phoneNumber != null) {
+				if (phoneNumber.length() > 0) {
+					sql3 = "and user.phoneNumber like '%"+phoneNumber+"%' ";
+				}
 
+			}
 			
-			sql = sql1 + sql2;
+			String sql4 = "";
+			if (plateNumber != null) {
+				if (plateNumber.length() > 0) {
+					sql4 = "and vehicle.plateNumber like '%"+plateNumber+"%' ";
+				}
+
+			}
+			
+			sql = sql1 + sql2 + sql3 + sql4;
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(VehicleListModel.class);
