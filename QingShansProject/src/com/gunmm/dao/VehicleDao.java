@@ -21,7 +21,7 @@ public interface VehicleDao {
 	public JSONObject updateVehicleInfo(Vehicle vehicle);
 	
 	//查询地图车辆列表
-	public List<VehicleListModel> getVehicleListBySiteId(String siteId);
+	public List<VehicleListModel> getVehicleListBySiteId(String siteId, String phoneNumber, String plateNumber);
 
 	// 判断车牌号是否被注册
 	public boolean judgeVehicleByPlateNumber(String plateNumber);

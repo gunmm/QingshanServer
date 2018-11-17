@@ -24,9 +24,12 @@ public class VehicleController {
 		JSONObject object = (JSONObject) request.getAttribute("body");
 
 		String siteId = object.getString("siteId");
+		String phoneNumber = object.getString("phoneNumber");
+		String plateNumber = object.getString("plateNumber");
+
 		
 		VehicleDao vehicleDao = new VehicleImpl();
-		List<VehicleListModel> vehicleList = vehicleDao.getVehicleListBySiteId(siteId);
+		List<VehicleListModel> vehicleList = vehicleDao.getVehicleListBySiteId(siteId, phoneNumber, plateNumber);
 
 		
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", vehicleList);

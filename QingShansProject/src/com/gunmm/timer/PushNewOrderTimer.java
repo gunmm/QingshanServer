@@ -60,6 +60,7 @@ public class PushNewOrderTimer extends TimerTask {
 							flow.setDriverId(nearbyDriverListModel.getUserId());
 							flow.setOrderId(order.getOrderId());
 							flow.setFlowStatus("0");
+							flow.setCreateTime(new Date());
 							flowDao.addFlow(flow);
 							count ++;
 						}
