@@ -20,6 +20,7 @@ import com.gunmm.model.Flow;
 import com.gunmm.model.Invoice;
 import com.gunmm.model.Order;
 import com.gunmm.model.User;
+import com.gunmm.model.Vehicle;
 import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
 import com.gunmm.responseModel.OrderListModelForSite;
@@ -115,11 +116,11 @@ public class OrderDaoImpl implements OrderDao {
 		} else {
 			UserDao userDao = new UserDaoImpl();
 			User user = userDao.getUserById(driverId);
-			
-			//注释掉之前只可接一个订单的代码
-//			if ("1".equals(user.getStatus()) && "1".equals(order.getType())) {
-//				return JSONUtils.responseToJsonString("0", "", "不可重复接实时订单！", "");
-//			}
+
+			// 注释掉之前只可接一个订单的代码
+			// if ("1".equals(user.getStatus()) && "1".equals(order.getType())) {
+			// return JSONUtils.responseToJsonString("0", "", "不可重复接实时订单！", "");
+			// }
 			order.setStatus("1");
 			order.setDriverId(driverId);
 			order.setUpdateTime(new Date());
@@ -302,8 +303,50 @@ public class OrderDaoImpl implements OrderDao {
 					+ "vehicle.nowLongitude," + "vehicle.nowLatitude," + "vehicle.plateNumber,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 					+ "FROM " + "`order` LEFT JOIN user ON `order`.driverId = user.userId,vehicle "
-					+ "where (`order`.driverId = '" + driverId + "' or `order`.driverId in (select userId from user where user.type = '6' and user.superDriver = '"+ driverId +"')) and user.vehicleId = vehicle.vehicleId " + condition
-					+ "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
+					+ "where (`order`.driverId = '" + driverId
+					+ "' or `order`.driverId in (select userId from user where user.type = '6' and user.superDriver = '"
+					+ driverId + "')) and user.vehicleId = vehicle.vehicleId " + condition + "ORDER BY updateTime desc "
+					+ "LIMIT " + page + "," + rows;
+
+			SQLQuery query = session.createSQLQuery(sql);
+			query.addEntity(OrderListModel.class);
+
+			orderList = query.list();
+
+			tx.commit();
+			return orderList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return orderList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<OrderListModel> getDriverFindOrderListByDriverId(Vehicle vehicle, String page, String rows) {
+		List<OrderListModel> orderList = null;
+		Transaction tx = null;
+		String sql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+
+			sql = "SELECT `order`.*," + "null AS nickname," + "null AS phoneNumber," + "null AS personImageUrl," + "null AS score,"
+					+ "null AS nowLongitude," + "null AS nowLatitude," + "null AS plateNumber,"
+					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
+					+ "FROM " + "`order` "
+					+ "where `order`.status = '0' "
+					+ "ORDER BY (ACOS(SIN((" + vehicle.getNowLatitude() + 
+					 " * 3.1415) / 180 ) * SIN((`order`.sendLatitude * 3.1415) / 180 ) +COS((" + vehicle.getNowLatitude() + 
+					 " * 3.1415) / 180 ) * COS((`order`.sendLatitude * 3.1415) / 180 ) *COS((" + 
+					 vehicle.getNowLongitude() + "* 3.1415) / 180 - (`order`.sendLongitude * 3.1415) / 180 ) ) * 6380) "
+					+ "LIMIT " + page + "," + rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(OrderListModel.class);
@@ -824,7 +867,9 @@ public class OrderDaoImpl implements OrderDao {
 			sql = "UPDATE `order` " + "SET `order`.driverWithdrawalStatus='" + driverWithdrawalStatus
 					+ "',`order`.driverWithdrawalId='" + driverWithdrawalId + "' "
 					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND (`order`.DRIVERID = '"
-					+ driverId + "' or `order`.driverId in (select userId from user where user.type = '6' and user.superDriver = '"+ driverId +"'))";
+					+ driverId
+					+ "' or `order`.driverId in (select userId from user where user.type = '6' and user.superDriver = '"
+					+ driverId + "'))";
 			SQLQuery query = session.createSQLQuery(sql);
 			query.executeUpdate();
 
@@ -855,7 +900,9 @@ public class OrderDaoImpl implements OrderDao {
 
 			sql = "SELECT SUM(price) from `order` "
 					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND (`order`.DRIVERID = '"
-					+ driverId + "' or `order`.DRIVERID in (select userId from user where user.type = '6' and user.superDriver = '"+ driverId +"'))";
+					+ driverId
+					+ "' or `order`.DRIVERID in (select userId from user where user.type = '6' and user.superDriver = '"
+					+ driverId + "'))";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			orderCount = (Double) query.uniqueResult();
@@ -890,7 +937,9 @@ public class OrderDaoImpl implements OrderDao {
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
 					+ "FROM `order` LEFT JOIN user ON `order`.driverId = user.userId LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 					+ "WHERE `order`.`STATUS` = '4' AND `order`.FREIGHTFEEPAYSTATUS = '1' AND `order`.driverWithdrawalStatus = '0' AND (`order`.DRIVERID = '"
-					+ driverId + "' or `order`.DRIVERID in (select userId from user where user.type = '6' and user.superDriver = '"+ driverId +"')) " + "ORDER BY `order`.finishTime desc ";
+					+ driverId
+					+ "' or `order`.DRIVERID in (select userId from user where user.type = '6' and user.superDriver = '"
+					+ driverId + "')) " + "ORDER BY `order`.finishTime desc ";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(OrderListModel.class);
@@ -1012,8 +1061,8 @@ public class OrderDaoImpl implements OrderDao {
 			}
 		}
 	}
-	
-	//查询要被车主去除的小司机有没有未提现的订单
+
+	// 查询要被车主去除的小司机有没有未提现的订单
 	@SuppressWarnings("unchecked")
 	public List<Order> getSmallDriverUnWithdrawedOrderList(String smallDriverId) {
 		List<Order> orderList = null;
@@ -1023,8 +1072,8 @@ public class OrderDaoImpl implements OrderDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 
-			sql = "SELECT * FROM `order` " +
-				  "WHERE `order`.driverId = '"+ smallDriverId +"' AND `order`.masterSiteWithdrawStatus = '0' AND `order`.driverSiteWithdrawStatus = '0'"; 
+			sql = "SELECT * FROM `order` " + "WHERE `order`.driverId = '" + smallDriverId
+					+ "' AND `order`.masterSiteWithdrawStatus = '0' AND `order`.driverSiteWithdrawStatus = '0'";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(Order.class);
@@ -1044,6 +1093,5 @@ public class OrderDaoImpl implements OrderDao {
 			}
 		}
 	}
-
 
 }

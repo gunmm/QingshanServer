@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2018-9-1 10:37:16 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2018-12-22 19:12:07 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.model.DictionaryModel" table="DICTIONARYMODEL">
         <id name="recordId" type="java.lang.String">
             <column name="RECORDID" />
             <generator class="assigned" />
         </id>
+        <property name="width" type="java.lang.String">
+            <column name="WIDTH" />
+        </property>
         <property name="name" type="java.lang.String">
             <column name="NAME" />
         </property>
@@ -31,6 +34,24 @@
         </property>
         <property name="startDistance" type="java.lang.Double">
             <column name="STARTDISTANCE" />
+        </property>
+        <property name="size" type="java.lang.String">
+            <column name="SIZE" />
+        </property>
+        <property name="weight" type="java.lang.String">
+            <column name="WEIGHT" />
+        </property>
+        <property name="axis" type="java.lang.String">
+            <column name="AXIS" />
+        </property>
+        <property name="height" type="java.lang.String">
+            <column name="HEIGHT" />
+        </property>
+        <property name="load" type="java.lang.String">
+            <column name="LOAD" />
+        </property>
+        <property name="strategy" type="java.lang.String">
+            <column name="STRATEGY" />
         </property>
     </class>
 </hibernate-mapping>

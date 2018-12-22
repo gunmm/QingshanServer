@@ -72,6 +72,34 @@ public class VehicleImpl implements VehicleDao {
 		}
 	}
 
+	// 根据bindingDriverId取车辆
+	public Vehicle getVehicleByBindingDriverId(String bindingDriverId) {
+		Transaction tx = null;
+		Vehicle vehicle = null;
+		String hql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			hql = "from Vehicle where bindingDriverId = ?";
+			Query query = session.createQuery(hql);
+			query.setParameter(0, bindingDriverId);
+			vehicle = (Vehicle) query.uniqueResult();
+
+			tx.commit();
+			return vehicle;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return null;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
 	// 删除车辆
 	public JSONObject deleteVehicle(String vehicleId) {
 		Transaction tx = null;
@@ -132,8 +160,7 @@ public class VehicleImpl implements VehicleDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			String sql1 = "SELECT vehicle.*,user.userId "
-					+ "FROM user,vehicle " 
+			String sql1 = "SELECT vehicle.*,user.userId " + "FROM user,vehicle "
 					+ "where user.userId = vehicle.bindingDriverId ";
 
 			String sql2 = "";
@@ -146,19 +173,19 @@ public class VehicleImpl implements VehicleDao {
 			String sql3 = "";
 			if (phoneNumber != null) {
 				if (phoneNumber.length() > 0) {
-					sql3 = "and user.phoneNumber like '%"+phoneNumber+"%' ";
+					sql3 = "and user.phoneNumber like '%" + phoneNumber + "%' ";
 				}
 
 			}
-			
+
 			String sql4 = "";
 			if (plateNumber != null) {
 				if (plateNumber.length() > 0) {
-					sql4 = "and vehicle.plateNumber like '%"+plateNumber+"%' ";
+					sql4 = "and vehicle.plateNumber like '%" + plateNumber + "%' ";
 				}
 
 			}
-			
+
 			sql = sql1 + sql2 + sql3 + sql4;
 
 			SQLQuery query = session.createSQLQuery(sql);

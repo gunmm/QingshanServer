@@ -16,13 +16,16 @@ import com.gunmm.dao.InvoiceDao;
 import com.gunmm.dao.OrderDao;
 import com.gunmm.dao.PushDao;
 import com.gunmm.dao.UserDao;
+import com.gunmm.dao.VehicleDao;
 import com.gunmm.impl.InvoiceImpl;
 import com.gunmm.impl.OrderDaoImpl;
 import com.gunmm.impl.PushDaoImpl;
 import com.gunmm.impl.UserDaoImpl;
+import com.gunmm.impl.VehicleImpl;
 import com.gunmm.model.Invoice;
 import com.gunmm.model.Order;
 import com.gunmm.model.User;
+import com.gunmm.model.Vehicle;
 import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
 import com.gunmm.responseModel.OrderListModelForSite;
@@ -176,7 +179,7 @@ public class OrderController {
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);
 	}
 
-	// PC端获取司机订单列表
+	// PC端获取货主订单列表
 	@RequestMapping("/getPcMasterOrderList")
 	@ResponseBody
 	private JSONObject getPcMasterOrderList(HttpServletRequest request) {
@@ -218,6 +221,28 @@ public class OrderController {
 
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);
 	}
+	
+	// 司机可抢订单列表   找货源
+		@RequestMapping("/getFindOrderList")
+		@ResponseBody
+		private JSONObject getFindOrderList(HttpServletRequest request) {
+			JSONObject object = (JSONObject) request.getAttribute("body");
+			String userId = object.getString("userId");
+			VehicleDao vehicleDao = new VehicleImpl();
+			Vehicle vehicle = vehicleDao.getVehicleByBindingDriverId(userId);
+
+			String rows = object.getString("rows");
+			String page = Integer.toString((Integer.parseInt(object.getString("page")) * Integer.parseInt(rows)));
+
+			if (userId == null) {
+				return JSONUtils.responseToJsonString("0", "参数错误！", "查询失败！", "");
+			}
+
+			OrderDao orderDao = new OrderDaoImpl();
+			List<OrderListModel> orderList = orderDao.getDriverFindOrderListByDriverId(vehicle, page, rows);
+
+			return JSONUtils.responseToJsonString("1", "", "查询成功！", orderList);
+		}
 
 	// PC端获取司机订单列表
 	@RequestMapping("/getPcDriverOrderList")

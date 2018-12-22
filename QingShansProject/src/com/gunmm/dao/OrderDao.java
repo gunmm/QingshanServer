@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gunmm.model.Order;
+import com.gunmm.model.Vehicle;
 import com.gunmm.responseModel.NearbyDriverListModel;
 import com.gunmm.responseModel.OrderListModel;
 import com.gunmm.responseModel.OrderListModelForSite;
@@ -34,6 +35,9 @@ public interface OrderDao {
 	// 查询司机订单列表
 	public List<OrderListModel> getDriverOrderListByDriverId(String driverId, String page, String rows,
 			String condition);
+
+	// 司机可抢订单列表   找货源
+	public List<OrderListModel> getDriverFindOrderListByDriverId(Vehicle vehicle, String page, String rows);
 
 	// 查询司机订单总条数
 	public Long getDriverOrderCount(String driverId);
@@ -94,9 +98,8 @@ public interface OrderDao {
 
 	// 获取Mobile司机提现订单列表
 	public List<OrderListModel> getMobileDriverWithdrawaledOrderList(String driverWithdrawalId);
-	
-	
-	//查询要被车主去除的小司机有没有未提现的订单
+
+	// 查询要被车主去除的小司机有没有未提现的订单
 	public List<Order> getSmallDriverUnWithdrawedOrderList(String smallDriverId);
 
 }
