@@ -62,10 +62,10 @@ public class Order {
 	
 
 	private String commentContent;  //货主评价内容
-	private Double commentStar;  //货主评价星级
+	private Double commentStar = 0.0;  //货主评价星级
 	
 	private String driverCommentContent;  //货主评价内容
-	private Double driverCommentStar;  //货主评价星级
+	private Double driverCommentStar = 0.0;  //货主评价星级
 
 
 	

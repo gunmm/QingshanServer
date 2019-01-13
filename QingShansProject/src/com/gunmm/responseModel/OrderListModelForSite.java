@@ -58,11 +58,11 @@ public class OrderListModelForSite {
 	
 
 	private String commentContent;  //评价内容
-	private Double commentStar;  //评价星级
+	private Double commentStar = 0.0;  //评价星级
 
 
 	private String driverCommentContent;  //货主评价内容
-	private Double driverCommentStar;  //货主评价星级
+	private Double driverCommentStar = 0.0;  //货主评价星级
 	
 	private String siteComplaintId;  //站点投诉ID
 	private String driverComplaintId; //司机投诉ID

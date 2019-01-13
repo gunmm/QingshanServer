@@ -9,7 +9,7 @@ public class Site {
 	private String siteId;              // 站点id 
 	private String superSiteId;        // 父站点id 
 	private String superSiteName;        // 父站点名字   表里没有的字段  hbm文件中也没有   仅用来返回数据
-	private Double childToSuperRate;   // 子站点给父站点的分成率 
+	private Double childToSuperRate = 0.0;   // 子站点给父站点的分成率 
 	private String siteType;           // 站点类型    用来区分是否是子站点1：父站点  2：子站点
 	private String siteCheckStatus;    // 站点审核状态 0:未审核  1:审核通过  2:审核未通过
 	private String siteName;           // 站点名称

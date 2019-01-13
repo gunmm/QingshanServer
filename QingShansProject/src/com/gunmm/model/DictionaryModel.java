@@ -9,9 +9,9 @@ public class DictionaryModel {
 	private String description;
 	private String cityName;
 	
-	private Double startPrice; //起步价
-	private Double unitPrice;  //单价
-	private Double startDistance;  //起步距离
+	private Double startPrice = 0.0; //起步价
+	private Double unitPrice = 0.0;  //单价
+	private Double startDistance = 0.0;  //起步距离
 	
 	private String width; //车辆宽度
 	private String size;   //车辆大小  1：微型车，2：轻型车（默认值），3：中型车，4：重型车
