@@ -490,7 +490,7 @@ public class OrderController {
 		OrderDao orderDao = new OrderDaoImpl();
 		Order order = orderDao.getOrderById(orderId);
 		order.setStatus("0");
-		order.setTimeOut(null);
+		order.setTimeOut(new Date(0));
 		order.setDriverId(null);
 		JSONObject jsonObj = orderDao.updateOrderInfo(order);
 

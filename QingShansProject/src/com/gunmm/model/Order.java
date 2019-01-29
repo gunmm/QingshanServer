@@ -73,19 +73,19 @@ public class Order {
 	private String driverComplaintId; //司机投诉ID
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date createTime; // 创建时间
+	private Date createTime = new Date(0); // 创建时间
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date updateTime; //更新时间  
+	private Date updateTime = new Date(0); //更新时间  
 
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date appointTime; //预约时间  
+	private Date appointTime = new Date(0); //预约时间  
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date finishTime; //完成时间  
+	private Date finishTime = new Date(0); //完成时间  
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date timeOut; //超时时间  
+	private Date timeOut = new Date(0); //超时时间  
 
 	
 	

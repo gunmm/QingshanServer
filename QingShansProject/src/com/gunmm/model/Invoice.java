@@ -21,10 +21,10 @@ public class Invoice {
 	private String expressNumber;    //运单号
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date createTime; // 创建时间
+	private Date createTime = new Date(0); // 创建时间
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date updateTime; //更新时间  
+	private Date updateTime = new Date(0); //更新时间  
 	
 	public Invoice() {
 

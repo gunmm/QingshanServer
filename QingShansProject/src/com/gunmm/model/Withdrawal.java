@@ -14,7 +14,7 @@ public class Withdrawal {
 	private String oprationUserId;           //操作员Id
 	private String periodOfTime;           //提现的时间段
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date withdrawalTime;   //提现时间
+	private Date withdrawalTime = new Date(0);   //提现时间
 	
 	
 	public Withdrawal() {

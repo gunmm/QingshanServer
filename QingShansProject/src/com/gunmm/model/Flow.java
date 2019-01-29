@@ -11,7 +11,7 @@ public class Flow {
 	private String driverId;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date createTime; // 创建时间
+	private Date createTime = new Date(0);; // 创建时间
 	
 	
 	public Flow() {

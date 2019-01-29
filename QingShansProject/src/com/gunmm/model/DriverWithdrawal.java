@@ -14,7 +14,7 @@ public class DriverWithdrawal {
 	
 	private String driverWithdrawalStatus; //司机提现状态 0：已提交  1：管理员已打款
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date driverWithdrawalTime;   //提现时间
+	private Date driverWithdrawalTime = new Date(0);   //提现时间
 	
 	
 	

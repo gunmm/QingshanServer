@@ -577,7 +577,7 @@ public class OrderDaoImpl implements OrderDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			sql = "update `order`,user "
-					+ "set `order`.status = '0',`order`.timeOut = NULL,`order`.driverId = NULL,`order`.driverId = NULL,user.status = '0',user.score = user.score-0.1 "
+					+ "set `order`.status = '0',`order`.timeOut = '1970-01-01 08:00:00',`order`.driverId = NULL,`order`.driverId = NULL,user.status = '0',user.score = user.score-0.1 "
 					+ "where `order`.status = '1' AND NOW() >= `order`.timeOut and user.userId = order.driverId ";
 			SQLQuery query = session.createSQLQuery(sql);
 			query.executeUpdate();
