@@ -27,7 +27,9 @@ public class DictionaryController {
 		
 		DictionaryDao dictionaryDao = new DictionaryImpl();
 		List<DictionaryModel> dictionaryList = dictionaryDao.getDictionaryListByName(name, cityName);
-		
+		if (dictionaryList.size() == 0) {
+			dictionaryList = dictionaryDao.getDictionaryListByName("车辆类型", "北京市");
+		}
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", dictionaryList);
 	}
 	
