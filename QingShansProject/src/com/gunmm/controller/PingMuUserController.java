@@ -49,8 +49,9 @@ public class PingMuUserController {
 			PingMuUser pingMuUserMid = pingMuUserDao.getUserById(pingMuUser.getDeviceId());
 			if (pingMuUserMid != null) {
 				pingMuUser.setCreateTime(pingMuUserMid.getCreateTime());
+				return pingMuUserDao.updateUser(pingMuUser);
 			}
-			return pingMuUserDao.updateUser(pingMuUser);
+			return JSONUtils.responseToJsonString("0", "", "操作失败！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
