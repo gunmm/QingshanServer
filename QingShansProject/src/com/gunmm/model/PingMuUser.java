@@ -14,6 +14,8 @@ public class PingMuUser {
 	private String model;
 	private String localizedModel;
 	private String systemName;	
+	private String deviceString;	
+
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date createTime = new Date(0);   //创建时间
@@ -103,6 +105,14 @@ public class PingMuUser {
 
 	public void setSystemName(String systemName) {
 		this.systemName = systemName;
+	}
+
+	public String getDeviceString() {
+		return deviceString;
+	}
+
+	public void setDeviceString(String deviceString) {
+		this.deviceString = deviceString;
 	}
 	
 	
