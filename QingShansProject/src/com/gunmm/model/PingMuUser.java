@@ -15,7 +15,8 @@ public class PingMuUser {
 	private String localizedModel;
 	private String systemName;	
 	private String deviceString;	
-
+	private String signValue;	
+	private String lastUrl;	
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date createTime = new Date(0);   //创建时间
@@ -114,9 +115,21 @@ public class PingMuUser {
 	public void setDeviceString(String deviceString) {
 		this.deviceString = deviceString;
 	}
-	
-	
-	
-	
 
+	public String getSignValue() {
+		return signValue;
+	}
+
+	public void setSignValue(String signValue) {
+		this.signValue = signValue;
+	}
+
+	public String getLastUrl() {
+		return lastUrl;
+	}
+
+	public void setLastUrl(String lastUrl) {
+		this.lastUrl = lastUrl;
+	}
+		
 }

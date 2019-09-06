@@ -59,6 +59,31 @@ public class PingMuUserController {
 		}
 	}
 	
+	@RequestMapping("/updataPushUrl")
+	@ResponseBody
+	private JSONObject updataPushUrl(HttpServletRequest request) {
+		try {
+			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+			httpServletRequest.setCharacterEncoding("utf-8");
+			byte[] data = JSONUtils.readInputStream(httpServletRequest);
+			JSONObject body = JSONUtils.getBody(data);
+			String lastUrl = body.getString("lastUrl");
+			String deviceId = body.getString("deviceId");
+			
+			PingMuUserDao pingMuUserDao = new PingMuImpl();
+			PingMuUser pingMuUser = pingMuUserDao.getUserById(deviceId);
+			if (pingMuUser != null) {
+				pingMuUser.setLastUrl(lastUrl);
+				return pingMuUserDao.updateUser(pingMuUser);
+			}
+			return JSONUtils.responseToJsonString("0", "", "操作失败！", "");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
+		}
+	}
+	
 	// 查询
 	@RequestMapping("/getBaiDuDictionary")
 	@ResponseBody
