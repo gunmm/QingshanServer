@@ -94,9 +94,8 @@ public class PingMuImpl implements PingMuUserDao {
 	@Override
 	public String getBaiduString() {
 		// TODO Auto-generated method stub
-		// TODO Auto-generated method stub
 		Transaction tx = null;
-		String valueText = null;
+		String valueText = "0";
 		String hql = "";
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
@@ -112,7 +111,7 @@ public class PingMuImpl implements PingMuUserDao {
 			// TODO: handle exception
 			e.printStackTrace();
 			tx.commit();
-			return valueText;
+			return "0";
 		} finally {
 			if (tx != null) {
 				tx = null;

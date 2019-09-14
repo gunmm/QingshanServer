@@ -87,10 +87,13 @@ public class PingMuUserController {
 	// 查询
 	@RequestMapping("/getBaiDuDictionary")
 	@ResponseBody
-	private JSONObject getOrderCarList(HttpServletRequest request) {
+	private JSONObject getBaiDuDictionary(HttpServletRequest request) {
 		PingMuUserDao pingMuUserDao = new PingMuImpl();
 		String baiduString = "0";
-		baiduString = pingMuUserDao.getBaiduString();
+		String queryString = pingMuUserDao.getBaiduString();
+		if (queryString != null) {
+			baiduString = queryString;
+		}
 		return JSONUtils.responseToJsonString("1", "", "查询成功！", baiduString);
 	}
 
