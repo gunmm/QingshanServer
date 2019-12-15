@@ -12,9 +12,9 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 
-	<listener>
+<!-- 	<listener>
 		<listener-class>com.gunmm.listener.TimeListener</listener-class>
-	</listener>
+	</listener> -->
 
 
 	<servlet-mapping>

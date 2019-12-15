@@ -19,7 +19,7 @@ public class User {
 	
 	private String loginPlate; //登陆平台
 
-	private String type;   // 0：超级管理员，1：平台管理员，2：平台投诉业务处理人员，3：站点管理员，4：站点业务员，5：货源方，6：司机
+	private String type;   // 0：超级管理员，1：平台管理员，2：平台投诉业务处理人员，3：站点管理员，4：站点业务员，5：货源方，6：司机 7：检测管理员，8：检测员工
 	private String userIdCardNumber; //身份证
 	
 	private String driverType;//司机类型 //1: 车主司机  2:小司机

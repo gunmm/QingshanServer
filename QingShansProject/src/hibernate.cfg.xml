@@ -3,9 +3,9 @@
 		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
 		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-    <session-factory>
-        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-		<property name="connection.url">jdbc:mysql:///qingshangroup?useUnicode=true&amp;characterEncoding=UTF-8</property>
+	<session-factory>
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="connection.url">jdbc:mysql:///qingshangroup?useUnicode=true&amp;autoReconnect=true&amp;characterEncoding=UTF-8</property>
 		<property name="connection.username">root</property>
 		<property name="connection.password">root</property>
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
@@ -17,12 +17,14 @@
 
 		<!-- 新建表 还是 更新表 -->
 		<property name="hbm2ddl.auto">none</property>
-		
+
 		<property name="hibernate.current_session_context_class">thread</property>
-		
+
 		<mapping resource="com/gunmm/model/PingMuUser.hbm.xml" />
-		
-		<mapping resource="com/gunmm/model/DriverWithdrawal.hbm.xml" />	
+
+		<mapping resource="com/gunmm/model/JianceCheck.hbm.xml" />
+
+		<mapping resource="com/gunmm/model/DriverWithdrawal.hbm.xml" />
 		<mapping resource="com/gunmm/model/Withdrawal.hbm.xml" />
 		<mapping resource="com/gunmm/model/Order.hbm.xml" />
 		<mapping resource="com/gunmm/model/MessageModel.hbm.xml" />
@@ -30,29 +32,46 @@
 		<mapping resource="com/gunmm/model/Invoice.hbm.xml" />
 		<mapping resource="com/gunmm/model/User.hbm.xml" />
 		<mapping resource="com/gunmm/model/DictionaryModel.hbm.xml" />
-	    
-	    <mapping resource="com/gunmm/model/Site.hbm.xml" />
-	    <mapping resource="com/gunmm/model/Complain.hbm.xml" />
-	    <mapping resource="com/gunmm/model/Vehicle.hbm.xml" />
-	    <mapping resource="com/gunmm/model/City.hbm.xml" />
-	    
-	    
-	    <mapping resource="com/gunmm/responseModel/OrderListModelForSite.hbm.xml" />	
-	    <mapping resource="com/gunmm/responseModel/ComplainResModel.hbm.xml" />	
-	    <mapping resource="com/gunmm/responseModel/InvoiceResModel.hbm.xml" />	
-	    <mapping resource="com/gunmm/responseModel/DriverWithdrawalListModel.hbm.xml" />	
-	    <mapping resource="com/gunmm/responseModel/WithdrawalFinishedOrderListModel.hbm.xml" />	
-	    <mapping resource="com/gunmm/responseModel/WithDrawalFinishedListModel.hbm.xml" />	
-	    <mapping resource="com/gunmm/responseModel/WithdrawalOrderListModel.hbm.xml" />	
-		<mapping resource="com/gunmm/responseModel/WithdrawalListModel.hbm.xml" />		
-		<mapping resource="com/gunmm/responseModel/OrderListModel.hbm.xml" />
-		<mapping resource="com/gunmm/responseModel/SiteListModel.hbm.xml" />
-		<mapping resource="com/gunmm/responseModel/DriverListModel.hbm.xml" />
-		<mapping resource="com/gunmm/responseModel/MasterListModel.hbm.xml" />
-		<mapping resource="com/gunmm/responseModel/ManageListModel.hbm.xml" /> 
-		<mapping resource="com/gunmm/responseModel/VehicleListModel.hbm.xml" /> 
-		<mapping resource="com/gunmm/responseModel/NearbyDriverListModel.hbm.xml" />
-		
-		
-    </session-factory>
+
+		<mapping resource="com/gunmm/model/Site.hbm.xml" />
+		<mapping resource="com/gunmm/model/Complain.hbm.xml" />
+		<mapping resource="com/gunmm/model/Vehicle.hbm.xml" />
+		<mapping resource="com/gunmm/model/City.hbm.xml" />
+
+
+		<mapping
+			resource="com/gunmm/responseModel/OrderListModelForSite.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/ComplainResModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/InvoiceResModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/DriverWithdrawalListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/WithdrawalFinishedOrderListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/WithDrawalFinishedListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/WithdrawalOrderListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/WithdrawalListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/OrderListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/SiteListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/DriverListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/MasterListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/ManageListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/VehicleListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/NearbyDriverListModel.hbm.xml" />
+		<mapping
+			resource="com/gunmm/responseModel/JianceListModel.hbm.xml" />
+
+
+	</session-factory>
 </hibernate-configuration>

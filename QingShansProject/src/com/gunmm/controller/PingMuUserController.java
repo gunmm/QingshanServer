@@ -26,8 +26,11 @@ public class PingMuUserController {
 			JSONObject body = JSONUtils.getBody(data);
 			PingMuUser pingMuUser = new PingMuUser();
 			pingMuUser = JSONObject.parseObject(body.toJSONString(), PingMuUser.class);
-			PingMuUserDao pingMuUserDao = new PingMuImpl();
-			return pingMuUserDao.addUser(pingMuUser);
+			if (pingMuUser != null) {
+				PingMuUserDao pingMuUserDao = new PingMuImpl();
+				return pingMuUserDao.addUser(pingMuUser);
+			}
+			return JSONUtils.responseToJsonString("0", "", "pingMuUser is null！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -51,7 +54,7 @@ public class PingMuUserController {
 				pingMuUser.setCreateTime(pingMuUserMid.getCreateTime());
 				return pingMuUserDao.updateUser(pingMuUser);
 			}
-			return JSONUtils.responseToJsonString("0", "", "操作失败！", "");
+			return JSONUtils.responseToJsonString("0", "", "pingMuUserMid is null！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

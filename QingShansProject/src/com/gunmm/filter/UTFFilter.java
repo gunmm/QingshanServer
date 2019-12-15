@@ -101,6 +101,7 @@ public class UTFFilter implements Filter {
 				return;
 			}
 		}else {
+			System.out.println(dateString + httpServletRequest.getServletPath());
 			chain.doFilter(request, response);
 		}
 		

@@ -99,4 +99,34 @@ public class DictionaryImpl implements DictionaryDao {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DictionaryModel> getDictionaryListByName(String name) {
+		// TODO Auto-generated method stub
+		List<DictionaryModel> dictionaryList = null;
+		Transaction tx = null;
+		String hql = "";
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			hql = "from DictionaryModel where name = '" + name + "' order by CAST(keyText as integer) asc";
+			Query query = session.createQuery(hql);
+			dictionaryList = query.list();
+
+			tx.commit();
+			return dictionaryList;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			tx.commit();
+			return dictionaryList;
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+
+		}
+	}
+
 }

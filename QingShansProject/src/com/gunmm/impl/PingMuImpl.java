@@ -28,9 +28,8 @@ public class PingMuImpl implements PingMuUserDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
 			e.printStackTrace();
-			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "addUser PingMuImpl操作失败！", "");
 		} finally {
 			if (tx != null) {
 				tx = null;
@@ -51,9 +50,8 @@ public class PingMuImpl implements PingMuUserDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
 			e.printStackTrace();
-			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "updateUserImp操作失败！", "");
 		} finally {
 			if (tx != null) {
 				tx = null;
@@ -80,7 +78,6 @@ public class PingMuImpl implements PingMuUserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
 			e.printStackTrace();
 			return null;
 		} finally {
@@ -110,7 +107,6 @@ public class PingMuImpl implements PingMuUserDao {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			tx.commit();
 			return "0";
 		} finally {
 			if (tx != null) {

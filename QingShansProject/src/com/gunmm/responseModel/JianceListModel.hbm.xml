@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2019-12-15 15:19:07 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.responseModel.JianceListModel" table="JIANCELISTMODEL">
+        <id name="recordId" type="java.lang.String">
+            <column name="RECORDID" />
+            <generator class="assigned" />
+        </id>
+        <property name="plateNumberType" type="java.lang.String">
+            <column name="PLATENUMBERTYPE" />
+        </property>
+        <property name="plateNumberString" type="java.lang.String">
+            <column name="PLATENUMBERSTRING" />
+        </property>
+        <property name="plateNumber" type="java.lang.String">
+            <column name="PLATENUMBER" />
+        </property>
+        <property name="masterName" type="java.lang.String">
+            <column name="MASTERNAME" />
+        </property>
+        <property name="masterPhone" type="java.lang.String">
+            <column name="MASTERPHONE" />
+        </property>
+        <property name="carSkeletonNumber" type="java.lang.String">
+            <column name="CARSKELETONNUMBER" />
+        </property>
+        <property name="carDistance" type="java.lang.String">
+            <column name="CARDISTANCE" />
+        </property>
+        <property name="masterAddress" type="java.lang.String">
+            <column name="MASTERADDRESS" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
+        <property name="createTime" type="java.util.Date">
+            <column name="CREATETIME" />
+        </property>
+        <property name="updataTime" type="java.util.Date">
+            <column name="UPDATATIME" />
+        </property>
+        <property name="checkTime" type="java.util.Date">
+            <column name="CHECKTIME" />
+        </property>
+    </class>
+</hibernate-mapping>
