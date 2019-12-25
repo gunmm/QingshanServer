@@ -34,7 +34,14 @@ public class ComplainImpl implements ComplainDao {
 			return JSONUtils.responseToJsonString("1", "", "添加成功！", complain.getRecordId());
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
 		} finally {
@@ -63,7 +70,14 @@ public class ComplainImpl implements ComplainDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 			return null;
 		} finally {
@@ -87,7 +101,14 @@ public class ComplainImpl implements ComplainDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", "");
 		} finally {
@@ -132,8 +153,15 @@ public class ComplainImpl implements ComplainDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
 		} finally {
 			if (tx != null) {
@@ -145,7 +173,7 @@ public class ComplainImpl implements ComplainDao {
 
 	// 查询投诉列表
 	@SuppressWarnings("unchecked")
-	public List<ComplainResModel> getComplainList(String type,String manageStatus, String page, String rows) {
+	public List<ComplainResModel> getComplainList(String type, String manageStatus, String page, String rows) {
 		List<ComplainResModel> complainResModelList = null;
 		Transaction tx = null;
 		String sql = "";
@@ -165,8 +193,8 @@ public class ComplainImpl implements ComplainDao {
 					+ "ELSE `order`.createManId END ) AS complainedManId "
 
 					+ "FROM complain,`order`  where (CASE WHEN (complain.type = '1') THEN `order`.siteComplaintId = complain.recordId ELSE `order`.driverComplaintId = complain.recordId END)"
-					+ "AND complain.type like '%" + type + "%' AND complain.manageStatus like '%" + manageStatus + "%' " + "ORDER BY updateTime desc " + "LIMIT " + page + ","
-					+ rows;
+					+ "AND complain.type like '%" + type + "%' AND complain.manageStatus like '%" + manageStatus + "%' "
+					+ "ORDER BY updateTime desc " + "LIMIT " + page + "," + rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(ComplainResModel.class);
@@ -178,8 +206,15 @@ public class ComplainImpl implements ComplainDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return complainResModelList;
 		} finally {
 			if (tx != null) {
@@ -198,7 +233,8 @@ public class ComplainImpl implements ComplainDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 
-			sql = "SELECT  count(*)" + "FROM complain,`order`  where (CASE WHEN (complain.type = '1') THEN `order`.siteComplaintId = complain.recordId ELSE `order`.driverComplaintId = complain.recordId END)"
+			sql = "SELECT  count(*)"
+					+ "FROM complain,`order`  where (CASE WHEN (complain.type = '1') THEN `order`.siteComplaintId = complain.recordId ELSE `order`.driverComplaintId = complain.recordId END)"
 					+ "AND complain.type like '%" + type + "%' AND complain.manageStatus like '%" + manageStatus + "%'";
 
 			SQLQuery query = session.createSQLQuery(sql);
@@ -209,8 +245,15 @@ public class ComplainImpl implements ComplainDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return complainCount;
 		} finally {
 			if (tx != null) {

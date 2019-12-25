@@ -23,8 +23,15 @@ public class FlowImpl implements FlowDao {
 			tx.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 		} finally {
 			if (tx != null) {
 				tx = null;
@@ -43,28 +50,33 @@ public class FlowImpl implements FlowDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 		} finally {
 			if (tx != null) {
 				tx = null;
 			}
 		}
 	}
-	
-	//根据订单Id查询所有相关flow
-    @SuppressWarnings("unchecked")
+
+	// 根据订单Id查询所有相关flow
+	@SuppressWarnings("unchecked")
 	public List<Flow> getFlowListByOrderId(String orderId, String driverId) {
-    	List<Flow> flowList = null;
+		List<Flow> flowList = null;
 		Transaction tx = null;
 		String sql = "";
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "select * " 
-			    + "from flow "
-			    + "where flow.orderId = '"+ orderId +"' and flow.driverId = '"+ driverId +"'";
-					
+			sql = "select * " + "from flow " + "where flow.orderId = '" + orderId + "' and flow.driverId = '" + driverId
+					+ "'";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(Flow.class);
@@ -76,15 +88,22 @@ public class FlowImpl implements FlowDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return flowList;
 		} finally {
 			if (tx != null) {
 				tx = null;
 			}
 		}
-    }
+	}
 
 	// 根据订单Id将所有相关flow状态修改
 	public void setFlowStatusByOrderId(String orderId, String status) {
@@ -93,18 +112,24 @@ public class FlowImpl implements FlowDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "update flow " + 
-				  "set flow.flowStatus = '"+ status +"' " + 
-				  "where flow.orderId = '"+ orderId +"' and flow.flowStatus = '0'";
+			sql = "update flow " + "set flow.flowStatus = '" + status + "' " + "where flow.orderId = '" + orderId
+					+ "' and flow.flowStatus = '0'";
 			SQLQuery query = session.createSQLQuery(sql);
 			query.executeUpdate();
-			
+
 			tx.commit();
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 		} finally {
 			if (tx != null) {
 				tx = null;
@@ -132,8 +157,15 @@ public class FlowImpl implements FlowDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {

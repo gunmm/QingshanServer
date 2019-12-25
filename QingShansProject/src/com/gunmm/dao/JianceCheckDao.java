@@ -18,9 +18,8 @@ public interface JianceCheckDao {
 		public JianceCheck getJianceCheckById(String recordId);
 		
 		//查询检测单列表
-		public List<JianceListModel> getJianceCheckList(String page, String rows, String masterPhone, String carPlateNumber, String isDaiBan);
+		public List<JianceListModel> getJianceCheckList(String page, String rows, String masterPhone, String carPlateNumber, String isDaiBan, String queryTime);
 		
 		//查询检测单条数isDaiBan
-		public Long getJianceCheckCount(String masterPhone, String carPlateNumber, String isDaiBan);
-
+		public Long getJianceCheckCount(String masterPhone, String carPlateNumber, String isDaiBan, String queryTime);
 }

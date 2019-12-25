@@ -80,8 +80,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalList;
 		} finally {
 			if (tx != null) {
@@ -111,8 +118,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalCount;
 		} finally {
 			if (tx != null) {
@@ -170,8 +184,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalList;
 		} finally {
 			if (tx != null) {
@@ -202,8 +223,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalCount;
 		} finally {
 			if (tx != null) {
@@ -253,8 +281,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 			return withdrawalList;
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalList;
 		} finally {
 			if (tx != null) {
@@ -285,8 +320,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalCount;
 		} finally {
 			if (tx != null) {
@@ -330,8 +372,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalOrderList;
 		} finally {
 			if (tx != null) {
@@ -369,8 +418,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalCount;
 		} finally {
 			if (tx != null) {
@@ -414,8 +470,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalOrderList;
 		} finally {
 			if (tx != null) {
@@ -453,8 +516,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalCount;
 		} finally {
 			if (tx != null) {
@@ -474,8 +544,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", withdrawal.getWithdrawalId());
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
 		} finally {
 			if (tx != null) {
@@ -496,8 +573,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", "");
 		} finally {
 			if (tx != null) {
@@ -524,8 +608,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {
@@ -552,8 +643,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
 			if (tx != null) {
@@ -564,21 +662,22 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 	// 查询已提现列表
 	@SuppressWarnings("unchecked")
-	public List<WithDrawalFinishedListModel> getFinishedWithDrawalList(String bankcardNumber, String page, String rows)	 {
+	public List<WithDrawalFinishedListModel> getFinishedWithDrawalList(String bankcardNumber, String page,
+			String rows) {
 		List<WithDrawalFinishedListModel> withdrawalFinishedList = null;
 		Transaction tx = null;
 		String sql = "";
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			
-			sql = "SELECT *," + 
-					      "(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = withdrawal.TOUSERID) as toUserName," + 
-					      "(SELECT site.SITENAME FROM site WHERE site.SITEID = withdrawal.toSiteId) AS siteName," + 
-					      "(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = withdrawal.OPRATIONUSERID) as oprationUserName " + 
-				  "FROM withdrawal " + 
-				  "WHERE withdrawal.TOBANKNUMBER like '%" + bankcardNumber + "%' " + "ORDER BY withdrawalTime desc " + "LIMIT " + page + "," + rows;
-					
+
+			sql = "SELECT *,"
+					+ "(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = withdrawal.TOUSERID) as toUserName,"
+					+ "(SELECT site.SITENAME FROM site WHERE site.SITEID = withdrawal.toSiteId) AS siteName,"
+					+ "(SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = withdrawal.OPRATIONUSERID) as oprationUserName "
+					+ "FROM withdrawal " + "WHERE withdrawal.TOBANKNUMBER like '%" + bankcardNumber + "%' "
+					+ "ORDER BY withdrawalTime desc " + "LIMIT " + page + "," + rows;
+
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(WithDrawalFinishedListModel.class);
 
@@ -589,8 +688,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalFinishedList;
 		} finally {
 			if (tx != null) {
@@ -609,9 +715,9 @@ public class WithdrawalImpl implements WithdrawalDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 
-			sql = "SELECT  count(*)" + "FROM withdrawal "
-					+ "WHERE withdrawal.TOBANKNUMBER like '%" + bankcardNumber + "%' " ;
-					
+			sql = "SELECT  count(*)" + "FROM withdrawal " + "WHERE withdrawal.TOBANKNUMBER like '%" + bankcardNumber
+					+ "%' ";
+
 			SQLQuery query = session.createSQLQuery(sql);
 			withdrawalCount = ((BigInteger) query.uniqueResult()).longValue();
 
@@ -620,8 +726,15 @@ public class WithdrawalImpl implements WithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return withdrawalCount;
 		} finally {
 			if (tx != null) {

@@ -34,6 +34,14 @@ public class JianceCheckImpl implements JianceCheckDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "addJianceCheck操作失败！", "");
 		} finally {
@@ -56,6 +64,14 @@ public class JianceCheckImpl implements JianceCheckDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "updateJianceCheck操作失败！", "");
 		} finally {
@@ -82,6 +98,14 @@ public class JianceCheckImpl implements JianceCheckDao {
 			return jianceCheck;
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 			return null;
 		} finally {
@@ -95,7 +119,7 @@ public class JianceCheckImpl implements JianceCheckDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<JianceListModel> getJianceCheckList(String page, String rows, String masterPhone, String carPlateNumber,
-			String isDaiBan) {
+			String isDaiBan, String queryTime) {
 		// TODO Auto-generated method stub
 		List<JianceListModel> jianceCheckList = null;
 		Transaction tx = null;
@@ -103,34 +127,45 @@ public class JianceCheckImpl implements JianceCheckDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			String sql1 = "SELECT JianceCheck.*," 
+			String sql1 = "SELECT JianceCheck.*,"
 					+ "(select valueText from DictionaryModel where name = '检测类型' and keyText = JianceCheck.plateNumberType limit 1) AS plateNumberString "
-				     + "FROM JianceCheck "
-				     + "where JianceCheck.masterPhone like '%"+masterPhone+"%' and JianceCheck.plateNumber like '%"+carPlateNumber+"%' ";
+					+ "FROM JianceCheck " + "where JianceCheck.masterPhone like '%" + masterPhone
+					+ "%' and JianceCheck.plateNumber like '%" + carPlateNumber + "%' ";
 			String sql2 = "";
-			if(isDaiBan.length() > 0) {
+			if (isDaiBan.length() > 0) {
 				sql2 = "and (JianceCheck.status = '0') ";
 			}
-			
-			String sql3 = "ORDER BY updataTime desc "
-				     + "LIMIT " + page + "," + rows;
-			sql = sql1 + sql2 +sql3;
+			String sql4 = "";
+			if (queryTime.length() > 0) {
+				sql4 = "and (JianceCheck.checkTime BETWEEN '" + queryTime + " 00:00:00" + "' AND '" + queryTime
+						+ " 23:59:59" + "') ";
+			}
+
+			String sql3 = "ORDER BY checkTime desc " + "LIMIT " + page + "," + rows;
+			sql = sql1 + sql2 + sql4 + sql3;
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(JianceListModel.class);
 
 			jianceCheckList = query.list();
 			tx.commit();
-			
+
 			return jianceCheckList;
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			
+
 			return jianceCheckList;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}
@@ -139,7 +174,7 @@ public class JianceCheckImpl implements JianceCheckDao {
 	}
 
 	@Override
-	public Long getJianceCheckCount(String masterPhone, String carPlateNumber, String isDaiBan) {
+	public Long getJianceCheckCount(String masterPhone, String carPlateNumber, String isDaiBan, String queryTime) {
 		// TODO Auto-generated method stub
 		Transaction tx = null;
 		Long siteCount = (long) 0;
@@ -147,28 +182,41 @@ public class JianceCheckImpl implements JianceCheckDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			String sql1 = "select count(*) from JianceCheck " 
-				     + "where JianceCheck.masterPhone like '%"+masterPhone+"%' and JianceCheck.plateNumber like '%"+carPlateNumber+"%' ";
+			String sql1 = "select count(*) from JianceCheck " + "where JianceCheck.masterPhone like '%" + masterPhone
+					+ "%' and JianceCheck.plateNumber like '%" + carPlateNumber + "%' ";
 			String sql2 = "";
-			if(isDaiBan.length() > 0) {
+			if (isDaiBan.length() > 0) {
 				sql2 = "and (JianceCheck.status = '0') ";
 			}
-			
-			sql = sql1 + sql2;
-			
+
+			String sql4 = "";
+			if (queryTime.length() > 0) {
+				sql4 = "and (JianceCheck.checkTime BETWEEN '" + queryTime + " 00:00:00" + "' AND '" + queryTime
+						+ " 23:59:59" + "') ";
+			}
+
+			sql = sql1 + sql4 + sql2;
+
 			SQLQuery query = session.createSQLQuery(sql);
-			siteCount = ((BigInteger)query.uniqueResult()).longValue();
+			siteCount = ((BigInteger) query.uniqueResult()).longValue();
 
 			tx.commit();
 			return siteCount;
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 			return siteCount;
 		} finally {
-			
+
 			if (tx != null) {
 				tx = null;
 			}

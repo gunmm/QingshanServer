@@ -45,8 +45,15 @@ public class OrderDaoImpl implements OrderDao {
 			return JSONUtils.responseToJsonString("1", "", "下单成功！", order.getOrderId());
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "下单失败！", "");
 		} finally {
 			if (tx != null) {
@@ -92,8 +99,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return driverList;
 		} finally {
 			if (tx != null) {
@@ -175,8 +189,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {
@@ -247,8 +268,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -277,8 +305,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderCount;
 		} finally {
 			if (tx != null) {
@@ -318,8 +353,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -337,16 +379,17 @@ public class OrderDaoImpl implements OrderDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 
-			sql = "SELECT `order`.*," + "null AS nickname," + "null AS phoneNumber," + "null AS personImageUrl," + "null AS score,"
-					+ "null AS nowLongitude," + "null AS nowLatitude," + "null AS plateNumber,"
+			sql = "SELECT `order`.*," + "null AS nickname," + "null AS phoneNumber," + "null AS personImageUrl,"
+					+ "null AS score," + "null AS nowLongitude," + "null AS nowLatitude," + "null AS plateNumber,"
 					+ "(select valueText from DictionaryModel where name = '车辆类型' and keyText = `order`.carType limit 1) AS carTypeName "
-					+ "FROM " + "`order` "
-					+ "where `order`.status = '0' "
-					+ "ORDER BY (ACOS(SIN((" + vehicle.getNowLatitude() + 
-					 " * 3.1415) / 180 ) * SIN((`order`.sendLatitude * 3.1415) / 180 ) +COS((" + vehicle.getNowLatitude() + 
-					 " * 3.1415) / 180 ) * COS((`order`.sendLatitude * 3.1415) / 180 ) *COS((" + 
-					 vehicle.getNowLongitude() + "* 3.1415) / 180 - (`order`.sendLongitude * 3.1415) / 180 ) ) * 6380) "
-					+ "LIMIT " + page + "," + rows;
+					+ "FROM " + "`order` " + "where `order`.status = '0' " + "ORDER BY (ACOS(SIN(("
+					+ vehicle.getNowLatitude()
+					+ " * 3.1415) / 180 ) * SIN((`order`.sendLatitude * 3.1415) / 180 ) +COS(("
+					+ vehicle.getNowLatitude()
+					+ " * 3.1415) / 180 ) * COS((`order`.sendLatitude * 3.1415) / 180 ) *COS(("
+					+ vehicle.getNowLongitude()
+					+ "* 3.1415) / 180 - (`order`.sendLongitude * 3.1415) / 180 ) ) * 6380) " + "LIMIT " + page + ","
+					+ rows;
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(OrderListModel.class);
@@ -358,8 +401,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -387,8 +437,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderCount;
 		} finally {
 			if (tx != null) {
@@ -437,8 +494,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -471,8 +535,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderCount;
 		} finally {
 			if (tx != null) {
@@ -520,8 +591,15 @@ public class OrderDaoImpl implements OrderDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", order);
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", order);
 		} finally {
 			if (tx != null) {
@@ -558,8 +636,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderListModel;
 		} finally {
 			if (tx != null) {
@@ -587,8 +672,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "超时订单操作失败！", "");
 		} finally {
 			if (tx != null) {
@@ -619,8 +711,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -665,8 +764,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
 		} finally {
 			if (tx != null) {
@@ -717,8 +823,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -747,8 +860,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderCount;
 		} finally {
 			if (tx != null) {
@@ -806,8 +926,15 @@ public class OrderDaoImpl implements OrderDao {
 			return orderList;
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -846,8 +973,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderCount;
 		} finally {
 			if (tx != null) {
@@ -878,8 +1012,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
 		} finally {
 			if (tx != null) {
@@ -912,8 +1053,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderCount;
 		} finally {
 			if (tx != null) {
@@ -951,8 +1099,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -986,8 +1141,15 @@ public class OrderDaoImpl implements OrderDao {
 			return orderList;
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -1017,8 +1179,15 @@ public class OrderDaoImpl implements OrderDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderCount;
 		} finally {
 			if (tx != null) {
@@ -1052,8 +1221,15 @@ public class OrderDaoImpl implements OrderDao {
 			return orderList;
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {
@@ -1084,8 +1260,15 @@ public class OrderDaoImpl implements OrderDao {
 			return orderList;
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderList;
 		} finally {
 			if (tx != null) {

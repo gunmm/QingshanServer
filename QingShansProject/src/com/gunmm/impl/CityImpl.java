@@ -16,20 +16,26 @@ public class CityImpl implements CityDao {
 		String provinceName = null;
 		String hql = "";
 		try {
-			Session session = MyHibernateSessionFactory.getSessionFactory()
-					.getCurrentSession();
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			hql = "select name from City where id = ? and deep = 1";
 			Query query = session.createQuery(hql);
 			query.setParameter(0, prvinceId);
 			provinceName = (String) query.uniqueResult();
-			
+
 			tx.commit();
 			return provinceName;
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return provinceName;
 		} finally {
 			if (tx != null) {
@@ -45,8 +51,7 @@ public class CityImpl implements CityDao {
 		String cityName = null;
 		String hql = "";
 		try {
-			Session session = MyHibernateSessionFactory.getSessionFactory()
-					.getCurrentSession();
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			hql = "select name from City where id = ? and parent_id = ? and deep = 2";
 			Query query = session.createQuery(hql);
@@ -54,13 +59,20 @@ public class CityImpl implements CityDao {
 			query.setParameter(1, prvinceId);
 
 			cityName = (String) query.uniqueResult();
-			
+
 			tx.commit();
 			return cityName;
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return cityName;
 		} finally {
 			if (tx != null) {

@@ -34,8 +34,15 @@ public class VehicleImpl implements VehicleDao {
 			return JSONUtils.responseToJsonString("1", "", "添加成功！", vehicle.getVehicleId());
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "添加失败！", "");
 		} finally {
 			if (tx != null) {
@@ -62,8 +69,15 @@ public class VehicleImpl implements VehicleDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {
@@ -90,8 +104,15 @@ public class VehicleImpl implements VehicleDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {
@@ -117,8 +138,15 @@ public class VehicleImpl implements VehicleDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
 			if (tx != null) {
@@ -141,8 +169,15 @@ public class VehicleImpl implements VehicleDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", vehicle);
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", vehicle);
 		} finally {
 			if (tx != null) {
@@ -198,8 +233,15 @@ public class VehicleImpl implements VehicleDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return vehicleList;
 		} finally {
 			if (tx != null) {
@@ -232,8 +274,15 @@ public class VehicleImpl implements VehicleDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return true;
 		} finally {
 			if (tx != null) {
@@ -265,8 +314,15 @@ public class VehicleImpl implements VehicleDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return true;
 		} finally {
 			if (tx != null) {
@@ -297,8 +353,15 @@ public class VehicleImpl implements VehicleDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return true;
 		} finally {
 			if (tx != null) {
@@ -329,8 +392,15 @@ public class VehicleImpl implements VehicleDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return true;
 		} finally {
 			if (tx != null) {

@@ -25,32 +25,35 @@ public class MessageImpl implements MessageDao {
 		Transaction tx = null;
 		String sql = "";
 		try {
-			Session session = MyHibernateSessionFactory.getSessionFactory()
-					.getCurrentSession();
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			sql = "SELECT * "+
-				"FROM messagemodel "+
-				"where messagemodel.receiveUserId = '"+userId+"' "+
-				"ORDER BY createTime desc " + 
-				"LIMIT "+page+","+rows;
-					
+			sql = "SELECT * " + "FROM messagemodel " + "where messagemodel.receiveUserId = '" + userId + "' "
+					+ "ORDER BY createTime desc " + "LIMIT " + page + "," + rows;
+
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(MessageModel.class);
 
 			messageList = query.list();
 			tx.commit();
 			return messageList;
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return messageList;
 		} finally {
 			if (tx != null) {
 				tx = null;
 			}
-			
+
 		}
 	}
 
@@ -59,7 +62,7 @@ public class MessageImpl implements MessageDao {
 		// TODO Auto-generated method stub
 		messageModel.setCreateTime(new Date());
 		messageModel.setIsRead("0");
-		
+
 		Transaction tx = null;
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
@@ -69,8 +72,15 @@ public class MessageImpl implements MessageDao {
 			return JSONUtils.responseToJsonString("1", "", "添加成功！", messageModel);
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "添加失败！", "");
 		} finally {
 			if (tx != null) {
@@ -88,12 +98,19 @@ public class MessageImpl implements MessageDao {
 			tx = session.beginTransaction();
 			session.update(messageModel);
 			tx.commit();
-			
+
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", messageModel);
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", "");
 		} finally {
 			if (tx != null) {
@@ -109,21 +126,27 @@ public class MessageImpl implements MessageDao {
 		MessageModel messageModel = null;
 		String hql = "";
 		try {
-			Session session = MyHibernateSessionFactory.getSessionFactory()
-					.getCurrentSession();
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 			hql = "from MessageModel where messageId = ?";
 			Query query = session.createQuery(hql);
 			query.setParameter(0, messageId);
 			messageModel = (MessageModel) query.uniqueResult();
-			
+
 			tx.commit();
 			return messageModel;
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {
@@ -139,12 +162,9 @@ public class MessageImpl implements MessageDao {
 		String resultCount = "";
 		String hql = "";
 		try {
-			Session session = MyHibernateSessionFactory.getSessionFactory()
-					.getCurrentSession();
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			hql = "select count(*) " + 
-				  "from MessageModel " + 
-				  "where isRead = '0' and receiveUserId = '"+userId+"'";
+			hql = "select count(*) " + "from MessageModel " + "where isRead = '0' and receiveUserId = '" + userId + "'";
 			Query query = session.createQuery(hql);
 			resultCount = query.uniqueResult().toString();
 			tx.commit();
@@ -152,8 +172,15 @@ public class MessageImpl implements MessageDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "未读消息数查询失败！", "");
 		} finally {
 			if (tx != null) {

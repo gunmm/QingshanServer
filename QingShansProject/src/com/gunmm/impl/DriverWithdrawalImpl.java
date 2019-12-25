@@ -28,8 +28,15 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", driverWithdrawal.getDriverWithdrawalId());
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
 		} finally {
 			if (tx != null) {
@@ -50,8 +57,15 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", "");
 		} finally {
 			if (tx != null) {
@@ -78,8 +92,15 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {
@@ -104,8 +125,15 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
 			if (tx != null) {
@@ -151,8 +179,15 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return driverWithdrawalListModel;
 		} finally {
 			if (tx != null) {
@@ -171,8 +206,9 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 
-			String sql1 = "select count(*) FROM driverWithdrawal WHERE driverWithdrawal.toBankNumber like '%" + bankCardNumber
-					    + "%' AND (SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = driverWithdrawal.toUserId) like '%"
+			String sql1 = "select count(*) FROM driverWithdrawal WHERE driverWithdrawal.toBankNumber like '%"
+					+ bankCardNumber
+					+ "%' AND (SELECT `user`.NICKNAME FROM `user` WHERE `user`.USERID = driverWithdrawal.toUserId) like '%"
 					+ toUserName + "%' ";
 
 			String sql2 = "";
@@ -191,8 +227,15 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return orderCount;
 		} finally {
 			if (tx != null) {

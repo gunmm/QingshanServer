@@ -63,7 +63,14 @@ public class UserDaoImpl implements UserDao {
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
@@ -86,20 +93,19 @@ public class UserDaoImpl implements UserDao {
 				return JSONUtils.responseToJsonString("0", "", "电话号码未注册！", "");
 			}
 		}
-		String verifyCode = String
-                .valueOf(new Random().nextInt(899999) + 100000);//生成短信验证码
+		String verifyCode = String.valueOf(new Random().nextInt(899999) + 100000);// 生成短信验证码
 		ALMessageUtil util = new ALMessageUtil();
 		boolean sendResult = false;
 		if ("0".equals(msgModelType)) {
 			sendResult = util.sendRegisterOrGetPasswordMsg(phoneNumber, verifyCode);
-		}else if ("1".equals(msgModelType)) {
+		} else if ("1".equals(msgModelType)) {
 			sendResult = util.sendChangeBankNumberMsg(phoneNumber, verifyCode);
-		}else if ("2".equals(msgModelType)) {
+		} else if ("2".equals(msgModelType)) {
 			sendResult = util.sendOrderBeRobMsg(phoneNumber, verifyCode);
-		}else if ("3".equals(msgModelType)) {
+		} else if ("3".equals(msgModelType)) {
 			sendResult = util.sendBindSmallDriverMsg(phoneNumber, verifyCode);
 		}
-		
+
 		if (sendResult) {
 			return JSONUtils.responseToJsonString("1", "", "验证码发送成功！", verifyCode);
 		}
@@ -155,8 +161,15 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "登陆失败！", "");
 		} finally {
 			if (tx != null) {
@@ -187,7 +200,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "登陆失败！", "");
 		} finally {
@@ -217,7 +237,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return null;
 		} finally {
@@ -241,8 +268,7 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight,"
-					+ "vehicle.vehicleMakeDate,"
-					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
+					+ "vehicle.vehicleMakeDate," + "vehicle.bindingDriverId AS vehicleBindingDriverId,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) AS gpsTypeName,"
 					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
@@ -260,7 +286,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return user;
 		} finally {
@@ -291,7 +324,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return null;
 		} finally {
@@ -316,7 +356,14 @@ public class UserDaoImpl implements UserDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", user);
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", user);
 		} finally {
@@ -344,8 +391,7 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
-					+ "vehicle.vehicleMakeDate,"
-					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
+					+ "vehicle.vehicleMakeDate," + "vehicle.bindingDriverId AS vehicleBindingDriverId,"
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
@@ -374,7 +420,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return driverList;
 		} finally {
@@ -399,13 +452,12 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
-					+ "vehicle.vehicleMakeDate,"
-					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
+					+ "vehicle.vehicleMakeDate," + "vehicle.bindingDriverId AS vehicleBindingDriverId,"
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
-					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId " + "where user.userId = '" + driverId
-					+ "'";
+					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId " + "where user.userId = '"
+					+ driverId + "'";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(DriverListModel.class);
@@ -417,7 +469,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
 		} finally {
@@ -460,7 +519,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return driverCount;
 		} finally {
@@ -491,7 +557,14 @@ public class UserDaoImpl implements UserDao {
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
@@ -522,7 +595,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
@@ -547,13 +627,13 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
-					+ "vehicle.vehicleMakeDate,"
-					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
+					+ "vehicle.vehicleMakeDate," + "vehicle.bindingDriverId AS vehicleBindingDriverId,"
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
-					+ "FROM user,vehicle " + "where (user.superDriver = '" + driverId + "' or user.userId = '" + driverId + "') and user.vehicleId = vehicle.vehicleId ORDER BY nickname ";
-			
+					+ "FROM user,vehicle " + "where (user.superDriver = '" + driverId + "' or user.userId = '"
+					+ driverId + "') and user.vehicleId = vehicle.vehicleId ORDER BY nickname ";
+
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(DriverListModel.class);
 
@@ -564,7 +644,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return driverList;
 		} finally {
@@ -590,16 +677,13 @@ public class UserDaoImpl implements UserDao {
 					+ "vehicle.operationCertificateNumber," + "vehicle.insuranceNumber,"
 					+ "vehicle.vehicleIdCardNumber," + "vehicle.businessLicenseNumber," + "vehicle.vehicleBrand,"
 					+ "vehicle.vehicleModel," + "vehicle.vehiclePhoto," + "vehicle.loadWeight," + "vehicle.plateNumber,"
-					+ "vehicle.vehicleMakeDate,"
-					+ "vehicle.bindingDriverId AS vehicleBindingDriverId,"
+					+ "vehicle.vehicleMakeDate," + "vehicle.bindingDriverId AS vehicleBindingDriverId,"
 					+ "(select description from DictionaryModel where name = '车辆类型' and keyText = vehicle.vehicleType limit 1) as vehicleTypeName,"
 					+ "(select valueText from DictionaryModel where name = 'GPS类型' and keyText = vehicle.gpsType) as gpsTypeName,"
 					+ "(select siteName from site where user.belongSiteId = siteId) as belongSiteName "
-					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId " 
+					+ "FROM user LEFT JOIN vehicle ON user.vehicleId = vehicle.vehicleId "
 					+ "where user.type = '6' and user.driverType = '2' and user.superDriver IS NULL and user.NICKNAME IS NOT NULL and user.userIdCardNumber IS NOT NULL and user.driverLicenseNumber IS NOT NULL "
 					+ "ORDER BY updateTime desc ";
-
-			
 
 			SQLQuery query = session.createSQLQuery(sql);
 			query.addEntity(DriverListModel.class);
@@ -611,7 +695,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return driverList;
 		} finally {
@@ -658,7 +749,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return masterList;
 		} finally {
@@ -697,7 +795,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return driverCount;
 		} finally {
@@ -729,7 +834,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
 		} finally {
@@ -761,7 +873,14 @@ public class UserDaoImpl implements UserDao {
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
@@ -790,7 +909,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
@@ -839,7 +965,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return manageList;
 		} finally {
@@ -882,7 +1015,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return manageCount;
 		} finally {
@@ -919,7 +1059,14 @@ public class UserDaoImpl implements UserDao {
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
 		} finally {
@@ -952,7 +1099,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return true;
 		} finally {
@@ -986,7 +1140,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return true;
 		} finally {
@@ -1020,7 +1181,14 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			tx.commit();
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				} // 撤销事务
+			}
 			e.printStackTrace();
 			return true;
 		} finally {

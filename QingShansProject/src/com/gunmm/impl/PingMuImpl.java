@@ -28,6 +28,14 @@ public class PingMuImpl implements PingMuUserDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "addUser PingMuImpl操作失败！", "");
 		} finally {
@@ -50,6 +58,14 @@ public class PingMuImpl implements PingMuUserDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "updateUserImp操作失败！", "");
 		} finally {
@@ -78,6 +94,14 @@ public class PingMuImpl implements PingMuUserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 			return null;
 		} finally {
@@ -106,6 +130,14 @@ public class PingMuImpl implements PingMuUserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 			return "0";
 		} finally {

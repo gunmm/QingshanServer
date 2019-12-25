@@ -22,7 +22,8 @@ public class DictionaryImpl implements DictionaryDao {
 		try {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
-			hql = "from DictionaryModel where name = '" + name + "' and cityName = '" + cityName + "' order by CAST(keyText as integer) asc";
+			hql = "from DictionaryModel where name = '" + name + "' and cityName = '" + cityName
+					+ "' order by CAST(keyText as integer) asc";
 			Query query = session.createQuery(hql);
 			dictionaryList = query.list();
 
@@ -31,8 +32,15 @@ public class DictionaryImpl implements DictionaryDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return dictionaryList;
 		} finally {
 			if (tx != null) {
@@ -60,8 +68,15 @@ public class DictionaryImpl implements DictionaryDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return valueText;
 		} finally {
 			if (tx != null) {
@@ -88,8 +103,15 @@ public class DictionaryImpl implements DictionaryDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return dictionaryModel;
 		} finally {
 			if (tx != null) {
@@ -118,8 +140,15 @@ public class DictionaryImpl implements DictionaryDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return dictionaryList;
 		} finally {
 			if (tx != null) {

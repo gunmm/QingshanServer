@@ -34,8 +34,15 @@ public class InvoiceImpl implements InvoiceDao {
 			return JSONUtils.responseToJsonString("1", "", "添加成功！", invoice.getInvoiceId());
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "添加失败！", "");
 		} finally {
 			if (tx != null) {
@@ -64,8 +71,15 @@ public class InvoiceImpl implements InvoiceDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return null;
 		} finally {
 			if (tx != null) {
@@ -87,8 +101,15 @@ public class InvoiceImpl implements InvoiceDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", invoice);
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", invoice);
 		} finally {
 			if (tx != null) {
@@ -116,8 +137,15 @@ public class InvoiceImpl implements InvoiceDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
 		} finally {
 			if (tx != null) {
@@ -147,8 +175,15 @@ public class InvoiceImpl implements InvoiceDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
 		} finally {
 			if (tx != null) {
@@ -184,8 +219,15 @@ public class InvoiceImpl implements InvoiceDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return invoiceResModelList;
 		} finally {
 			if (tx != null) {
@@ -204,11 +246,9 @@ public class InvoiceImpl implements InvoiceDao {
 			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
 			tx = session.beginTransaction();
 
-			sql = "SELECT  count(*)"
-					+ "FROM invoice,`order`  " 
-					+ "where `order`.invoiceId = invoice.invoiceId "
-					+ "AND invoice.status like '%" + status + "%' AND invoice.invoiceType like '%" + invoiceType + "%'  AND invoice.receiverName like '%" + receiverName + "%' ";
-					
+			sql = "SELECT  count(*)" + "FROM invoice,`order`  " + "where `order`.invoiceId = invoice.invoiceId "
+					+ "AND invoice.status like '%" + status + "%' AND invoice.invoiceType like '%" + invoiceType
+					+ "%'  AND invoice.receiverName like '%" + receiverName + "%' ";
 
 			SQLQuery query = session.createSQLQuery(sql);
 			invoiceCount = ((BigInteger) query.uniqueResult()).longValue();
@@ -218,8 +258,15 @@ public class InvoiceImpl implements InvoiceDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			if (null != tx) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
 			e.printStackTrace();
-			tx.commit();
 			return invoiceCount;
 		} finally {
 			if (tx != null) {
