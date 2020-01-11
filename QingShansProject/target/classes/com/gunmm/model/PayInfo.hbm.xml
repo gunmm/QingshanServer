@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2019-12-28 23:49:51 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.gunmm.model.PayInfo" table="PAYINFO">
+        <id name="recordId" type="java.lang.String">
+            <column name="RECORDID" />
+            <generator class="assigned" />
+        </id>
+        <property name="deviceId" type="java.lang.String">
+            <column name="DEVICEID" />
+        </property>
+        <property name="product" type="java.lang.String">
+            <column name="PRODUCT" />
+        </property>
+        <property name="environment" type="java.lang.String">
+            <column name="ENVIRONMENT" />
+        </property>
+        <property name="receipt_type" type="java.lang.String">
+            <column name="RECEIPT_TYPE" />
+        </property>
+        <property name="createTime" type="java.util.Date">
+            <column name="CREATETIME" />
+        </property>
+    </class>
+</hibernate-mapping>

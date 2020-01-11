@@ -63,13 +63,13 @@ public class UserDaoImpl implements UserDao {
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
@@ -161,13 +161,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "登陆失败！", "");
@@ -200,13 +200,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "登陆失败！", "");
@@ -237,13 +237,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return null;
@@ -286,13 +286,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return user;
@@ -324,13 +324,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return null;
@@ -356,13 +356,13 @@ public class UserDaoImpl implements UserDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", user);
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "更新信息失败！", user);
@@ -420,13 +420,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return driverList;
@@ -469,13 +469,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
@@ -519,13 +519,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return driverCount;
@@ -557,13 +557,13 @@ public class UserDaoImpl implements UserDao {
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
@@ -595,13 +595,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
@@ -644,13 +644,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return driverList;
@@ -695,13 +695,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return driverList;
@@ -749,13 +749,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return masterList;
@@ -795,13 +795,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return driverCount;
@@ -834,13 +834,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "查询失败！", "");
@@ -873,13 +873,13 @@ public class UserDaoImpl implements UserDao {
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
@@ -909,13 +909,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "删除失败！", "");
@@ -965,13 +965,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return manageList;
@@ -1015,13 +1015,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return manageCount;
@@ -1059,13 +1059,13 @@ public class UserDaoImpl implements UserDao {
 			return JSONUtils.responseToJsonString("1", "", "注册成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "注册失败！", "");
@@ -1099,13 +1099,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return true;
@@ -1140,13 +1140,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return true;
@@ -1181,13 +1181,13 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
-				} // 撤销事务
+				}
 			}
 			e.printStackTrace();
 			return true;

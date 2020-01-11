@@ -34,7 +34,7 @@ public class ComplainImpl implements ComplainDao {
 			return JSONUtils.responseToJsonString("1", "", "添加成功！", complain.getRecordId());
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -70,7 +70,7 @@ public class ComplainImpl implements ComplainDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -101,7 +101,7 @@ public class ComplainImpl implements ComplainDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -153,7 +153,7 @@ public class ComplainImpl implements ComplainDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -206,7 +206,7 @@ public class ComplainImpl implements ComplainDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -245,7 +245,7 @@ public class ComplainImpl implements ComplainDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {

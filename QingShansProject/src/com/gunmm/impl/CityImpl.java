@@ -27,7 +27,7 @@ public class CityImpl implements CityDao {
 			return provinceName;
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -64,7 +64,7 @@ public class CityImpl implements CityDao {
 			return cityName;
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {

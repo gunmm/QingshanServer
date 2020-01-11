@@ -34,7 +34,7 @@ public class InvoiceImpl implements InvoiceDao {
 			return JSONUtils.responseToJsonString("1", "", "添加成功！", invoice.getInvoiceId());
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -71,7 +71,7 @@ public class InvoiceImpl implements InvoiceDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -101,7 +101,7 @@ public class InvoiceImpl implements InvoiceDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", invoice);
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -137,7 +137,7 @@ public class InvoiceImpl implements InvoiceDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -175,7 +175,7 @@ public class InvoiceImpl implements InvoiceDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -219,7 +219,7 @@ public class InvoiceImpl implements InvoiceDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -258,7 +258,7 @@ public class InvoiceImpl implements InvoiceDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {

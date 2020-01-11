@@ -39,7 +39,7 @@ public class MessageImpl implements MessageDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -72,7 +72,7 @@ public class MessageImpl implements MessageDao {
 			return JSONUtils.responseToJsonString("1", "", "添加成功！", messageModel);
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -102,7 +102,7 @@ public class MessageImpl implements MessageDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", messageModel);
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -138,7 +138,7 @@ public class MessageImpl implements MessageDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -172,7 +172,7 @@ public class MessageImpl implements MessageDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {

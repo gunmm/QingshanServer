@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2019-9-6 21:51:33 by Hibernate Tools 3.5.0.Final -->
+<!-- Generated 2019-12-28 17:02:19 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <class name="com.gunmm.model.PingMuUser" table="PINGMUUSER">
         <id name="deviceId" type="java.lang.String">
@@ -37,6 +37,12 @@
         </property>
         <property name="lastUrl" type="java.lang.String">
             <column name="LASTURL" />
+        </property>
+        <property name="downLoadTime" type="java.util.Date">
+            <column name="DOWNLOADTIME" />
+        </property>
+        <property name="expirationTime" type="java.util.Date">
+            <column name="EXPIRATIONTIME" />
         </property>
         <property name="createTime" type="java.util.Date">
             <column name="CREATETIME" />

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.PingMuUserDao;
 import com.gunmm.impl.PingMuImpl;
+import com.gunmm.model.PayInfo;
 import com.gunmm.model.PingMuUser;
 import com.gunmm.utils.JSONUtils;
 
@@ -53,6 +54,8 @@ public class PingMuUserController {
 			if (pingMuUserMid != null) {
 				pingMuUser.setCreateTime(pingMuUserMid.getCreateTime());
 				return pingMuUserDao.updateUser(pingMuUser);
+			} else if (pingMuUser.getDeviceId() != null) {
+				return pingMuUserDao.addUser(pingMuUser);
 			}
 			return JSONUtils.responseToJsonString("0", "", "pingMuUserMid is null！", "");
 		} catch (Exception e) {
@@ -80,6 +83,25 @@ public class PingMuUserController {
 				return pingMuUserDao.updateUser(pingMuUser);
 			}
 			return JSONUtils.responseToJsonString("0", "", "操作失败！", "");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "操作失败！", "");
+		}
+	}
+	
+	@RequestMapping("/uploadPayData")
+	@ResponseBody
+	private JSONObject uploadPayData(HttpServletRequest request) {
+		try {
+			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+			httpServletRequest.setCharacterEncoding("utf-8");
+			byte[] data = JSONUtils.readInputStream(httpServletRequest);
+			JSONObject body = JSONUtils.getBody(data);
+			PayInfo payInfo = new PayInfo();
+			payInfo = JSONObject.parseObject(body.toJSONString(), PayInfo.class);
+			PingMuUserDao pingMuUserDao = new PingMuImpl();
+			return pingMuUserDao.addPay(payInfo);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

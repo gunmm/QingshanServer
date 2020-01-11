@@ -34,11 +34,11 @@ public class JianceCheckImpl implements JianceCheckDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
 				}
 			}
@@ -64,11 +64,11 @@ public class JianceCheckImpl implements JianceCheckDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
 				}
 			}
@@ -98,11 +98,11 @@ public class JianceCheckImpl implements JianceCheckDao {
 			return jianceCheck;
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
 				}
 			}
@@ -153,11 +153,11 @@ public class JianceCheckImpl implements JianceCheckDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
 				}
 			}
@@ -205,11 +205,11 @@ public class JianceCheckImpl implements JianceCheckDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
 				}
 			}

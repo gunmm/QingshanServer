@@ -1,6 +1,7 @@
 package com.gunmm.impl;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -9,6 +10,7 @@ import org.hibernate.Transaction;
 import com.alibaba.fastjson.JSONObject;
 import com.gunmm.dao.PingMuUserDao;
 import com.gunmm.db.MyHibernateSessionFactory;
+import com.gunmm.model.PayInfo;
 import com.gunmm.model.PingMuUser;
 import com.gunmm.utils.JSONUtils;
 
@@ -28,11 +30,11 @@ public class PingMuImpl implements PingMuUserDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
 				}
 			}
@@ -58,11 +60,11 @@ public class PingMuImpl implements PingMuUserDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
 				}
 			}
@@ -94,11 +96,11 @@ public class PingMuImpl implements PingMuUserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
 				}
 			}
@@ -130,16 +132,47 @@ public class PingMuImpl implements PingMuUserDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
-
+					// use logging framework here
 					re.printStackTrace();
 				}
 			}
 			e.printStackTrace();
 			return "0";
+		} finally {
+			if (tx != null) {
+				tx = null;
+			}
+		}
+	}
+
+	@Override
+	public JSONObject addPay(PayInfo payInfo) {
+		// TODO Auto-generated method stub
+		payInfo.setRecordId(UUID.randomUUID().toString());
+		payInfo.setCreateTime(new Date());
+		Transaction tx = null;
+		try {
+			Session session = MyHibernateSessionFactory.getSessionFactory().getCurrentSession();
+			tx = session.beginTransaction();
+			session.save(payInfo);
+			tx.commit();
+			return JSONUtils.responseToJsonString("1", "", "操作成功！", "");
+		} catch (Exception e) {
+			// TODO: handle exception
+			if (null != tx && tx.isActive()) {
+				try {
+					tx.rollback();
+				} catch (Exception re) {
+					// use logging framework here
+					re.printStackTrace();
+				}
+			}
+			e.printStackTrace();
+			return JSONUtils.responseToJsonString("0", e.getCause().getMessage(), "addPay操作失败！", "");
 		} finally {
 			if (tx != null) {
 				tx = null;

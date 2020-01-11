@@ -19,6 +19,12 @@ public class PingMuUser {
 	private String lastUrl;	
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date downLoadTime = new Date(0);   //开始计费时间
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date expirationTime = new Date(0);   //到期时间
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date createTime = new Date(0);   //创建时间
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -131,5 +137,23 @@ public class PingMuUser {
 	public void setLastUrl(String lastUrl) {
 		this.lastUrl = lastUrl;
 	}
+
+	public Date getDownLoadTime() {
+		return downLoadTime;
+	}
+
+	public void setDownLoadTime(Date downLoadTime) {
+		this.downLoadTime = downLoadTime;
+	}
+
+	public Date getExpirationTime() {
+		return expirationTime;
+	}
+
+	public void setExpirationTime(Date expirationTime) {
+		this.expirationTime = expirationTime;
+	}
+	
+	
 		
 }

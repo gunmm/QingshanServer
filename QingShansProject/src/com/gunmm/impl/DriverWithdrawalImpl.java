@@ -28,7 +28,7 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 			return JSONUtils.responseToJsonString("1", "", "操作成功！", driverWithdrawal.getDriverWithdrawalId());
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -57,7 +57,7 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 			return JSONUtils.responseToJsonString("1", "", "更新信息成功！", "");
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -92,7 +92,7 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -125,7 +125,7 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -179,7 +179,7 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
@@ -227,7 +227,7 @@ public class DriverWithdrawalImpl implements DriverWithdrawalDao {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			if (null != tx) {
+			if (null != tx && tx.isActive()) {
 				try {
 					tx.rollback();
 				} catch (Exception re) {
